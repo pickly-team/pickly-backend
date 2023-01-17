@@ -1,17 +1,19 @@
-plugins {
-    id 'java'
+bootJar {
+    enabled = false
 }
 
-group 'org.pickly'
-version '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+jar {
+    enabled = true
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation project(":pickly-common")
+
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "com.google.firebase:firebase-admin:${FIREBASE_ADMIN_VERSION}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 test {
