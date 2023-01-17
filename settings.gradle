@@ -1,0 +1,6 @@
+rootProject.name = 'pickly-backend'
+include 'pickly-common'
+include 'pickly-push'
+include 'pickly-service'
+include 'pickly-scheduler'
+
