@@ -7,6 +7,9 @@ repositories {
 }
 
 dependencies {
+    implementation project(":pickly-common")
+    implementation project(":pickly-push")
+
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
