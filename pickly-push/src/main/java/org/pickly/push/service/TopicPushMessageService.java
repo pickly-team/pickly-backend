@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TopicPushMessageService implements PushMessageService{
+public class TopicPushMessageService implements PushMessageService {
 
     private final FirebaseAppProvider appProvider;
 
