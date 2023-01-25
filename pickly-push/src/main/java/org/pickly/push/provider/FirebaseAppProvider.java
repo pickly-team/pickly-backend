@@ -19,7 +19,6 @@ public class FirebaseAppProvider {
 
     private final Map<String, FirebaseApp> firebaseApps = new HashMap<>();
 
-
     public FirebaseApp getFirebaseApp(String projectName) {
         try {
             if (firebaseApps.containsKey(projectName)) return firebaseApps.get(projectName);
