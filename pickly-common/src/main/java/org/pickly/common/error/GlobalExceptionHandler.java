@@ -1,8 +1,8 @@
 package org.pickly.common.error;
 
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.exception.BusinessException;
-import org.pickly.common.error.exception.ErrorCode;
+import org.pilot.common.error.exception.BusinessException;
+import org.pilot.common.error.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
