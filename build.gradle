@@ -1,5 +1,5 @@
 buildscript {
-    ext {
+    ext{
         springBootVersion = '3.0.1'
         dependencyManagementVersion = '1.1.0.RELEASE'
         MYSQL_CONNECTOR_VERSION = "8.0.11"
@@ -7,7 +7,7 @@ buildscript {
 
     }
 
-    repositories {
+    repositories{
         mavenCentral()
     }
     dependencies {
@@ -20,7 +20,7 @@ buildscript {
     }
 }
 
-subprojects {
+subprojects{
     group 'org.pickly'
     version '1.0-SNAPSHOT'
 
@@ -31,11 +31,11 @@ subprojects {
     // Java Version을 의미한다. 뒤의 숫자의 경우 자바 버전을 의미
     sourceCompatibility = 17
 
-    repositories {
+    repositories{
         mavenCentral()
     }
 
-    dependencies {
+    dependencies{
         compileOnly "org.springframework.boot:spring-boot-starter"
         compileOnly 'org.projectlombok:lombok'
         compileOnly "org.springframework.boot:spring-boot-configuration-processor"

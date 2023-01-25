@@ -22,7 +22,7 @@ public class FirebaseAppProvider {
 
     public FirebaseApp getFirebaseApp(String projectName) {
         try {
-            if (firebaseApps.containsKey(projectName)) return firebaseApps.get(projectName);
+            if(firebaseApps.containsKey(projectName)) return firebaseApps.get(projectName);
 
             ClassPathResource resource = new ClassPathResource(projectName + JSON_TYPE_SUFFIX);
 
