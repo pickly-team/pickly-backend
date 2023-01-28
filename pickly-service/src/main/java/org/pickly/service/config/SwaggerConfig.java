@@ -1,4 +1,4 @@
-package org.pickly.common.config;
+package org.pickly.service.config;
 
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
