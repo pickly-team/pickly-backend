@@ -1,9 +1,6 @@
 package org.pickly.service.config;
 
-import org.springdoc.core.GroupedOpenApi;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -20,14 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SwaggerConfig {
 
-	@Bean
-	@Profile("!prod")
-	public GroupedOpenApi customTestOpenAPi() {
-		return GroupedOpenApi
-			.builder()
-			.group("Pickly V1 API")
-			.pathsToMatch("/api/v1/**")
-			.build();
-	}
+	// 추후 인증 & 권한 전역 관리 설정 추가 예정
 
 }
