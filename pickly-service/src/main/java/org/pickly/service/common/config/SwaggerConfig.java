@@ -1,4 +1,4 @@
-package org.pickly.service.config;
+package org.pickly.service.common.config;
 
 import org.springframework.context.annotation.Configuration;
 
