@@ -1,6 +1,6 @@
 # Conventions
 
-## Branch Convention
+## Branch
 
 #### Branches
 - main
@@ -14,11 +14,14 @@
 - 변경 요청하거나 제안사항 있으면 수정사항 반영 후 다시 리뷰 요청
 - 조건 만족시 self-merge
 
-## Commit Convention
-- 커밋 컨벤션은 앵귤러
-- 커밋 바디는 한글
+<br />
 
-#### 구조
+## Commit
+- [Angular Commit Convention](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
+
+<br />
+
+#### Structure
 ```
 커밋 메시지 헤더
 <type> : <short summary>
@@ -46,6 +49,8 @@ body
 - perf : 성능 개선
 - chore : 그 외 자잘한 수정
 
+
+<br />
 
 Reference
 - https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit-message-footer
