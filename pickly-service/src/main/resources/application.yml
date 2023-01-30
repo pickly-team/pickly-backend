@@ -1,0 +1,44 @@
+spring:
+  # 실행할 프로필 정보
+  profiles:
+    active: local
+  # multipart 이용 시 파일/리퀘스트 사이즈 제한
+  servlet:
+    multipart:
+      maxFileSize: 5MB
+      maxRequestSize: 5MB
+  # hikaripool 관련
+  datasource:
+    hikari:
+      connection-timeout: 10000
+      maximum-pool-size: 500
+      minimum-idle: 500
+      max-lifetime: 1800000
+      validation-timeout: 5000
+  # Pageable 관련
+  data:
+    web:
+      pageable:
+        max-page-size: 20
+        default-page-size: 20
+
+# server 관련
+server:
+  port: 9090
+
+# swagger :: springdoc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /api/**

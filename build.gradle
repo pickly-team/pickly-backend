@@ -11,12 +11,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        dependencies {
-            classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-            classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
-            classpath "mysql:mysql-connector-java:${MYSQL_CONNECTOR_VERSION}"
-            classpath "com.google.firebase:firebase-admin:${FIREBASE_ADMIN_VERSION}"
-        }
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
+        classpath "mysql:mysql-connector-java:${MYSQL_CONNECTOR_VERSION}"
+        classpath "com.google.firebase:firebase-admin:${FIREBASE_ADMIN_VERSION}"
     }
 }
 
@@ -37,10 +35,12 @@ subprojects {
 
     dependencies {
         compileOnly "org.springframework.boot:spring-boot-starter"
+
         compileOnly 'org.projectlombok:lombok'
         compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
         annotationProcessor 'org.projectlombok:lombok'
+        implementation "org.springframework.boot:spring-boot-starter-web"
         implementation 'org.springframework.boot:spring-boot-starter-test'
 
         // compileJava시 javax.annotation.meta.When 오류 해결

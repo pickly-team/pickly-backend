@@ -10,7 +10,6 @@ ext {
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-aop"
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
