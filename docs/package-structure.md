@@ -23,7 +23,6 @@
 └── README.md 
 
 ```
-<br />
 
 #### Modules
 - pickly-common
@@ -77,7 +76,6 @@
 │               └── application.yml
 ```
 
-<br />
 
 
 ####  Directory 
