@@ -11,7 +11,7 @@
 1. Preferences > Plugins 에서 checkstyle 검색 및 설치
 2. 설치 후 IntelliJ 리로드
 3. System > Preferences > Tools > Checkstyle
-4. Google Checks 선탣s
+4. Google Checks 선택
 
 #### how to use
 1. 원하는 파일에 돌리기
