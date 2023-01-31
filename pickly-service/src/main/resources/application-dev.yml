@@ -1,8 +1,5 @@
 # dev 설정 파일
 spring:
-  config:
-    activate:
-      on-profile: dev
   # jpa 관련 설정
   jpa:
     output:
