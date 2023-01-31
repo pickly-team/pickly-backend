@@ -15,11 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class TestCtrl {
 
