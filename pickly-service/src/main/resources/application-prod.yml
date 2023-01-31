@@ -1,8 +1,5 @@
 # prod 설정 파일 :: 예시 보여드리려고 올렸습니당 ignore 추가 예정
 spring:
-  config:
-    activate:
-      on-profile: prod
   # jpa 관련 설정
   jpa:
     output:
