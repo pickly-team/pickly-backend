@@ -1,8 +1,5 @@
 # local 설정 파일
 spring:
-  config:
-    activate:
-      on-profile: local
   # jpa 관련 설정
   jpa:
     output:
