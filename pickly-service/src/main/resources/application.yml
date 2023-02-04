@@ -10,11 +10,8 @@ spring:
   # hikaripool 관련
   datasource:
     hikari:
-      connection-timeout: 10000
-      maximum-pool-size: 500
-      minimum-idle: 500
-      max-lifetime: 1800000
-      validation-timeout: 5000
+      maximum-pool-size: 5
+      minimum-idle: 3
   # Pageable 관련
   data:
     web:
