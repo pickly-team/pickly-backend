@@ -26,5 +26,4 @@ class CustomStringUtilTest extends Specification {
         nullResult == null
     }
 
-
 }
