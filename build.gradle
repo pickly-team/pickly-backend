@@ -32,7 +32,7 @@ subprojects {
     sourceCompatibility = 17
 
     jacoco {
-        toolVersion = '0.8.5'
+        toolVersion = '0.8.8'
     }
 
     repositories {
@@ -54,11 +54,12 @@ subprojects {
         testAnnotationProcessor "org.projectlombok:lombok"
 
         // spock
-        testRuntimeOnly('org.junit.vintage:junit-vintage-engine')
-        testImplementation('org.spockframework:spock-core:2.0-M2-groovy-3.0') {
+        testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+        testImplementation('org.spockframework:spock-core:2.4-M1-groovy-4.0') {
             exclude module: 'groovy-all'
         }
-        testImplementation('org.spockframework:spock-spring:2.0-M2-groovy-3.0')
+        testImplementation('org.spockframework:spock-spring:2.4-M1-groovy-4.0')
+
     }
 
     test {
