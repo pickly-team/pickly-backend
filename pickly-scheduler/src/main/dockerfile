@@ -1,0 +1,15 @@
+FROM adoptopenjdk/openjdk15
+
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} pickly-scheduler-1.0-SNAPSHOT.jar
+
+EXPOSE 8081
+
+CMD java \
+        -Xms1535m \
+        -Xmx1535m \
+        -Dfile.encoding=UTF-8 \
+        -DlogAppender=STDOUT \
+        -Dspring.profiles.active=dev \
+        -Duser.timezone=Asia/Seoul \
+        -jar pickly-scheduler-1.0-SNAPSHOT.jar
