@@ -1,6 +1,5 @@
-package org.pickly.service.category.entity;
+package org.pickly.service.comment.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -11,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.member.entity.Member;
 
@@ -18,18 +18,16 @@ import org.pickly.service.member.entity.Member;
 @Getter
 @Builder
 @AllArgsConstructor
-@Table(name = "category")
+@Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends BaseEntity {
+public class Comment extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @Column(name = "is_auto_delete_mode", nullable = false)
-  private Boolean isAutoDeleteMode;
-
-  @Column(length = 100, nullable = false, unique = true)
-  private String name;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "bookmark_id")
+  private Bookmark bookmark;
 
 }
