@@ -23,10 +23,6 @@ import org.pickly.service.common.utils.base.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
   @Column(length = 80, nullable = false, unique = true)
   private String username;
 
