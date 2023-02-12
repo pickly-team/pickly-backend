@@ -5,7 +5,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@ConfigurationPropertiesScan
 public class ServiceApplication {
 
   private static final String DEV_PROPERTIES = "optional:pickly-service/src/main/resources/application-dev.yml";
