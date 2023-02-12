@@ -29,7 +29,7 @@ public class Category extends BaseEntity {
   @Column(name = "is_auto_delete_mode", nullable = false)
   private Boolean isAutoDeleteMode;
 
-  @Column(length = 100, nullable = false, unique = true)
+  @Column(length = 100, nullable = false)
   private String name;
 
 }
