@@ -1,6 +1,5 @@
-package org.pickly.service.category.entity;
+package org.pickly.service.friend.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -18,15 +17,16 @@ import org.pickly.service.member.entity.Member;
 @Getter
 @Builder
 @AllArgsConstructor
-@Table(name = "category")
+@Table(name = "friend")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends BaseEntity {
+public class Friend extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
-  private Member member;
+  @JoinColumn(name = "followee_id")
+  private Member followee;
 
-  @Column(length = 100, nullable = false, unique = true)
-  private String name;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "follower_id ")
+  private Member follower;
 
 }
