@@ -20,7 +20,6 @@ import jakarta.validation.constraints.Positive;
 @RestController
 @RequestMapping("/api/v1")
 public class TestCtrl {
-
   @Operation(summary = "API 내용 summary")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
