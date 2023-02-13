@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    restart: always
+    build:
+      context: "${DB_BUILD_CONTEXT}"
+      dockerfile: Postgres-Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "${DB_USER_ID}"
+      POSTGRES_PASSWORD: "${DB_USER_PASSWORD}"
+      APP_DB_NAME: "${APP_DB_NAME}"
+      APP_DB_USER: "${APP_DB_USER}"
+      APP_DB_PASS: "${APP_DB_PASS}"
+    volumes:
+      - ${POSTGRES_HOME_DIR}/data:/var/lib/postgresql/data
+  app:
+    container_name: pickly-service
+    build:
+      context: "${APP_BUILD_CONTEXT}"
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOSTNAME: db
+      DB_PORT: 5432
+      DB_DBNAME: "${APP_DB_NAME}"
+      DB_USERNAME: "${APP_DB_USER}"
+      DB_PASSWORD: "${APP_DB_PASS}"
+    depends_on:
+      - db
