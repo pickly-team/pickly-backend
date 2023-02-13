@@ -1,6 +1,7 @@
 package org.pickly.service.comment.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CommentServiceImpl implements CommentService {
 
-  private final CommentService commentService;
+  private final CommentRepository commentRepository;
 
 }
