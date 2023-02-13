@@ -3,9 +3,6 @@ package org.pickly.service.member.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -41,8 +38,7 @@ public class Member extends BaseEntity {
   @Column(length = 20, nullable = false, unique = true)
   private String nickname;
 
-  @Lob
-  @Column(name = "profile_image_url")
-  private String profileImageUrl;
+  @Column(name = "profile_emoji", columnDefinition = "text")
+  private String profileEmoji;
 
 }
