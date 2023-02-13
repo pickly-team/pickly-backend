@@ -3,6 +3,7 @@ buildscript {
         springBootVersion = '3.0.1'
         dependencyManagementVersion = '1.1.0.RELEASE'
         MYSQL_CONNECTOR_VERSION = "8.0.11"
+        POSTGRESQL_CONNECTOR_VERSION = "42.5.3"
         FIREBASE_ADMIN_VERSION = "8.0.0"
 
     }
@@ -14,6 +15,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
         classpath "mysql:mysql-connector-java:${MYSQL_CONNECTOR_VERSION}"
+        classpath "org.postgresql:postgresql:${POSTGRESQL_CONNECTOR_VERSION}"
         classpath "com.google.firebase:firebase-admin:${FIREBASE_ADMIN_VERSION}"
     }
 }
