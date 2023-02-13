@@ -39,3 +39,4 @@ target
 .flattened-pom.xml
 logs/
 logs
+data/
