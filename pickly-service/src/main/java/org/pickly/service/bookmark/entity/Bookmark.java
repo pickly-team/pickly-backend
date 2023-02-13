@@ -45,6 +45,6 @@ public class Bookmark extends BaseEntity {
 
   @Column(nullable = false, unique = true)
   @Enumerated(EnumType.STRING)
-  private NoticeScope noticeScope;
+  private Visibility visibility;
 
 }
