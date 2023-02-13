@@ -19,10 +19,6 @@ spring:
         max-page-size: 20
         default-page-size: 20
 
-# server 관련
-server:
-  port: 9090
-
 # swagger :: springdoc
 springdoc:
   swagger-ui:

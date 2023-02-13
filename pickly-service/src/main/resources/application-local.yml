@@ -5,12 +5,20 @@ spring:
     output:
       ansi:
         enabled: always
-    hibernate:
-      ddl-auto: create
+    database: postgresql
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: true
   # schema.sql, data.sql 사용 여부
   sql:
     init:
       mode: always
+  # postgreSQL local 설정
+  datasource:
+    url: jdbc:postgresql://${db.hostname}:${db.port}/${db.dbname}
+    username: ${db.username}
+    password: ${db.password}
 
 # 로깅 관련
 logging:
