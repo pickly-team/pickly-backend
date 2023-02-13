@@ -32,4 +32,7 @@ public class Category extends BaseEntity {
   @Column(length = 100, nullable = false)
   private String name;
 
+  @Column(columnDefinition = "text")
+  private String emoji;
+
 }
