@@ -1,6 +1,6 @@
 FROM openjdk:17-oracle
 
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/libs/pickly-service-1.0-SNAPSHOT.jar
 COPY ${JAR_FILE} pickly-service-1.0-SNAPSHOT.jar
 
 EXPOSE 8080

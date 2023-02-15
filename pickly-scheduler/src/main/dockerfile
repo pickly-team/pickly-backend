@@ -1,6 +1,6 @@
 FROM openjdk:17-oracle
 
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/libs/pickly-scheduler-1.0-SNAPSHOT.jar
 COPY ${JAR_FILE} pickly-scheduler-1.0-SNAPSHOT.jar
 
 EXPOSE 8081
