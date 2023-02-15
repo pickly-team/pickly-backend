@@ -12,8 +12,8 @@ COPY ${JAR_FILE} pickly-service-1.0-SNAPSHOT.jar
 EXPOSE 8080
 
 CMD java \
-        -Xms1535m \
-        -Xmx1535m \
+        -Xms200m \
+        -Xmx200m \
         -Dfile.encoding=UTF-8 \
         -DlogAppender=STDOUT \
         -Dspring.profiles.active=prod \
