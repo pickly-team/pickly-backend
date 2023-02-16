@@ -1,5 +1,6 @@
 package org.pickly.service.comment.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -29,5 +30,11 @@ public class Comment extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "bookmark_id")
   private Bookmark bookmark;
+
+  @Column(name = "is_owner_comment", nullable = false)
+  private Boolean isOwnerComment;
+
+  @Column(length = 150, nullable = false)
+  private String content;
 
 }
