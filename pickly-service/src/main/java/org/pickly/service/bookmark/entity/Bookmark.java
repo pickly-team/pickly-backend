@@ -37,7 +37,7 @@ public class Bookmark extends BaseEntity {
   private String title;
 
   @Lob
-  @Column(name = "priview_image_url")
+  @Column(name = "preview_image_url")
   private String previewImageUrl;
 
   @Column(name = "is_user_like", nullable = false)
