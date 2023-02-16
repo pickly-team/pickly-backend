@@ -130,7 +130,3 @@ create trigger update_trigger
     on friend
     for each row
     execute procedure updated_at();
-
-
-
-
