@@ -2,6 +2,7 @@ package org.pickly.service.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
+import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.exception.custom.CategoryNotFoundException;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
@@ -27,4 +28,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     return categoryRepository.save(new Category(member, false, dto.name(), ""));
   }
+
+  @Transactional
+  public Category update(Long categoryId, CategoryUpdateRequestDTO dto) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(CategoryNotFoundException::new);
+
+    return category.update(dto.isAutoDeleteMode(), dto.name(), dto.emoji());
+  }
+
 }
