@@ -7,6 +7,7 @@ import org.pickly.service.category.exception.custom.CategoryNotFoundException;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.category.service.interfaces.CategoryService;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public Category create(CategoryRequestDTO dto) {
     Member member = memberRepository.findById(dto.memberId())
-        .orElseThrow(CategoryNotFoundException::new);
+        .orElseThrow(() -> new MemberNotFoundException(dto.memberId()));
 
     return categoryRepository.save(new Category(member, false, dto.name(), ""));
   }
