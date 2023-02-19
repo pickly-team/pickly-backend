@@ -56,11 +56,10 @@ class CategoryAcceptanceTest extends Specification {
 
     def "카테고리를 수정한다"() {
         given:
-        Member testMember = memberRepository.save(memberFactory.testMember());
-        Category category = categoryRepository.save(categoryFactory.testCategory(testMember));
+        Category category = categoryRepository.save(categoryFactory.testCategory());
 
         String json = objectMapper.writeValueAsString(
-                new CategoryUpdateRequestDTO("update" + category.getId(),
+                new CategoryUpdateRequestDTO(category.getId(),
                         !category.getIsAutoDeleteMode(),
                         "update" + category.getName(),
                         "update" + category.getEmoji())
