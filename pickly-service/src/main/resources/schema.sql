@@ -19,7 +19,8 @@ create table member
     nickname      varchar(20)             not null,
     profile_emoji text,
     created_at    timestamp default now() not null,
-    updated_at    timestamp
+    updated_at    timestamp,
+    deleted_at    timestamp
 );
 
 create unique index member_email_uindex
@@ -50,7 +51,8 @@ create table category
     name                varchar(100)            not null,
     emoji               text,
     created_at          timestamp default now() not null,
-    updated_at          timestamp
+    updated_at          timestamp,
+    deleted_at          timestamp
 );
 
 create trigger update_trigger
@@ -74,7 +76,8 @@ create table bookmark
     is_user_like      boolean                 not null,
     visibility        varchar(50),
     created_at        timestamp default now() not null,
-    updated_at        timestamp
+    updated_at        timestamp,
+    deleted_at        timestamp
 );
 
 create trigger update_trigger
@@ -99,7 +102,8 @@ create table comment
     is_owner_comment boolean                 not null,
     content          varchar(150)            not null,
     created_at       timestamp default now() not null,
-    updated_at       timestamp
+    updated_at       timestamp,
+    deleted_at       timestamp
 );
 
 create trigger update_trigger
@@ -122,7 +126,8 @@ create table friend
         references member
         on update cascade on delete cascade,
     created_at  timestamp default now() not null,
-    updated_at  timestamp
+    updated_at  timestamp,
+    deleted_at  timestamp
 );
 
 create trigger update_trigger
