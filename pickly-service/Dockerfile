@@ -1,4 +1,4 @@
-FROM openjdk:17-oracle
+#FROM openjdk:17-oracle
 
 #
 #ARG JAR_FILE=build/libs/pickly-service-1.0-SNAPSHOT.jar
@@ -15,6 +15,7 @@ FROM openjdk:17-oracle
 #        -Duser.timezone=Asia/Seoul \
 #        -jar pickly-service-1.0-SNAPSHOT.jar
 
+FROM openjdk:17-oracle
 ARG JAR_FILE=./build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 COPY wait-for-it.sh /usr/local/bin/
