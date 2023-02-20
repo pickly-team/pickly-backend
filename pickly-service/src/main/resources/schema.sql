@@ -1,3 +1,9 @@
+drop table if exists friend;
+drop table if exists comment;
+drop table if exists bookmark;
+drop table if exists category;
+drop table if exists member;
+
 CREATE OR REPLACE FUNCTION updated_at()
 RETURNS TRIGGER AS '
 BEGIN
