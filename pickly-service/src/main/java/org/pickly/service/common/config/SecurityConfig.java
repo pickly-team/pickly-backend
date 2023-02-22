@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   private static final String[] AUTH_WHITELIST = {
-      "/api/**",
+      "/api/**", "/graphiql",
       "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
       "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
   };
