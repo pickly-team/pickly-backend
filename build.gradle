@@ -5,7 +5,8 @@ buildscript {
         MYSQL_CONNECTOR_VERSION = "8.0.11"
         POSTGRESQL_CONNECTOR_VERSION = "42.5.3"
         FIREBASE_ADMIN_VERSION = "8.0.0"
-
+        QUERYDSL_PLUGIN_VERSION = "1.0.10"
+        QUERYDSL_VERSION = "5.0.0"
     }
 
     repositories {
@@ -18,6 +19,10 @@ buildscript {
         classpath "org.postgresql:postgresql:${POSTGRESQL_CONNECTOR_VERSION}"
         classpath "com.google.firebase:firebase-admin:${FIREBASE_ADMIN_VERSION}"
     }
+}
+
+plugins {
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 subprojects {
@@ -35,6 +40,12 @@ subprojects {
 
     jacoco {
         toolVersion = '0.8.8'
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
 
     jar {
@@ -59,6 +70,14 @@ subprojects {
         implementation 'com.google.code.findbugs:jsr305:3.0.2'
         testAnnotationProcessor "org.projectlombok:lombok"
 
+        // querydsl
+        implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}"
+        annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+
+        annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+        annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+
         // spock
         testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
         testImplementation('org.spockframework:spock-core:2.4-M1-groovy-4.0') {
@@ -76,4 +95,23 @@ subprojects {
         jacoco.includeNoLocationClasses = true
         jacoco.excludes = ['jdk.internal.*']
     }
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }
