@@ -7,4 +7,6 @@ public interface MemberService {
 
   List<Member> getMembers();
 
+  Member save(String username);
+
 }
