@@ -11,3 +11,7 @@ type Member {
 type Query {
     getMembers: [Member]
 }
+
+type Mutation {
+    save(username: String): Member
+}
