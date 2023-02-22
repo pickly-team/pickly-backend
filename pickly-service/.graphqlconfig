@@ -1,0 +1,7 @@
+{
+  "name": "Pickly GraphQL Schema",
+  "schemaPath": "src/main/resources/graphql/schema.graphqls",
+  "extensions": {
+
+  }
+}
