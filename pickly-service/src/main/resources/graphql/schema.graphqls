@@ -1,0 +1,13 @@
+type Member {
+    id: ID
+    username: String
+    isHardMode: Boolean
+    email: String
+    name: String
+    nickname: String
+    profileEmoji: String!
+}
+
+type Query {
+    getMembers: [Member]
+}
