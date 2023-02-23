@@ -2,6 +2,7 @@ package org.pickly.service.member.service.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
@@ -36,5 +37,12 @@ public class MemberServiceImpl implements MemberService {
         .nickname("graphQL-test")
         .build();
     return memberRepository.save(member);
+  }
+
+  @Override
+  public void existsById(Long memberId) {
+    if (!memberRepository.existsById(memberId)) {
+      throw new EntityNotFoundException("존재하지 않는 유저입니다.");
+    }
   }
 }

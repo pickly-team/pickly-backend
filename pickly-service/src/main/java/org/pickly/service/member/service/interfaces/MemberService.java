@@ -9,4 +9,6 @@ public interface MemberService {
 
   Member save(String username);
 
+  void existsById(Long memberId);
+
 }
