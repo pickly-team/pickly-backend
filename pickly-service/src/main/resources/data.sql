@@ -11,10 +11,10 @@ VALUES
     (1, false, '프론트엔드', '😳');
 
 INSERT INTO bookmark
-(category_id, url, title, preview_image_url, is_user_like, visibility)
+(category_id, member_id, url, title, preview_image_url, is_user_like, visibility)
 VALUES
-    (1, 'https://naver.com', '스프링 쌈싸먹기', null, false, 'SCOPE_PUBLIC'),
-    (2, 'https://google.com', '리액트 쌈싸먹기', null, true, 'SCOPE_PRIVATE');
+    (1, 1  'https://naver.com', '스프링 쌈싸먹기', null, false, 'SCOPE_PUBLIC'),
+    (2, 1  'https://google.com', '리액트 쌈싸먹기', null, true, 'SCOPE_PRIVATE');
 
 INSERT INTO comment
 (member_id, bookmark_id, is_owner_comment, content)

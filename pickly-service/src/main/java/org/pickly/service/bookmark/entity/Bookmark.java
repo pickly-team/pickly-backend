@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.common.utils.base.BaseEntity;
+import org.pickly.service.member.entity.Member;
 
 @Entity
 @Getter
@@ -28,6 +29,10 @@ public class Bookmark extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_id")
+  private Member member;
 
   @Lob
   @Column(nullable = false)
