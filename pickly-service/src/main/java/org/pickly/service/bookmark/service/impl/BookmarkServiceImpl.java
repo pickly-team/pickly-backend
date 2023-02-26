@@ -19,7 +19,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Override
   public Long countMemberLikes(Long memberId) {
     memberService.existsById(memberId);
-    return bookmarkRepository.countMemberLikes(memberId);
+    return bookmarkRepository.countAllByMemberId(memberId);
   }
 
 }
