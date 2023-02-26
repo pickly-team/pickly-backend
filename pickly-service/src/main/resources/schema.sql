@@ -78,6 +78,10 @@ create table bookmark
         constraint bookmark_category_id_fk
         references category
         on update cascade on delete cascade,
+    member_id       bigint                  not null
+        constraint bookmark_member_id_fk
+        references member
+        on update cascade on delete cascade,
     url               text                    not null,
     title             varchar(100)            not null,
     preview_image_url text,

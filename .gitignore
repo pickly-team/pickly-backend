@@ -40,5 +40,3 @@ target
 logs/
 logs
 data/
-applicaion-test.yml
-applicaion-postgres.yml
