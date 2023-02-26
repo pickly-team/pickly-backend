@@ -13,8 +13,12 @@ VALUES
 INSERT INTO bookmark
 (category_id, member_id, url, title, preview_image_url, is_user_like, visibility)
 VALUES
-    (1, 1  'https://naver.com', '스프링 쌈싸먹기', null, false, 'SCOPE_PUBLIC'),
-    (2, 1  'https://google.com', '리액트 쌈싸먹기', null, true, 'SCOPE_PRIVATE');
+    (1, 1, 'https://naver.com', '스프링 쌈싸먹기', null, false, 'SCOPE_PUBLIC'),
+    (2, 1, 'https://google.com', '리액트 쌈싸먹기', null, true, 'SCOPE_PRIVATE'),
+    (1, 1, 'https://naver.com1', '스프링 쌈싸먹기1', null, true, 'SCOPE_PUBLIC'),
+    (2, 1, 'https://google.com1', '리액트 쌈싸먹기1', null, true, 'SCOPE_PRIVATE'),
+    (1, 1, 'https://google.com2', '리액트 쌈싸먹기2', null, true, 'SCOPE_PRIVATE'),
+    (1, 1, 'https://google.com2', '리액트 쌈싸먹기2', null, true, 'SCOPE_PRIVATE');
 
 INSERT INTO comment
 (member_id, bookmark_id, is_owner_comment, content)

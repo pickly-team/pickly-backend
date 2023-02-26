@@ -6,7 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -34,15 +33,13 @@ public class Bookmark extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @Lob
-  @Column(nullable = false)
+  @Column(length = 500, nullable = false)
   private String url;
 
   @Column(length = 100, nullable = false)
   private String title;
 
-  @Lob
-  @Column(name = "preview_image_url")
+  @Column(length = 500, nullable = false)
   private String previewImageUrl;
 
   @Column(name = "is_user_like", nullable = false)
