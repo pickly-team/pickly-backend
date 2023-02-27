@@ -10,6 +10,7 @@ import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.service.interfaces.CategoryService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,4 +42,15 @@ public class CategoryController {
     return ResponseEntity
         .ok(CategoryMapper.toResponseDTO(category));
   }
+
+  @DeleteMapping("/{categoryId}")
+  public ResponseEntity<Void> delete(
+      @PathVariable Long categoryId
+  ) {
+    categoryService.delete(categoryId);
+    return ResponseEntity
+        .noContent()
+        .build();
+  }
+
 }

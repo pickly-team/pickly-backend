@@ -8,4 +8,7 @@ public interface CategoryService {
   Category create(CategoryRequestDTO request);
 
   Category update(Long categoryId, CategoryUpdateRequestDTO dto);
+
+  void delete(Long categoryId);
+
 }

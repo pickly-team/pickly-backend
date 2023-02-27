@@ -37,4 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     return category.update(dto.isAutoDeleteMode(), dto.name(), dto.emoji());
   }
 
+  @Transactional
+  public void delete(Long categoryId) {
+    categoryRepository.deleteById(categoryId);
+  }
+
 }
