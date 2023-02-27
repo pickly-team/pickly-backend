@@ -86,6 +86,7 @@ create table bookmark
     title             varchar(100)            not null,
     preview_image_url varchar(500),
     is_user_like      boolean                 not null,
+    is_user_read      boolean                 not null,
     visibility        varchar(50),
     created_at        timestamp default now() not null,
     updated_at        timestamp,
