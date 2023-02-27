@@ -24,44 +24,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/category")
 public class CategoryController {
 
-  private final CategoryService categoryService;
+    private final CategoryService categoryService;
 
-  @PostMapping
-  public ResponseEntity<CategoryResponseDTO> create(@RequestBody @Valid final CategoryRequestDTO dto) {
-    Category category = categoryService.create(dto);
+    @PostMapping
+    public ResponseEntity<CategoryResponseDTO> create(
+        @RequestBody @Valid final CategoryRequestDTO dto) {
+        Category category = categoryService.create(dto);
 
-    return ResponseEntity
-        .ok(CategoryMapper.toResponseDTO(category));
-  }
+        return ResponseEntity
+            .ok(CategoryMapper.toResponseDTO(category));
+    }
 
-  @PostMapping("/{categoryId}")
-  public ResponseEntity<CategoryResponseDTO> update(
-      @PathVariable @Positive Long categoryId,
-      @RequestBody @Valid final CategoryUpdateRequestDTO dto
-  ) {
-    Category category = categoryService.update(categoryId, dto);
+    @PostMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponseDTO> update(
+        @PathVariable @Positive Long categoryId,
+        @RequestBody @Valid final CategoryUpdateRequestDTO dto
+    ) {
+        Category category = categoryService.update(categoryId, dto);
 
-    return ResponseEntity
-        .ok(CategoryMapper.toResponseDTO(category));
-  }
+        return ResponseEntity
+            .ok(CategoryMapper.toResponseDTO(category));
+    }
 
-  @DeleteMapping("/{categoryId}")
-  public ResponseEntity<Void> delete(
-      @PathVariable Long categoryId
-  ) {
-    categoryService.delete(categoryId);
-    return ResponseEntity
-        .noContent()
-        .build();
-  }
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> delete(
+        @PathVariable Long categoryId
+    ) {
+        categoryService.delete(categoryId);
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
 
-  @DeleteMapping
-  public ResponseEntity<Void> delteAllById(
-      @RequestParam(value = "categoryId") List<Long> categoryIds
-  ) {
-    categoryService.deleteAllByCategoryId(categoryIds);
-    return ResponseEntity
-        .noContent()
-        .build();
-  }
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllById(
+        @RequestParam(value = "categoryId") List<Long> categoryIds
+    ) {
+        categoryService.deleteAllByCategoryId(categoryIds);
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
 }
