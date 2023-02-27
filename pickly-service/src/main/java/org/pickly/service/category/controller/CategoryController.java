@@ -2,6 +2,7 @@ package org.pickly.service.category.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.dto.controller.CategoryMapper;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -53,4 +55,13 @@ public class CategoryController {
         .build();
   }
 
+  @DeleteMapping
+  public ResponseEntity<Void> delteAllById(
+      @RequestParam(value = "categoryId") List<Long> categoryIds
+  ) {
+    categoryService.deleteAllByCategoryId(categoryIds);
+    return ResponseEntity
+        .noContent()
+        .build();
+  }
 }

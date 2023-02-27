@@ -1,5 +1,6 @@
 package org.pickly.service.category.service.interfaces;
 
+import java.util.List;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.entity.Category;
@@ -11,4 +12,5 @@ public interface CategoryService {
 
   void delete(Long categoryId);
 
+  void deleteAllByCategoryId(List<Long> ids);
 }

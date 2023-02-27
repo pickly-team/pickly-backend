@@ -1,5 +1,6 @@
 package org.pickly.service.category.service.impl;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
@@ -42,4 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
     categoryRepository.deleteById(categoryId);
   }
 
+  @Transactional
+  public void deleteAllByCategoryId(List<Long> ids) {
+    categoryRepository.deleteAllByCategoryId(ids);
+  }
 }
