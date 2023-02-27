@@ -5,7 +5,7 @@ import org.pickly.service.bookmark.entity.Bookmark;
 
 public interface BookmarkQueryRepository {
 
-  List<Bookmark> findBookmarks(Long cursorId, Long memberId, Boolean isUserLike, Integer pageSize);
+  List<Bookmark> findBookmarks(Long cursorId, Long memberId, Long categoryId, Boolean isUserLike, Boolean isUserRead, Integer pageSize);
 
   long count(Long memberId, Boolean isUserLike);
 }

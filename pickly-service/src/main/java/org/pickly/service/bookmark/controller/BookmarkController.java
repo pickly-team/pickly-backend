@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.bookmark.dto.controller.MemberBookmarkRes;
 import org.pickly.service.bookmark.dto.controller.MemberLikeBookmarkRes;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +69,37 @@ public class BookmarkController {
       @RequestParam(required = false, defaultValue = "10") final Integer pageSize
   ) {
     return bookmarkService.findMemberLikeBookmarks(cursorId, memberId, pageSize);
+  }
+
+  @Operation(
+      summary = "특정 유저의 북마크 전체 조회",
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 MAX(bookmarkId). 필터링이 필요하지 않다면 queryParam null로!"
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MemberBookmarkRes.class)))
+          })
+  })
+  @GetMapping("/members/{memberId}/bookmarks")
+  public MemberBookmarkRes findMemberBookmarks(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @Parameter(name = "categoryId", description = "카테고리 ID 값. 필터링 필요 없으면 Null", example = "1")
+      @RequestParam(required = false) final Long categoryId,
+
+      @Parameter(name = "isUserRead", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
+      @RequestParam(required = false) final Boolean isUserRead,
+
+      @Parameter(name = "cursorId", description = "커서 ID 값. 디폴트 0", example = "1")
+      @RequestParam(required = false, defaultValue = "0") final Long cursorId,
+
+      @Parameter(name = "pageSize", description = "한 페이지에 나올 데이터 사이즈 값. 디폴트 10", example = "10")
+      @RequestParam(required = false, defaultValue = "10") final Integer pageSize
+  ) {
+    return bookmarkService.findMemberBookmarks(cursorId, memberId, categoryId, isUserRead,
+        pageSize);
   }
 
 

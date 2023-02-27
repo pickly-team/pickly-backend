@@ -17,13 +17,17 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public List<Bookmark> findBookmarks(Long cursorId, Long memberId, Boolean isUserLike, Integer pageSize) {
+  public List<Bookmark> findBookmarks(
+      Long cursorId, Long memberId, Long categoryId, Boolean isUserLike, Boolean isUserRead, Integer pageSize
+  ) {
     return queryFactory
         .selectFrom(bookmark)
         .where(
             gtCursorId(cursorId),
             eqMemberId(memberId),
-            eqIsUserLike(isUserLike)
+            eqCategoryId(categoryId),
+            eqIsUserLike(isUserLike),
+            eqIsUserRead(isUserRead)
         )
         .orderBy(bookmark.id.asc())
         .limit(pageSize + 1)
@@ -48,6 +52,21 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     }
     return bookmark.member.id.eq(memberId);
   }
+
+  private BooleanExpression eqCategoryId(final Long categoryId) {
+    if (categoryId == null) {
+      return null;
+    }
+    return bookmark.category.id.eq(categoryId);
+  }
+
+  private BooleanExpression eqIsUserRead(final Boolean isUserRead) {
+    if (isUserRead == null) {
+      return null;
+    }
+    return bookmark.isUserRead.eq(isUserRead);
+  }
+
 
   private BooleanExpression eqIsUserLike(final Boolean isUserLike) {
     if (isUserLike == null) {

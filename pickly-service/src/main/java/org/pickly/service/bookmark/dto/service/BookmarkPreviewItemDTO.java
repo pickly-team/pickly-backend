@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.pickly.service.bookmark.entity.Bookmark;
 
 @Getter
 @Builder
@@ -29,14 +30,27 @@ public class BookmarkPreviewItemDTO {
   @Schema(description = "유저가 읽은 북마크인지?", example = "false")
   private Boolean isUserRead;
 
-  @Schema(description = "댓글이 있는 북마크인지?", example = "true")
-  private Boolean hasComment;
+  @Schema(description = "북마크에 달린 댓글 수", example = "5")
+  private Long commentCnt;
 
   @Schema(description = "북마크 생성 일자", example = "2023-01-25")
   private LocalDate createdDate;
 
   private BookmarkPreviewItemDTO() {
 
+  }
+
+  public static BookmarkPreviewItemDTO from(final Bookmark bookmark, final Long commentCnt) {
+    return BookmarkPreviewItemDTO.builder()
+        .bookmarkId(bookmark.getId())
+        .title(bookmark.getTitle())
+        .url(bookmark.getUrl())
+        .previewImageUrl(bookmark.getPreviewImageUrl())
+        .isUserLike(bookmark.getIsUserLike())
+        .isUserRead(bookmark.getIsUserRead())
+        .commentCnt(commentCnt)
+        .createdDate(bookmark.getCreatedAt().toLocalDate())
+        .build();
   }
 
 }
