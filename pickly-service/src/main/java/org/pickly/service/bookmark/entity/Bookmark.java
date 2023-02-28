@@ -6,7 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -29,14 +28,13 @@ public class Bookmark extends BaseEntity {
   @JoinColumn(name = "category_id")
   private Category category;
 
-  @Lob
-  @Column(nullable = false)
+  @Column(nullable = false, length = 2000)
   private String url;
 
   @Column(length = 100, nullable = false)
   private String title;
 
-  @Lob
+
   @Column(name = "preview_image_url")
   private String previewImageUrl;
 
@@ -47,4 +45,11 @@ public class Bookmark extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Visibility visibility;
 
+  public void updateUserLike() {
+    this.isUserLike = true;
+  }
+
+  public void updateUserUnlike() {
+    this.isUserLike = false;
+  }
 }
