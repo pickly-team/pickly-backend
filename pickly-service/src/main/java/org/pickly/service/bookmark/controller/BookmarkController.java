@@ -60,11 +60,9 @@ public class BookmarkController {
   public PageResponse<BookmarkItemDTO> findMemberLikes(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
-      @RequestBody PageRequest pageRequest
+      @Parameter @RequestBody PageRequest pageRequest
   ) {
-    Long cursorId = pageRequest.getCursorId();
-    Integer pageSize = pageRequest.getPageSize();
-    return bookmarkService.findMemberLikeBookmarks(cursorId, memberId, pageSize);
+    return bookmarkService.findMemberLikeBookmarks(pageRequest, memberId);
   }
 
   @Operation(
@@ -83,12 +81,9 @@ public class BookmarkController {
       @Parameter(name = "isUserRead", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
       @RequestParam(required = false) final Boolean isUserRead,
 
-      @RequestBody PageRequest pageRequest
+      @Parameter @RequestBody PageRequest pageRequest
   ) {
-    Long cursorId = pageRequest.getCursorId();
-    Integer pageSize = pageRequest.getPageSize();
-    return bookmarkService.findMemberBookmarks(cursorId, memberId, categoryId, isUserRead,
-        pageSize);
+    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, isUserRead);
   }
 
 

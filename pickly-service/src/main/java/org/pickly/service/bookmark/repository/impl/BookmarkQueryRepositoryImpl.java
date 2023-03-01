@@ -17,9 +17,12 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
   private final JPAQueryFactory queryFactory;
 
+  private static final long CHECK_LAST = 1;
+
   @Override
   public List<Bookmark> findBookmarks(
-      PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike, Boolean isUserRead
+      PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike,
+      Boolean isUserRead
   ) {
     Long cursorId = pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
@@ -33,7 +36,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqIsUserRead(isUserRead)
         )
         .orderBy(bookmark.id.asc())
-        .limit(pageSize + 1)
+        .limit(pageSize + CHECK_LAST)
         .fetch();
   }
 
