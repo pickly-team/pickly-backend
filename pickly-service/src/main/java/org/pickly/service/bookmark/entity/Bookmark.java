@@ -45,11 +45,11 @@ public class Bookmark extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Visibility visibility;
 
-  public void updateUserLike() {
+  public void like() {
     this.isUserLike = true;
   }
 
-  public void updateUserCancelLike() {
+  public void deleteLike() {
     this.isUserLike = false;
   }
 }
