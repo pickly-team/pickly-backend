@@ -35,7 +35,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqIsUserLike(isUserLike),
             eqIsUserRead(isUserRead)
         )
-        .orderBy(bookmark.id.desc())
+        .orderBy(bookmark.createdAt.asc())
         .limit(pageSize + CHECK_LAST)
         .fetch();
   }

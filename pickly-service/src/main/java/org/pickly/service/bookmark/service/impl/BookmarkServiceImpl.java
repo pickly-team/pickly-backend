@@ -1,6 +1,7 @@
 package org.pickly.service.bookmark.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,7 +28,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   private final MemberService memberService;
 
   private static final boolean USER_LIKE = true;
-  private static final int FIRST_INDEX = 0;
+  private static final int LAST_ITEM = 1;
 
   @Override
   public Long countMemberLikes(final Long memberId) {
@@ -51,7 +52,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   ) {
     memberService.existsById(memberId);
     List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
-        categoryId, USER_LIKE, isUserRead);
+        categoryId, null, isUserRead);
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
@@ -67,7 +68,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     int contentSize = bookmarks.size();
     boolean hasNext = makeHasNext(contentSize, pageSize);
     List<BookmarkItemDTO> contents = makeBookmarkRes(
-        mapToDtoList(bookmarks, BookmarkItemDTO::from));
+        mapToDtoList(bookmarks, BookmarkItemDTO::from), contentSize);
     return new PageResponse<>(hasNext, contents);
   }
 
@@ -77,7 +78,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     boolean hasNext = makeHasNext(contentSize, pageSize);
     List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(
         mapToDtoList(bookmarks,
-            b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))));
+            b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))),
+        contentSize);
     return new PageResponse<>(hasNext, contents);
   }
 
@@ -85,9 +87,10 @@ public class BookmarkServiceImpl implements BookmarkService {
     return contentSize > pageSize;
   }
 
-  private <T> List<T> makeBookmarkRes(final List<T> contents) {
+  private <T> List<T> makeBookmarkRes(final List<T> contents, final int size) {
     List<T> resultList = new ArrayList<>(contents);
-    resultList.remove(FIRST_INDEX);
+    resultList.remove(size - LAST_ITEM);
+    Collections.reverse(resultList);
     return resultList;
   }
 
