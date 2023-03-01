@@ -3,7 +3,6 @@ package org.pickly.service.bookmark.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,15 +31,9 @@ public class BookmarkController {
 
   @Operation(summary = "특정 유저의 좋아요 북마크 수 조회")
   @ApiResponses(value = {
-      @ApiResponse(
-          responseCode = "200", description = "성공",
-          content = {
-              @Content(
-                  schema = @Schema(implementation = Long.class),
-                  examples = @ExampleObject(value = "10")
-              )
-          }
-      ),
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class))),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/bookmarks/likes/count")
@@ -55,7 +48,11 @@ public class BookmarkController {
       summary = "특정 유저가 좋아요한 북마크 전체 조회",
       description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 MAX(bookmarkId)"
   )
-  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "성공")})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class)))
+  })
   @GetMapping("/members/{memberId}/bookmarks/likes")
   public PageResponse<BookmarkItemDTO> findMemberLikes(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
