@@ -3,8 +3,10 @@ package org.pickly.service.bookmark.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.pickly.service.bookmark.dto.controller.BaseBookmarkRes;
 import org.pickly.service.bookmark.dto.controller.MemberBookmarkRes;
 import org.pickly.service.bookmark.dto.controller.MemberLikeBookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
@@ -43,7 +45,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(cursorId, memberId, null,
         USER_LIKE, null, pageSize);
     List<BookmarkItemDTO> dtos = memberLikes.stream().map(BookmarkItemDTO::from).toList();
-    return makeMemberLikeBookmarkRes(dtos, pageSize);
+//    return makeBookmarkRes(dtos, pageSize, MemberLikeBookmarkRes::from);
+//    return makeMemberLikeBookmarkRes(dtos, pageSize);
+    return makeBookmarkRes(dtos, pageSize, MemberLikeBookmarkRes::from);
   }
 
   @Override
@@ -60,29 +64,42 @@ public class BookmarkServiceImpl implements BookmarkService {
     List<BookmarkPreviewItemDTO> dtos = memberBookmarks.stream().map(
         b -> BookmarkPreviewItemDTO.from(b, bookmarkCommentCntMap.get(b.getId()))
     ).toList();
-    return makeBookmarkRes(dtos, pageSize);
+//    return makeBookmarkRes(dtos, pageSize, MemberBookmarkRes::from);
+//    return makeBookmarkRes(dtos, pageSize);
+    return makeBookmarkRes(dtos, pageSize, MemberBookmarkRes::from);
   }
 
-  private MemberLikeBookmarkRes makeMemberLikeBookmarkRes(final List<BookmarkItemDTO> contents,
-      final Integer pageSize) {
-    ArrayList<BookmarkItemDTO> arrayList = new ArrayList<>(contents);
+//  private MemberLikeBookmarkRes makeMemberLikeBookmarkRes(final List<BookmarkItemDTO> contents,
+//      final Integer pageSize) {
+//    ArrayList<BookmarkItemDTO> arrayList = new ArrayList<>(contents);
+//    int contentSize = arrayList.size();
+//    boolean hasNext = contentSize > pageSize;
+//    if (!hasNext) {
+//      arrayList.remove(contentSize - 1);
+//    }
+//    return MemberLikeBookmarkRes.from(arrayList, hasNext);
+//  }
+//
+//  private MemberBookmarkRes makeBookmarkRes(final List<BookmarkPreviewItemDTO> contents,
+//      final Integer pageSize) {
+//    ArrayList<BookmarkPreviewItemDTO> arrayList = new ArrayList<>(contents);
+//    int contentSize = arrayList.size();
+//    boolean hasNext = contentSize > pageSize;
+//    if (!hasNext) {
+//      arrayList.remove(contentSize - 1);
+//    }
+//    return MemberBookmarkRes.from(arrayList, hasNext);
+//  }
+
+
+  private <T extends BaseBookmarkRes<E>, E> T makeBookmarkRes(final List<E> contents, final Integer pageSize, BiFunction<List<E>, Boolean, T> constructor) {
+    ArrayList<E> arrayList = new ArrayList<>(contents);
     int contentSize = arrayList.size();
     boolean hasNext = contentSize > pageSize;
     if (!hasNext) {
       arrayList.remove(contentSize - 1);
     }
-    return MemberLikeBookmarkRes.from(arrayList, hasNext);
-  }
-
-  private MemberBookmarkRes makeBookmarkRes(final List<BookmarkPreviewItemDTO> contents,
-      final Integer pageSize) {
-    ArrayList<BookmarkPreviewItemDTO> arrayList = new ArrayList<>(contents);
-    int contentSize = arrayList.size();
-    boolean hasNext = contentSize > pageSize;
-    if (!hasNext) {
-      arrayList.remove(contentSize - 1);
-    }
-    return MemberBookmarkRes.from(arrayList, hasNext);
+    return constructor.apply(arrayList, hasNext);
   }
 
 }

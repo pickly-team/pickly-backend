@@ -1,16 +1,18 @@
 package org.pickly.service.comment.repository.impl;
 
-import static com.querydsl.core.group.GroupBy.groupBy;
 import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
 import static org.pickly.service.comment.entity.QComment.comment;
-import static org.pickly.service.member.entity.QMember.member;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class CommentQueryRepositoryImpl implements CommentQueryRepository {
@@ -20,11 +22,18 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
   @Override
   public Map<Long, Long> findBookmarkCommentCntByMember(Long memberId) {
     return queryFactory
-        .from(comment)
-        .rightJoin(comment.bookmark, bookmark)
-        .rightJoin(bookmark.member, member)
-        .where(member.id.eq(memberId))
-        .transform(groupBy(bookmark.id).as(comment.count()));
+        .select(bookmark.id, comment.count().castToNum(Long.class))
+        .from(bookmark)
+        .leftJoin(comment).on(comment.bookmark.id.eq(bookmark.id))
+        .groupBy(bookmark.id)
+        .where(bookmark.member.id.eq(memberId))
+        .fetch()
+        .stream()
+        .collect(Collectors.toMap(
+            tuple -> tuple.get(bookmark.id),
+            tuple -> Optional.ofNullable(tuple.get(comment.count())).orElse(0L)
+        ));
   }
+
 
 }
