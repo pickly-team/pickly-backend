@@ -49,7 +49,7 @@ public class Bookmark extends BaseEntity {
     this.isUserLike = true;
   }
 
-  public void updateUserUnlike() {
+  public void updateUserCancelLike() {
     this.isUserLike = false;
   }
 }

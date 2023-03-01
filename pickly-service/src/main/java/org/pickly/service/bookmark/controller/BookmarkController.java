@@ -25,7 +25,6 @@ public class BookmarkController {
 
   // TODO : 멤버 아이디를 토큰에서 가져오도록 수정
   // 또는 북마크 작업하시는 분이 멤버 아이디를 추가해 주시면 추가할 것
-
   public ResponseEntity<Void> likeBookmark(
       @PathVariable
       @Schema(description = "Bookmark id", example = "1")
@@ -37,13 +36,13 @@ public class BookmarkController {
 
 
   @DeleteMapping("/{bookmarkId}/like")
-  @Operation(summary = "Unlike bookmark", description = "Unlike bookmark")
-  public ResponseEntity<Void> unlikeBookmark(
+  @Operation(summary = "CancelLike bookmark", description = "CancelLike bookmark")
+  public ResponseEntity<Void> cancelLikeBookmark(
       @PathVariable
       @Schema(description = "Bookmark id", example = "1")
       Long bookmarkId
   ) {
-    bookmarkService.unlikeBookmark(bookmarkId);
+    bookmarkService.cancelLikeBookmark(bookmarkId);
     return ResponseEntity.ok().build();
   }
 }
