@@ -14,20 +14,21 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   private final BookmarkRepository bookmarkRepository;
 
+  @Override
+  public Bookmark findById(Long Id) {
+    return bookmarkRepository.findOneById(Id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+  }
 
   @Override
   public void likeBookmark(Long bookmarkId) {
-    Bookmark bookmark = bookmarkRepository.findOneById(bookmarkId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
-
-    bookmark.updateUserLike();
+    Bookmark bookmark = findById(bookmarkId);
+    bookmark.like();
   }
 
   @Override
   public void cancelLikeBookmark(Long bookmarkId) {
-    Bookmark bookmark = bookmarkRepository.findOneById(bookmarkId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
-
-    bookmark.updateUserCancelLike();
+    Bookmark bookmark = findById(bookmarkId);
+    bookmark.deleteLike();
   }
 }
