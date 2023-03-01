@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class BookmarkController {
 
   private final BookmarkService bookmarkService;
