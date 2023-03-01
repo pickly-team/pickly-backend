@@ -10,7 +10,7 @@ import lombok.Getter;
 public class PageResponse<T> {
 
   @Schema(description = "다음 페이지가 남았는지?", example = "true")
-  private boolean nextPage;
+  private boolean hasNext;
 
   @Schema(description = "현재 페이지의 아이템 리스트")
   private List<T> contents;
