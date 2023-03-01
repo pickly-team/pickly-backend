@@ -71,7 +71,7 @@ subprojects {
         testAnnotationProcessor "org.projectlombok:lombok"
 
         // querydsl
-        implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+        implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}:jakarta"
         annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
         annotationProcessor "jakarta.annotation:jakarta.annotation-api"
         annotationProcessor "jakarta.persistence:jakarta.persistence-api"
