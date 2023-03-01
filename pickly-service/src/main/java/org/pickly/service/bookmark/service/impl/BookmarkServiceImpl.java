@@ -27,7 +27,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   private final MemberService memberService;
 
   private static final boolean USER_LIKE = true;
-  private static final int UNUSED_ITEM = 1;
+  private static final int FIRST_INDEX = 0;
 
   @Override
   public Long countMemberLikes(final Long memberId) {
@@ -67,7 +67,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     int contentSize = bookmarks.size();
     boolean hasNext = makeHasNext(contentSize, pageSize);
     List<BookmarkItemDTO> contents = makeBookmarkRes(
-        mapToDtoList(bookmarks, BookmarkItemDTO::from), contentSize);
+        mapToDtoList(bookmarks, BookmarkItemDTO::from));
     return new PageResponse<>(hasNext, contents);
   }
 
@@ -77,8 +77,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     boolean hasNext = makeHasNext(contentSize, pageSize);
     List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(
         mapToDtoList(bookmarks,
-            b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))),
-        contentSize);
+            b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))));
     return new PageResponse<>(hasNext, contents);
   }
 
@@ -86,9 +85,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     return contentSize > pageSize;
   }
 
-  private <T> List<T> makeBookmarkRes(final List<T> contents, final int contentSize) {
+  private <T> List<T> makeBookmarkRes(final List<T> contents) {
     List<T> resultList = new ArrayList<>(contents);
-    resultList.remove(contentSize - UNUSED_ITEM);
+    resultList.remove(FIRST_INDEX);
     return resultList;
   }
 
