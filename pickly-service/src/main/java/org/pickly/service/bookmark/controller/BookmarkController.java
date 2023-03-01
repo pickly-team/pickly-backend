@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.pickly.service.bookmark.dto.controller.MemberBookmarkRes;
-import org.pickly.service.bookmark.dto.controller.MemberLikeBookmarkRes;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
