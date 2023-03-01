@@ -3,8 +3,8 @@ package org.pickly.service.bookmark.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -17,8 +17,6 @@ import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,35 +36,51 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
-  public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(final PageRequest pageRequest, final Long memberId) {
+  public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(final PageRequest pageRequest,
+      final Long memberId) {
     memberService.existsById(memberId);
     List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(pageRequest, memberId, null,
         USER_LIKE, null);
-    List<BookmarkItemDTO> dtos = memberLikes.stream().map(BookmarkItemDTO::from).toList();
-    int contentSize = dtos.size();
-    boolean hasNext = makeHasNext(contentSize, pageRequest.getPageSize());
-    List<BookmarkItemDTO> contents = makeBookmarkRes(dtos, contentSize);
-    return new PageResponse<>(hasNext, contents);
+    return makeResponse(pageRequest.getPageSize(), memberLikes);
   }
 
   @Override
   public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(
-      final PageRequest pageRequest, final Long memberId, final Long categoryId, final Boolean isUserRead
+      final PageRequest pageRequest, final Long memberId, final Long categoryId,
+      final Boolean isUserRead
   ) {
     memberService.existsById(memberId);
     List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
         categoryId, USER_LIKE, isUserRead);
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
         memberId);
-    List<BookmarkPreviewItemDTO> dtos = memberBookmarks.stream().map(
-        b -> BookmarkPreviewItemDTO.from(b, bookmarkCommentCntMap.get(b.getId()))
-    ).toList();
-    int contentSize = dtos.size();
-    boolean hasNext = makeHasNext(contentSize, pageRequest.getPageSize());
-    List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(dtos, contentSize);
+    return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
+  }
+
+  private <T> List<T> mapToDtoList(final List<Bookmark> bookmarks,
+      final Function<Bookmark, T> mapper) {
+    return bookmarks.stream().map(mapper).toList();
+  }
+
+  private PageResponse<BookmarkItemDTO> makeResponse(
+      final int pageSize, final List<Bookmark> bookmarks) {
+    int contentSize = bookmarks.size();
+    boolean hasNext = makeHasNext(contentSize, pageSize);
+    List<BookmarkItemDTO> contents = makeBookmarkRes(
+        mapToDtoList(bookmarks, BookmarkItemDTO::from), contentSize);
     return new PageResponse<>(hasNext, contents);
   }
 
+  private PageResponse<BookmarkPreviewItemDTO> makeResponse(
+      final int pageSize, final List<Bookmark> bookmarks, final Map<Long, Long> commentCntMap) {
+    int contentSize = bookmarks.size();
+    boolean hasNext = makeHasNext(contentSize, pageSize);
+    List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(
+        mapToDtoList(bookmarks,
+            b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))),
+        contentSize);
+    return new PageResponse<>(hasNext, contents);
+  }
 
   private boolean makeHasNext(final int contentSize, final int pageSize) {
     return contentSize > pageSize;
