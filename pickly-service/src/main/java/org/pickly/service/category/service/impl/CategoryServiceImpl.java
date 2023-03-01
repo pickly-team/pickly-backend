@@ -40,11 +40,14 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Transactional
   public void delete(Long categoryId) {
-    categoryRepository.deleteById(categoryId);
+    Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(CategoryNotFoundException::new);
+    category.delete();
   }
 
   @Transactional
   public void deleteAllByCategoryId(List<Long> ids) {
-    categoryRepository.deleteAllByCategoryId(ids);
+    List<Category> categories = categoryRepository.findAllByCategoryId(ids);
+    categories.stream().forEach(category -> category.delete());
   }
 }
