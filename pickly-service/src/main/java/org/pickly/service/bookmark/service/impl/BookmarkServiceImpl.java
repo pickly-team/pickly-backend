@@ -11,6 +11,7 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
+import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
@@ -37,35 +38,32 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
-  public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(
-      final Long cursorId, final Long memberId, final Integer pageSize) {
+  public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(final PageRequest pageRequest, final Long memberId) {
     memberService.existsById(memberId);
-    List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(cursorId, memberId, null,
-        USER_LIKE, null, pageSize);
+    List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(pageRequest, memberId, null,
+        USER_LIKE, null);
     List<BookmarkItemDTO> dtos = memberLikes.stream().map(BookmarkItemDTO::from).toList();
     int contentSize = dtos.size();
-    boolean hasNext = makeHasNext(contentSize, pageSize);
-    List<BookmarkItemDTO> contents = makeBookmarkRes(dtos, contentSize, hasNext);
+    boolean hasNext = makeHasNext(contentSize, pageRequest.getPageSize());
+    List<BookmarkItemDTO> contents = makeBookmarkRes(dtos, contentSize);
     return new PageResponse<>(hasNext, contents);
   }
 
   @Override
   public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(
-      final Long cursorId, final Long memberId, final Long categoryId, final Boolean isUserRead,
-      final Integer pageSize
+      final PageRequest pageRequest, final Long memberId, final Long categoryId, final Boolean isUserRead
   ) {
     memberService.existsById(memberId);
-    List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(cursorId, memberId,
-        categoryId,
-        USER_LIKE, isUserRead, pageSize);
+    List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
+        categoryId, USER_LIKE, isUserRead);
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
         memberId);
     List<BookmarkPreviewItemDTO> dtos = memberBookmarks.stream().map(
         b -> BookmarkPreviewItemDTO.from(b, bookmarkCommentCntMap.get(b.getId()))
     ).toList();
     int contentSize = dtos.size();
-    boolean hasNext = makeHasNext(contentSize, pageSize);
-    List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(dtos, contentSize, hasNext);
+    boolean hasNext = makeHasNext(contentSize, pageRequest.getPageSize());
+    List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(dtos, contentSize);
     return new PageResponse<>(hasNext, contents);
   }
 
@@ -74,11 +72,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     return contentSize > pageSize;
   }
 
-  private <T> List<T> makeBookmarkRes(final List<T> contents, final int contentSize, final boolean hasNext) {
+  private <T> List<T> makeBookmarkRes(final List<T> contents, final int contentSize) {
     List<T> resultList = new ArrayList<>(contents);
-    if (hasNext) {
-      resultList.remove(contentSize - UNUSED_ITEM);
-    }
+    resultList.remove(contentSize - UNUSED_ITEM);
     return resultList;
   }
 

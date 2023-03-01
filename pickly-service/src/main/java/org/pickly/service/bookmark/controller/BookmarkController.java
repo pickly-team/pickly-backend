@@ -61,18 +61,9 @@ public class BookmarkController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
       @RequestBody PageRequest pageRequest
-
-//      @Parameter(name = "cursorId", description = "커서 ID 값. 디폴트 0", example = "1")
-//      @RequestParam(required = false, defaultValue = "0") final Long cursorId,
-//
-//      @Parameter(name = "pageSize", description = "한 페이지에 나올 데이터 사이즈 값. 디폴트 10", example = "10")
-//      @RequestParam(required = false, defaultValue = "10") final Integer pageSize
   ) {
     Long cursorId = pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
-
-    log.info("cursorId = {}, pageSize = {}", cursorId, pageSize);
-
     return bookmarkService.findMemberLikeBookmarks(cursorId, memberId, pageSize);
   }
 
@@ -92,12 +83,10 @@ public class BookmarkController {
       @Parameter(name = "isUserRead", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
       @RequestParam(required = false) final Boolean isUserRead,
 
-      @Parameter(name = "cursorId", description = "커서 ID 값. 디폴트 0", example = "1")
-      @RequestParam(required = false, defaultValue = "0") final Long cursorId,
-
-      @Parameter(name = "pageSize", description = "한 페이지에 나올 데이터 사이즈 값. 디폴트 10", example = "10")
-      @RequestParam(required = false, defaultValue = "10") final Integer pageSize
+      @RequestBody PageRequest pageRequest
   ) {
+    Long cursorId = pageRequest.getCursorId();
+    Integer pageSize = pageRequest.getPageSize();
     return bookmarkService.findMemberBookmarks(cursorId, memberId, categoryId, isUserRead,
         pageSize);
   }

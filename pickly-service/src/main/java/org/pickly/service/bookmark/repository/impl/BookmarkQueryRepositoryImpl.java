@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
+import org.pickly.service.common.utils.page.PageRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,8 +19,10 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
   @Override
   public List<Bookmark> findBookmarks(
-      Long cursorId, Long memberId, Long categoryId, Boolean isUserLike, Boolean isUserRead, Integer pageSize
+      PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike, Boolean isUserRead
   ) {
+    Long cursorId = pageRequest.getCursorId();
+    Integer pageSize = pageRequest.getPageSize();
     return queryFactory
         .selectFrom(bookmark)
         .where(
