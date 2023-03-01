@@ -28,7 +28,7 @@ public class BookmarkController {
   @Operation(summary = "Like bookmark", description = "Like bookmark")
   public void likeBookmark(
       @PathVariable
-      @Positive
+      @Positive(message = "북마크 ID는 양수입니다.")
       @Schema(description = "Bookmark id", example = "1")
       Long bookmarkId
   ) {
@@ -41,7 +41,7 @@ public class BookmarkController {
   @Operation(summary = "CancelLike bookmark", description = "CancelLike bookmark")
   public void cancelLikeBookmark(
       @PathVariable
-      @Positive
+      @Positive(message = "북마크 ID는 양수입니다.")
       @Schema(description = "Bookmark id", example = "1")
       Long bookmarkId
   ) {
