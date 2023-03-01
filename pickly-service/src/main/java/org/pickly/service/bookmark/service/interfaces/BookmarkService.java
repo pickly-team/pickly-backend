@@ -5,6 +5,6 @@ public interface BookmarkService {
 
   void likeBookmark(Long memberId);
 
-  void unlikeBookmark(Long memberId);
+  void cancelLikeBookmark(Long memberId);
 
 }
