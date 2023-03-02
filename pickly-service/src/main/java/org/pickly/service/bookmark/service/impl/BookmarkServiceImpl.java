@@ -67,7 +67,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   private PageResponse<BookmarkItemDTO> makeResponse(
       final int pageSize, final List<Bookmark> bookmarks) {
     int contentSize = bookmarks.size();
-    boolean hasNext = makeHasNext(contentSize, pageSize);
+    boolean hasNext = PageResponse.makeHasNext(contentSize, pageSize);
     List<BookmarkItemDTO> contents = makeBookmarkRes(
         mapToDtoList(bookmarks, BookmarkItemDTO::from), contentSize);
     return new PageResponse<>(hasNext, contents);
@@ -76,16 +76,12 @@ public class BookmarkServiceImpl implements BookmarkService {
   private PageResponse<BookmarkPreviewItemDTO> makeResponse(
       final int pageSize, final List<Bookmark> bookmarks, final Map<Long, Long> commentCntMap) {
     int contentSize = bookmarks.size();
-    boolean hasNext = makeHasNext(contentSize, pageSize);
+    boolean hasNext = PageResponse.makeHasNext(contentSize, pageSize);
     List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(
         mapToDtoList(bookmarks,
             b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))),
         contentSize);
     return new PageResponse<>(hasNext, contents);
-  }
-
-  private boolean makeHasNext(final int contentSize, final int pageSize) {
-    return contentSize > pageSize;
   }
 
   private <T> List<T> makeBookmarkRes(final List<T> contents, final int size) {

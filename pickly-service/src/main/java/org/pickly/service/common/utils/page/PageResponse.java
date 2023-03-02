@@ -15,5 +15,9 @@ public class PageResponse<T> {
   @Schema(description = "현재 페이지의 아이템 리스트")
   private List<T> contents;
 
+  public static boolean makeHasNext(final int contentSize, final int pageSize) {
+    return contentSize > pageSize;
+  }
+
 }
 
