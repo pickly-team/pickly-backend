@@ -10,19 +10,20 @@ import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
+import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BookmarkServiceImpl implements BookmarkService {
 
+  private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
   private final MemberService memberService;
@@ -92,6 +93,24 @@ public class BookmarkServiceImpl implements BookmarkService {
     resultList.remove(size - LAST_ITEM);
     Collections.reverse(resultList);
     return resultList;
+  }
+
+  @Override
+  public Bookmark findById(Long id) {
+    return bookmarkRepository.findOneById(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+  }
+
+  @Override
+  public void likeBookmark(Long bookmarkId) {
+    Bookmark bookmark = findById(bookmarkId);
+    bookmark.like();
+  }
+
+  @Override
+  public void cancelLikeBookmark(Long bookmarkId) {
+    Bookmark bookmark = findById(bookmarkId);
+    bookmark.deleteLike();
   }
 
 }

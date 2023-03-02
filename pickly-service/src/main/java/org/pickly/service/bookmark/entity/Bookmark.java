@@ -29,17 +29,26 @@ public class Bookmark extends BaseEntity {
   @JoinColumn(name = "category_id")
   private Category category;
 
+<<<<<<< HEAD
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;
 
   @Column(length = 500, nullable = false)
+=======
+  @Column(nullable = false, length = 2000)
+>>>>>>> 8cc1e9675e2b35d4a6f3f0c5ec19c80b56b75161
   private String url;
 
   @Column(length = 100, nullable = false)
   private String title;
 
+<<<<<<< HEAD
   @Column(length = 500, nullable = false)
+=======
+
+  @Column(name = "preview_image_url")
+>>>>>>> 8cc1e9675e2b35d4a6f3f0c5ec19c80b56b75161
   private String previewImageUrl;
 
   @Column(name = "is_user_like", nullable = false)
@@ -52,4 +61,11 @@ public class Bookmark extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Visibility visibility;
 
+  public void like() {
+    this.isUserLike = true;
+  }
+
+  public void deleteLike() {
+    this.isUserLike = false;
+  }
 }
