@@ -9,4 +9,6 @@ public interface MemberService {
 
   Member save(String username);
 
+  Member findById(Long id);
+
 }
