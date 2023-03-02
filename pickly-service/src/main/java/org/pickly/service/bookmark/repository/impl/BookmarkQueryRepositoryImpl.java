@@ -29,13 +29,13 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return queryFactory
         .selectFrom(bookmark)
         .where(
-            gtCursorId(cursorId),
+            ltCursorId(cursorId),
             eqMemberId(memberId),
             eqCategoryId(categoryId),
             eqIsUserLike(isUserLike),
             eqIsUserRead(isUserRead)
         )
-        .orderBy(bookmark.createdAt.asc())
+        .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
         .fetch();
   }
@@ -81,11 +81,11 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return bookmark.isUserLike.eq(isUserLike);
   }
 
-  private BooleanExpression gtCursorId(final Long cursorId) {
+  private BooleanExpression ltCursorId(final Long cursorId) {
     if (cursorId == null) {
       return null;
     }
-    return bookmark.id.gt(cursorId);
+    return bookmark.id.lt(cursorId);
   }
 
 }

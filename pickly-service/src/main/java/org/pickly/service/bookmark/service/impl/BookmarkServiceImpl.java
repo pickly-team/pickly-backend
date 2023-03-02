@@ -1,16 +1,15 @@
 package org.pickly.service.bookmark.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
+import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
@@ -87,7 +86,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   private <T> List<T> makeBookmarkRes(final List<T> contents, final int size) {
     List<T> resultList = new ArrayList<>(contents);
     resultList.remove(size - LAST_ITEM);
-    Collections.reverse(resultList);
+//    Collections.reverse(resultList);
     return resultList;
   }
 
