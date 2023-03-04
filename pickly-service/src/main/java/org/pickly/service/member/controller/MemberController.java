@@ -29,7 +29,7 @@ public class MemberController {
   @Operation(summary = "Update my profile")
   public void updateMyProfile(
       // TODO: Replace with member ID from JWT or that from any other authentication method
-      @RequestParam(value = "member_id")
+      @RequestParam
       @Schema(description = "Member ID (should be replaced later on)", example = "1")
       Long memberId,
 
