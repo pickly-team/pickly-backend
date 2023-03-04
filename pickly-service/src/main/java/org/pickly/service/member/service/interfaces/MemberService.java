@@ -12,5 +12,5 @@ public interface MemberService {
 
   Member findById(Long id);
 
-  MemberProfileDTO findProfileByNickname(String nickname);
+  MemberProfileDTO findProfileByMemberId(Long memberId);
 }

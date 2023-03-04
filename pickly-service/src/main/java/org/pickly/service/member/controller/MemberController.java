@@ -41,15 +41,15 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/{nickname}")
+  @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
   public ResponseEntity<MemberProfileRes> getMemberProfile(
       @PathVariable
-      @Schema(description = "Member nickname", example = "pickly")
-      String nickname
+      @Schema(description = "Member ID", example = "1")
+      Long memberId
   ) {
     MemberProfileRes response = memberMapper.toResponse(
-        memberService.findProfileByNickname(nickname)
+        memberService.findProfileByMemberId(memberId)
     );
     return ResponseEntity.ok(response);
   }
