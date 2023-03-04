@@ -86,7 +86,6 @@ public class BookmarkServiceImpl implements BookmarkService {
   private <T> List<T> makeBookmarkRes(final List<T> contents, final int size) {
     List<T> resultList = new ArrayList<>(contents);
     resultList.remove(size - LAST_ITEM);
-//    Collections.reverse(resultList);
     return resultList;
   }
 
