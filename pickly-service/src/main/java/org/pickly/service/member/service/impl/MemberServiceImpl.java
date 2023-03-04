@@ -18,6 +18,11 @@ public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
   private final MemberMapper memberMapper;
 
+  private Member findMemberById(Long memberId) {
+    return memberRepository.findById(memberId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+  }
+
   @Override
   public void existsById(Long memberId) {
     if (!memberRepository.existsById(memberId)) {
@@ -27,8 +32,7 @@ public class MemberServiceImpl implements MemberService {
 
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
-    Member member = memberRepository.findById(memberId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+    Member member = findMemberById(memberId);
 
     member.updateProfile(
         request.getName(),
@@ -40,8 +44,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   @Transactional(readOnly = true)
   public MemberProfileDTO findProfileByMemberId(Long memberId) {
-    Member member = memberRepository.findById(memberId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+    Member member = findMemberById(memberId);
 
     return memberMapper.toMemberProfileDTO(member);
   }
