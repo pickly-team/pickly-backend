@@ -28,7 +28,7 @@ public class BookmarkPreviewItemDTO {
   private Boolean isUserLike;
 
   @Schema(description = "유저가 읽은 북마크인지?", example = "false")
-  private Boolean isUserRead;
+  private Boolean readByUser;
 
   @Schema(description = "북마크에 달린 댓글 수", example = "5")
   private Long commentCnt;
@@ -47,7 +47,7 @@ public class BookmarkPreviewItemDTO {
         .url(bookmark.getUrl())
         .previewImageUrl(bookmark.getPreviewImageUrl())
         .isUserLike(bookmark.getIsUserLike())
-        .isUserRead(bookmark.getIsUserRead())
+        .readByUser(bookmark.getReadByUser())
         .commentCnt(commentCnt)
         .createdDate(bookmark.getCreatedAt().toLocalDate())
         .build();

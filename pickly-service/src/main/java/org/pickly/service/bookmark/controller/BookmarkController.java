@@ -79,12 +79,12 @@ public class BookmarkController {
       @Parameter(name = "categoryId", description = "카테고리 ID 값. 필터링 필요 없으면 Null", example = "1")
       @RequestParam(required = false) final Long categoryId,
 
-      @Parameter(name = "isUserRead", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
-      @RequestParam(required = false) final Boolean isUserRead,
+      @Parameter(name = "readByUser", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
+      @RequestParam(required = false) final Boolean readByUser,
 
       @Parameter @RequestBody PageRequest pageRequest
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, isUserRead);
+    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser);
   }
 
   // TODO : 멤버 아이디를 토큰에서 가져오도록 수정

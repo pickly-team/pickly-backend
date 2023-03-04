@@ -19,6 +19,6 @@ public interface BookmarkService {
   PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(PageRequest pageRequest, Long memberId);
 
   PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(PageRequest pageRequest, Long memberId,
-      Long categoryId, Boolean isUserRead);
+      Long categoryId, Boolean readByUser);
 
 }

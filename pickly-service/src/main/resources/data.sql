@@ -11,7 +11,7 @@ VALUES
     (1, false, '프론트엔드', '😳');
 
 INSERT INTO bookmark
-(category_id, member_id, url, title, preview_image_url, is_user_like, is_user_read, visibility)
+(category_id, member_id, url, title, preview_image_url, is_user_like, read_by_user, visibility)
 VALUES
     (1, 1, 'https://naver.com', '스프링 쌈싸먹기', null, false, false, 'SCOPE_PUBLIC'),
     (2, 1, 'https://google.com', '리액트 쌈싸먹기', null, true, true, 'SCOPE_PRIVATE'),

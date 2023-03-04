@@ -48,11 +48,11 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Override
   public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(
       final PageRequest pageRequest, final Long memberId, final Long categoryId,
-      final Boolean isUserRead
+      final Boolean readByUser
   ) {
     memberService.existsById(memberId);
     List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
-        categoryId, null, isUserRead);
+        categoryId, null, readByUser);
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);

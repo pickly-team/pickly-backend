@@ -22,7 +22,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   @Override
   public List<Bookmark> findBookmarks(
       PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike,
-      Boolean isUserRead
+      Boolean readByUser
   ) {
     Long cursorId = pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
@@ -33,7 +33,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqMemberId(memberId),
             eqCategoryId(categoryId),
             eqIsUserLike(isUserLike),
-            eqIsUserRead(isUserRead)
+            eqReadByUser(readByUser)
         )
         .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
@@ -66,11 +66,11 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return bookmark.category.id.eq(categoryId);
   }
 
-  private BooleanExpression eqIsUserRead(final Boolean isUserRead) {
-    if (isUserRead == null) {
+  private BooleanExpression eqReadByUser(final Boolean readByUser) {
+    if (readByUser == null) {
       return null;
     }
-    return bookmark.isUserRead.eq(isUserRead);
+    return bookmark.readByUser.eq(readByUser);
   }
 
 
