@@ -5,10 +5,8 @@ import org.pickly.service.member.entity.Member;
 
 public interface MemberService {
 
-  List<Member> getMembers();
-
-  Member save(String username);
-
   void existsById(Long memberId);
+
+  Member findById(Long id);
 
 }
