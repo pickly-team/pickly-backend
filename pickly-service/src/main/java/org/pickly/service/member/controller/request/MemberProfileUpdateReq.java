@@ -9,7 +9,12 @@ import lombok.Getter;
 @Schema(description = "Member profile update request")
 public class MemberProfileUpdateReq {
 
+  @Schema(description = "member name", example = "John Doe")
   private String name;
+
+  @Schema(description = "member nickname", example = "johndoe")
   private String nickname;
+
+  @Schema(description = "member profile emoji", example = "👨🏻‍💻")
   private String profileEmoji;
 }
