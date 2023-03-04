@@ -10,6 +10,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
   # schema.sql, data.sql 사용 여부
   sql:
     init:
