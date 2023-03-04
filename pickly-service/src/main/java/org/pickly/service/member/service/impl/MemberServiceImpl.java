@@ -39,8 +39,8 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional(readOnly = true)
-  public MemberProfileDTO findProfileByNickname(String nickname) {
-    Member member = memberRepository.findOneByNickname(nickname)
+  public MemberProfileDTO findProfileByMemberId(Long memberId) {
+    Member member = memberRepository.findById(memberId)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
 
     return memberMapper.toMemberProfileDTO(member);
