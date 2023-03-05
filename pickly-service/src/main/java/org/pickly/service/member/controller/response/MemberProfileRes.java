@@ -17,4 +17,5 @@ public class MemberProfileRes {
 
   @Schema(description = "member profile emoji", example = "👨🏻‍💻")
   private String profileEmoji;
+
 }
