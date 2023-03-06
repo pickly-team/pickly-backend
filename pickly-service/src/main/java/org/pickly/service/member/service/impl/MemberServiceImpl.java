@@ -25,6 +25,18 @@ public class MemberServiceImpl implements MemberService {
     }
   }
 
+  @Override
+  @Transactional
+  public void changePassword(
+      Long memberId,
+      String currentPassword,
+      String newPassword
+  ) {
+    Member member = findById(memberId);
+
+    member.changePassword(currentPassword, newPassword);
+  }
+
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
     Member member = findById(memberId);

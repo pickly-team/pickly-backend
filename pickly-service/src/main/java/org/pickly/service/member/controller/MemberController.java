@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.member.common.MemberMapper;
+import org.pickly.service.member.controller.request.MemberChangePasswordReq;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -28,6 +29,22 @@ public class MemberController {
 
   private final MemberService memberService;
   private final MemberMapper memberMapper;
+
+  @PutMapping("/password")
+  @Operation(summary = "Change password")
+  public void changePassword(
+      // TODO: Replace with member ID from JWT or that from any other authentication method
+      @RequestParam
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID (should be replaced later on)", example = "1")
+      Long memberId,
+
+      @RequestBody
+      @Valid
+      MemberChangePasswordReq request
+  ) {
+    memberService.changePassword(memberId, request.getCurrentPassword(), request.getNewPassword());
+  }
 
   @PutMapping("/me")
   @Operation(summary = "Update my profile")

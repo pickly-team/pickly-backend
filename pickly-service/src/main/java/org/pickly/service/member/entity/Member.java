@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.pickly.common.error.exception.InvalidValueException;
 import org.pickly.service.common.utils.base.BaseEntity;
 
 @Entity
@@ -44,5 +45,15 @@ public class Member extends BaseEntity {
     this.name = name;
     this.nickname = nickname;
     this.profileEmoji = profileEmoji;
+  }
+
+  public void changePassword(String currentPassword, String newPassword) {
+    if (!password.isMatched(currentPassword)) {
+      throw new InvalidValueException("현재 비밀번호가 일치하지 않습니다.");
+    }
+    if (password.isMatched(newPassword)) {
+      throw new InvalidValueException("현재 비밀번호와 동일합니다.");
+    }
+    password.update(newPassword);
   }
 }

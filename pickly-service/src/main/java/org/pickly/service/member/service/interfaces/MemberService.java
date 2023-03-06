@@ -8,6 +8,8 @@ public interface MemberService {
 
   void existsById(Long memberId);
 
+  void changePassword(Long memberId, String currentPassword, String newPassword);
+
   void updateMyProfile(Long memberId, MemberProfileUpdateDTO request);
 
   Member findById(Long id);

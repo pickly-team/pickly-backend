@@ -1,6 +1,8 @@
 package org.pickly.service.member.service
 
 import org.junit.jupiter.api.BeforeEach
+import org.pickly.common.error.exception.InvalidValueException
+import org.pickly.service.member.MemberFactory
 import org.pickly.service.member.entity.Member
 import org.pickly.service.member.entity.Password
 import org.pickly.service.member.repository.interfaces.MemberRepository
@@ -14,6 +16,8 @@ import spock.lang.Specification
 @SpringBootTest
 @AutoConfigureMockMvc
 class MemberServiceSpec extends Specification {
+
+    private final MemberFactory memberFactory = new MemberFactory()
 
     @Autowired
     private MemberService memberService
@@ -71,5 +75,41 @@ class MemberServiceSpec extends Specification {
         found.name == "수정"
         found.nickname == "수정"
         found.profileEmoji == "👎"
+    }
+
+    def "비밀번호 변경 - 성공"() {
+        given:
+        var member = memberFactory.testMember()
+        memberRepository.save(member)
+
+        when:
+        memberService.changePassword(member.id, "nobodyKnows123", "test")
+
+        then:
+        noExceptionThrown()
+    }
+
+    def "비밀번호 변경 - 기존 비밀번호를 틀린 경우 예외 발생"() {
+        given:
+        var member = memberFactory.testMember()
+        memberRepository.save(member)
+
+        when:
+        memberService.changePassword(member.id, "test", "test")
+
+        then:
+        thrown InvalidValueException
+    }
+
+    def "비밀번호 변경 - 기존 비밀번호가 새로운 비밀번호와 같은 경우 예외 발생"() {
+        given:
+        var member = memberFactory.testMember()
+        memberRepository.save(member)
+
+        when:
+        memberService.changePassword(member.id, "nobodyKnows123", "nobodyKnows123")
+
+        then:
+        thrown InvalidValueException
     }
 }
