@@ -6,7 +6,6 @@ import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
-import org.pickly.service.member.service.dto.MemberInfoDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -41,17 +40,10 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional(readOnly = true)
-  public MemberProfileDTO findProfileByMemberId(Long memberId) {
-    Member member = findById(memberId);
-
-    return memberMapper.toMemberProfileDTO(member);
-  }
-
-  @Override
-  public MemberInfoDTO findInfoByMemberId(Long memberId, Long loginId) {
+  public MemberProfileDTO findProfileByMemberId(final Long memberId, final Long loginId) {
     Member member = findById(memberId);
     Boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
-    return memberMapper.toMemberInfoDTO(member, isFollowing);
+    return memberMapper.toMemberProfileDTO(member, isFollowing);
   }
 
   @Override
