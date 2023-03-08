@@ -7,10 +7,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class MemberProfileDTO {
+public class MemberInfoDTO {
 
   private Long id;
-  private String name;
   private String nickname;
   private String profileEmoji;
   private Boolean isFollowing;

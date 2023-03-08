@@ -12,5 +12,6 @@ public interface MemberService {
 
   Member findById(Long id);
 
-  MemberProfileDTO findProfileByMemberId(Long memberId);
+  MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
+
 }

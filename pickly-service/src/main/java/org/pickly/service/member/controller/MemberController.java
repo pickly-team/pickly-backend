@@ -1,6 +1,7 @@
 package org.pickly.service.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -51,10 +52,14 @@ public class MemberController {
       @PathVariable
       @Positive(message = "유저 ID는 양수입니다.")
       @Schema(description = "Member ID", example = "1")
-      Long memberId
+      Long memberId,
+
+      @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
   ) {
     return memberMapper.toResponse(
-        memberService.findProfileByMemberId(memberId)
+        memberService.findProfileByMemberId(memberId, loginId)
     );
   }
+
 }

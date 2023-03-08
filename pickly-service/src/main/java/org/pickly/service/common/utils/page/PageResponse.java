@@ -19,5 +19,10 @@ public class PageResponse<T> {
     return contentSize > pageSize;
   }
 
+  public PageResponse(final int contentSize, final int pageSize, final List<T> contents) {
+    this.hasNext = makeHasNext(contentSize, pageSize);
+    this.contents = contents;
+  }
+
 }
 

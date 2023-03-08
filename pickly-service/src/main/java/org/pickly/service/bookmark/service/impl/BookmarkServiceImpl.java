@@ -9,6 +9,7 @@ import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
+import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
@@ -41,18 +42,18 @@ public class BookmarkServiceImpl implements BookmarkService {
       final Long memberId) {
     memberService.existsById(memberId);
     List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(pageRequest, memberId, null,
-        USER_LIKE, null);
+        USER_LIKE, null, null);
     return makeResponse(pageRequest.getPageSize(), memberLikes);
   }
 
   @Override
   public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(
       final PageRequest pageRequest, final Long memberId, final Long categoryId,
-      final Boolean readByUser
+      final Boolean readByUser, final Visibility visibility
   ) {
     memberService.existsById(memberId);
     List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
-        categoryId, null, readByUser);
+        categoryId, null, readByUser, visibility);
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
@@ -63,30 +64,30 @@ public class BookmarkServiceImpl implements BookmarkService {
     return bookmarks.stream().map(mapper).toList();
   }
 
-  private PageResponse<BookmarkItemDTO> makeResponse(
-      final int pageSize, final List<Bookmark> bookmarks) {
+  private PageResponse<BookmarkItemDTO> makeResponse(final int pageSize, List<Bookmark> bookmarks) {
     int contentSize = bookmarks.size();
-    boolean hasNext = PageResponse.makeHasNext(contentSize, pageSize);
-    List<BookmarkItemDTO> contents = makeBookmarkRes(
-        mapToDtoList(bookmarks, BookmarkItemDTO::from), contentSize);
-    return new PageResponse<>(hasNext, contents);
+    bookmarks = removeElement(bookmarks, contentSize, pageSize);
+    List<BookmarkItemDTO> contents = mapToDtoList(bookmarks, BookmarkItemDTO::from);
+    return new PageResponse<>(contentSize, pageSize, contents);
   }
 
   private PageResponse<BookmarkPreviewItemDTO> makeResponse(
-      final int pageSize, final List<Bookmark> bookmarks, final Map<Long, Long> commentCntMap) {
+      final int pageSize, List<Bookmark> bookmarks, final Map<Long, Long> commentCntMap) {
     int contentSize = bookmarks.size();
-    boolean hasNext = PageResponse.makeHasNext(contentSize, pageSize);
-    List<BookmarkPreviewItemDTO> contents = makeBookmarkRes(
-        mapToDtoList(bookmarks,
-            b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId()))),
-        contentSize);
-    return new PageResponse<>(hasNext, contents);
+    bookmarks = removeElement(bookmarks, contentSize, pageSize);
+    List<BookmarkPreviewItemDTO> contents = mapToDtoList(bookmarks,
+        b -> BookmarkPreviewItemDTO.from(b, commentCntMap.get(b.getId())));
+    return new PageResponse<>(contentSize, pageSize, contents);
   }
 
-  private <T> List<T> makeBookmarkRes(final List<T> contents, final int size) {
-    List<T> resultList = new ArrayList<>(contents);
-    resultList.remove(size - LAST_ITEM);
-    return resultList;
+  private List<Bookmark> removeElement(final List<Bookmark> bookmarkList, final int size,
+      final int pageSize) {
+    if (size - LAST_ITEM >= pageSize) {
+      List<Bookmark> resultList = new ArrayList<>(bookmarkList);
+      resultList.remove(size - LAST_ITEM);
+      return resultList;
+    }
+    return bookmarkList;
   }
 
   @Override

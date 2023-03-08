@@ -2,6 +2,7 @@ package org.pickly.service.member.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
+  private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
 
   @Override
@@ -38,10 +40,10 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional(readOnly = true)
-  public MemberProfileDTO findProfileByMemberId(Long memberId) {
+  public MemberProfileDTO findProfileByMemberId(final Long memberId, final Long loginId) {
     Member member = findById(memberId);
-
-    return memberMapper.toMemberProfileDTO(member);
+    Boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
+    return memberMapper.toMemberProfileDTO(member, isFollowing);
   }
 
   @Override

@@ -1,8 +1,10 @@
 package org.pickly.service.member.common;
 
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.member.controller.response.MemberInfoRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.service.dto.MemberInfoDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.springframework.stereotype.Component;
@@ -11,7 +13,22 @@ import org.springframework.stereotype.Component;
 public class MemberMapper {
 
   public MemberProfileRes toResponse(MemberProfileDTO dto) {
-    return new MemberProfileRes(dto.getName(), dto.getNickname(), dto.getProfileEmoji());
+    return MemberProfileRes.builder()
+        .id(dto.getId())
+        .name(dto.getName())
+        .nickname(dto.getNickname())
+        .profileEmoji(dto.getProfileEmoji())
+        .isFollowing(dto.getIsFollowing())
+        .build();
+  }
+
+  public MemberInfoRes toMemberInfoRes(MemberInfoDTO dto) {
+    return MemberInfoRes.builder()
+        .id(dto.getId())
+        .nickname(dto.getNickname())
+        .profileEmoji(dto.getProfileEmoji())
+        .isFollowing(dto.getIsFollowing())
+        .build();
   }
 
   public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
@@ -20,7 +37,23 @@ public class MemberMapper {
     );
   }
 
-  public MemberProfileDTO toMemberProfileDTO(Member member) {
-    return new MemberProfileDTO(member.getName(), member.getNickname(), member.getProfileEmoji());
+  public MemberProfileDTO toMemberProfileDTO(Member member, Boolean isFollowing) {
+    return MemberProfileDTO.builder()
+        .id(member.getId())
+        .name(member.getName())
+        .nickname(member.getNickname())
+        .profileEmoji(member.getProfileEmoji())
+        .isFollowing(isFollowing)
+        .build();
   }
+
+  public MemberInfoDTO toMemberInfoDTO(Member member, Boolean isFollowing) {
+    return MemberInfoDTO.builder()
+        .id(member.getId())
+        .nickname(member.getNickname())
+        .profileEmoji(member.getProfileEmoji())
+        .isFollowing(isFollowing)
+        .build();
+  }
+
 }

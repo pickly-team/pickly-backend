@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
+import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
@@ -82,9 +83,12 @@ public class BookmarkController {
       @Parameter(name = "readByUser", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
       @RequestParam(required = false) final Boolean readByUser,
 
+      @Parameter(name = "visibility", description = "북마크 공개 범위", example = "SCOPE_PUBLIC")
+      @RequestParam(required = false) final Visibility visibility,
+
       @Parameter @RequestBody PageRequest pageRequest
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser);
+    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser, visibility);
   }
 
   // TODO : 멤버 아이디를 토큰에서 가져오도록 수정

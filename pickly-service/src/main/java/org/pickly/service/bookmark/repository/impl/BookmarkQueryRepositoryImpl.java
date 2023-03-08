@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.bookmark.entity.Bookmark;
+import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   @Override
   public List<Bookmark> findBookmarks(
       PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike,
-      Boolean readByUser
+      Boolean readByUser, Visibility visibility
   ) {
     Long cursorId = pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
@@ -33,7 +34,8 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqMemberId(memberId),
             eqCategoryId(categoryId),
             eqIsUserLike(isUserLike),
-            eqReadByUser(readByUser)
+            eqReadByUser(readByUser),
+            eqVisibility(visibility)
         )
         .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
@@ -79,6 +81,13 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
       return null;
     }
     return bookmark.isUserLike.eq(isUserLike);
+  }
+
+  private BooleanExpression eqVisibility(final Visibility visibility) {
+    if (visibility == null) {
+      return null;
+    }
+    return bookmark.visibility.eq(visibility);
   }
 
   private BooleanExpression ltCursorId(final Long cursorId) {
