@@ -39,7 +39,7 @@ public class CommentController {
 
       @Valid @RequestBody CommentCreateReq request
   ) {
-    CommentDTO dto = commentService.create(bookmarkId, memberId, request);
+    CommentDTO dto = commentService.create(bookmarkId, memberId, commentMapper.toCreateDTO(request));
     return commentMapper.toResponse(dto);
   }
 
