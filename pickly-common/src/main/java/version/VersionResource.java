@@ -9,7 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface VersionResource {
 
-  String media() default "application/vnd.pickly.resource";
+  // 인터페이스 내, static final은 생략 가능 ( static final의 형대로 들어가게 되어짐 )
+  String VERSION_RESOURCE = "application/vnd.pickly.resource";
+
+  String media() default VERSION_RESOURCE;
 
   String from() default "";
 
