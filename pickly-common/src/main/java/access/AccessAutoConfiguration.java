@@ -3,7 +3,6 @@ package access;
 import jakarta.servlet.Servlet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import version.CustomRequestMappingHandlerMapping;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
+import version.CustomRequestMappingHandlerMapping;
 
 @Configuration
 @ConditionalOnProperty(
@@ -31,10 +31,13 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @ConditionalOnClass({Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class})
 @ConditionalOnMissingBean({WebMvcAutoConfiguration.class})
 @AutoConfigureBefore({WebMvcAutoConfiguration.class})
-@RequiredArgsConstructor
 public class AccessAutoConfiguration {
 
 
+  /*
+   * AccessAutoConfiguration이 선언된 interceptor를 injection 받기 위해 이너클래스로 선언
+   * TODO : 내부 구현로직 한번 더 파보면서 공부하면 큰 도움될듯
+   */
   @Configuration
   @RequiredArgsConstructor
   public static class ApiAccessConfig extends WebMvcConfigurationSupport {
