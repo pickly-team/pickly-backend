@@ -6,7 +6,7 @@ import org.pickly.service.comment.service.dto.CommentDTO;
 
 public interface CommentService {
 
-  void create(Long bookmarkId, Long memberId, CommentCreateReq request);
+  CommentDTO create(Long bookmarkId, Long memberId, CommentCreateReq request);
 
   List<CommentDTO> findByBookmark(Long bookmarkId);
 

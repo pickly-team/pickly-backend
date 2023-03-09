@@ -29,7 +29,7 @@ public class CommentController {
 
   @PostMapping("/bookmarks/{bookmarkId}/comment")
   @Operation(summary = "특정 Bookmark에 Comment 추가")
-  public void create(
+  public CommentRes create(
       @Parameter(name = "bookmarkId", description = "댓글을 추가할 Bookmark ID 값", example = "1", required = true)
       @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId,
 
@@ -39,7 +39,8 @@ public class CommentController {
 
       @Valid @RequestBody CommentCreateReq request
   ) {
-    commentService.create(bookmarkId, memberId, request);
+    CommentDTO dto = commentService.create(bookmarkId, memberId, request);
+    return commentMapper.toResponse(dto);
   }
 
   @GetMapping("/bookmarks/{bookmarkId}/comments")
@@ -48,6 +49,7 @@ public class CommentController {
       @Parameter(name = "bookmarkId", description = "Bookmark ID 값", example = "1", required = true)
       @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId
   ) {
+
     List<CommentDTO> dtoList = commentService.findByBookmark(bookmarkId);
     return dtoList.stream()
         .map(commentMapper::toResponse)
