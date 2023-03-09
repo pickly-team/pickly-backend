@@ -27,11 +27,12 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public void create(final Long bookmarkId, final Long memberId, final CommentCreateReq request) {
+  public CommentDTO create(final Long bookmarkId, final Long memberId, final CommentCreateReq request) {
     Bookmark bookmark = bookmarkService.findById(bookmarkId);
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);
+    return commentMapper.toDTO(comment);
   }
 
   @Override
