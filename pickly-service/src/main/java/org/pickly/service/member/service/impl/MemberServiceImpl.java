@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional
-  public MemberStatusDTO switchToHardMode(Long memberId) {
+  public MemberStatusDTO setHardMode(Long memberId) {
     Member member = findById(memberId);
 
     member.setHardMode(isNormalOrHardMode(member));

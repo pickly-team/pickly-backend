@@ -15,5 +15,5 @@ public interface MemberService {
 
   MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
 
-  MemberStatusDTO switchToHardMode(Long memberId);
+  MemberStatusDTO setHardMode(Long memberId);
 }

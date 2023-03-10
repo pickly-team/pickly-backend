@@ -75,7 +75,7 @@ public class MemberController {
       Long memberId
   ) {
     return memberMapper.toMemberStatusRes(
-        memberService.switchToHardMode(memberId)
+        memberService.setHardMode(memberId)
     );
   }
 
