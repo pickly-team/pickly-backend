@@ -27,7 +27,7 @@ VALUES
     (2, 1, false, '너 아직도 백엔드하니?');
 
 INSERT INTO friend
-(followee_id, follower_id)
+(followee_id, follower_id, notification_enabled)
 VALUES
-    (1, 2),
-    (2, 1);
+    (1, 2, false),
+    (2, 1, true);
