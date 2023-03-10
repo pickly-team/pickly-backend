@@ -25,7 +25,7 @@ public class FriendServiceImpl implements FriendService {
     checkAlreadyFriend(followerId, memberId);
     Member follower = memberService.findById(followerId);
     Member followee = memberService.findById(memberId);
-    friendRepository.save(new Friend(followee, follower));
+    friendRepository.save(new Friend(followee, follower, true));
   }
 
   @Override
@@ -40,4 +40,25 @@ public class FriendServiceImpl implements FriendService {
     }
   }
 
+  private Friend checkIsFollower(final Long followerId) {
+    Friend friend = friendRepository.findById(followerId)
+        .orElseThrow(() -> new BusinessException("팔로우 중이 아닙니다", ErrorCode.INVALID_INPUT_VALUE));
+    return friend;
+  }
+
+  @Override
+  @Transactional
+  public void enableNotification(Long followerId, Long memberId) {
+    Friend follower = checkIsFollower(followerId);
+
+    follower.enableNotification();
+  }
+
+  @Override
+  @Transactional
+  public void disableNotification(Long followerId, Long memberId) {
+    Friend follower = checkIsFollower(followerId);
+
+    follower.disableNotification();
+  }
 }
