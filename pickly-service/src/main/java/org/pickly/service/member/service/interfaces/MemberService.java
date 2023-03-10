@@ -1,12 +1,17 @@
 package org.pickly.service.member.service.interfaces;
 
-import java.util.List;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.service.dto.MemberProfileDTO;
+import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 
 public interface MemberService {
 
-  List<Member> getMembers();
+  void existsById(Long memberId);
 
-  Member save(String username);
+  void updateMyProfile(Long memberId, MemberProfileUpdateDTO request);
+
+  Member findById(Long id);
+
+  MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
 
 }
