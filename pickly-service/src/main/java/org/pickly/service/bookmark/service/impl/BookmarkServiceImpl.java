@@ -1,5 +1,6 @@
 package org.pickly.service.bookmark.service.impl;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,24 +13,25 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
+import org.pickly.service.bookmark.service.dto.BookmarkListDeleteDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class BookmarkServiceImpl implements BookmarkService {
 
+  private static final boolean USER_LIKE = true;
+  private static final int LAST_ITEM = 1;
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
   private final MemberService memberService;
-
-  private static final boolean USER_LIKE = true;
-  private static final int LAST_ITEM = 1;
 
   @Override
   public Long countMemberLikes(final Long memberId) {
@@ -114,4 +116,17 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmark.deleteLike();
   }
 
+  @Override
+  @Transactional
+  public void deleteBookmark(Long bookmarkId) {
+    Bookmark oneById = bookmarkRepository.findOneById(bookmarkId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+    bookmarkRepository.delete(oneById);
+  }
+
+  @Override
+  @Transactional
+  public void deleteBookmarks(BookmarkListDeleteDTO request) {
+    request.getBookmarkIds().forEach(this::deleteBookmark);
+  }
 }
