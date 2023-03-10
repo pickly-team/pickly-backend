@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberProfileRes;
+import org.pickly.service.member.controller.response.MemberStatusRes;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,4 +63,16 @@ public class MemberController {
     );
   }
 
+  @PutMapping("/status")
+  @Operation(summary = "HardMode Status ON / OFF")
+  public MemberStatusRes switchToHardMode(
+      @RequestParam
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId
+  ) {
+    return memberMapper.toMemberStatusRes(
+        memberService.switchToHardMode(memberId)
+    );
+  }
 }
