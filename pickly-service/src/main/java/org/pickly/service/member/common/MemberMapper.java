@@ -3,10 +3,12 @@ package org.pickly.service.member.common;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberInfoRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
+import org.pickly.service.member.controller.response.MemberStatusRes;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.dto.MemberInfoDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberStatusDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,6 +31,10 @@ public class MemberMapper {
         .profileEmoji(dto.getProfileEmoji())
         .isFollowing(dto.getIsFollowing())
         .build();
+  }
+
+  public MemberStatusRes toMemberStatusRes(MemberStatusDTO statusDTO) {
+    return new MemberStatusRes(statusDTO.getIsSuccess());
   }
 
   public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
@@ -54,6 +60,10 @@ public class MemberMapper {
         .profileEmoji(member.getProfileEmoji())
         .isFollowing(isFollowing)
         .build();
+  }
+
+  public MemberStatusDTO toMemberStatusDTO(Boolean isHardMode) {
+    return new MemberStatusDTO(isHardMode);
   }
 
 }
