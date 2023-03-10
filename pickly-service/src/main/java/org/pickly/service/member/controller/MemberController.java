@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.common.version.ApiVersion;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberProfileRes;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import version.VersionResource;
 
 @RestController
 @RequiredArgsConstructor
@@ -65,6 +67,7 @@ public class MemberController {
 
   @PutMapping("/status")
   @Operation(summary = "HardMode Status ON / OFF")
+  @VersionResource(from = ApiVersion.V1)
   public MemberStatusRes switchToHardMode(
       @RequestParam
       @Positive(message = "유저 ID는 양수입니다.")
