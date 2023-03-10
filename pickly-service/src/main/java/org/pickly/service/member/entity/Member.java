@@ -45,4 +45,8 @@ public class Member extends BaseEntity {
     this.nickname = nickname;
     this.profileEmoji = profileEmoji;
   }
+
+  public void updateisHardMode(Boolean isHardMode) {
+    this.isHardMode = isHardMode;
+  }
 }
