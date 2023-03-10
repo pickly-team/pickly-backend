@@ -51,6 +51,7 @@ public class MemberController {
 
   @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
+  @VersionResource(from = ApiVersion.V1)
   public MemberProfileRes getMemberProfile(
       @PathVariable
       @Positive(message = "유저 ID는 양수입니다.")
@@ -67,7 +68,6 @@ public class MemberController {
 
   @PutMapping("/status")
   @Operation(summary = "HardMode Status ON / OFF")
-  @VersionResource(from = ApiVersion.V1)
   public MemberStatusRes switchToHardMode(
       @RequestParam
       @Positive(message = "유저 ID는 양수입니다.")
@@ -78,4 +78,5 @@ public class MemberController {
         memberService.switchToHardMode(memberId)
     );
   }
+
 }
