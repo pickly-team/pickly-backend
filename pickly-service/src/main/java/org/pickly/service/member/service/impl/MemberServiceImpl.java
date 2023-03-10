@@ -8,6 +8,7 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberStatusDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +48,24 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  @Transactional
+  public MemberStatusDTO switchToHardMode(Long memberId) {
+    Member member = findById(memberId);
+
+    member.updateisHardMode(isNormalOrHardMode(member));
+    Member resultMember = memberRepository.save(member);
+
+    return memberMapper.toMemberStatusDTO(resultMember.getIsHardMode());
+  }
+
+  @Override
   public Member findById(Long id) {
     return memberRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
+  }
+
+  private Boolean isNormalOrHardMode(Member member) {
+    return !member.getIsHardMode().equals(true);
   }
 
 }

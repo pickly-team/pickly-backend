@@ -3,6 +3,7 @@ package org.pickly.service.member.service.interfaces;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberStatusDTO;
 
 public interface MemberService {
 
@@ -14,4 +15,5 @@ public interface MemberService {
 
   MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
 
+  MemberStatusDTO switchToHardMode(Long memberId);
 }
