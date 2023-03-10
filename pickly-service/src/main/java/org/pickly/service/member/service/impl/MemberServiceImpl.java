@@ -52,10 +52,9 @@ public class MemberServiceImpl implements MemberService {
   public MemberStatusDTO switchToHardMode(Long memberId) {
     Member member = findById(memberId);
 
-    member.updateisHardMode(isNormalOrHardMode(member));
-    Member resultMember = memberRepository.save(member);
+    member.setHardMode(isNormalOrHardMode(member));
 
-    return memberMapper.toMemberStatusDTO(resultMember.getIsHardMode());
+    return memberMapper.toMemberStatusDTO(member.getIsHardMode());
   }
 
   @Override
