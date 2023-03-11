@@ -1,5 +1,6 @@
 package org.pickly.service.friend.repository.interfaces;
 
+import java.util.Optional;
 import org.pickly.service.friend.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
   boolean existsByFollowerIdAndFolloweeId(Long followerId, Long followeeId);
 
-  Friend findByFollowerIdAndFolloweeId(Long followerId, Long followeeId);
+  Optional<Friend> findByFollowerIdAndFolloweeId(Long followerId, Long followeeId);
 
 }
