@@ -2,7 +2,7 @@ package org.pickly.service.friend.service
 
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.common.error.exception.BusinessException
-import org.pickly.service.friend.FriendFactory
+import org.pickly.common.error.exception.ErrorCode
 import org.pickly.service.friend.repository.interfaces.FriendRepository
 import org.pickly.service.friend.service.interfaces.FriendService
 import org.pickly.service.member.entity.Member
@@ -16,7 +16,6 @@ import spock.lang.Specification
 @SpringBootTest
 @AutoConfigureMockMvc
 class FriendServiceSpec extends Specification {
-    private FriendFactory friendFactory = new FriendFactory()
 
     @Autowired
     private FriendService friendService
@@ -57,15 +56,15 @@ class FriendServiceSpec extends Specification {
                 .isHardMode(false)
                 .build());
 
-        friendService.follow(follower.getId(), followee.getId())
-        var friend = friendFactory.testFriend(follower, followee)
+        friendService.follow(follower.id, followee.id)
 
         when:
-        friendService.enableNotification(friend.follower.id, friend.followee.id)
+        friendService.enableNotification(follower.id, followee.id)
 
         then:
-        def testFriend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId())
-        testFriend.notificationEnabled == true
+        def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
+                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+        friend.notificationEnabled == true
     }
 
     def "팔로우 중일 경우 > 알림 설정 OFF"() {
@@ -91,15 +90,15 @@ class FriendServiceSpec extends Specification {
                 .isHardMode(false)
                 .build());
 
-        friendService.follow(follower.getId(), followee.getId())
-        var friend = friendFactory.testFriend(follower, followee)
+        friendService.follow(follower.id, followee.id)
 
         when:
-        friendService.disableNotification(friend.follower.id, friend.followee.id)
+        friendService.disableNotification(follower.id, followee.id)
 
         then:
-        def testFriend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId())
-        testFriend.notificationEnabled == false
+        def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
+                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+        friend.notificationEnabled == false
     }
 
     def "팔로우 중이 아닐 때 > 알림을 끄려고 하면 실패한다."() {
@@ -124,10 +123,9 @@ class FriendServiceSpec extends Specification {
                 .isHardMode(false)
                 .build());
 
-        var friend = friendFactory.testFriend(follower, followee)
 
         when:
-        friendService.disableNotification(friend.follower.id, friend.followee.id)
+        friendService.disableNotification(follower.id, followee.id)
 
         then:
         thrown BusinessException
