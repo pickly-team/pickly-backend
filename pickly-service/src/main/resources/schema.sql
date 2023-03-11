@@ -138,6 +138,7 @@ create table friend
         constraint friend_member_id_fk_2
         references member
         on update cascade on delete cascade,
+    notification_enabled boolean        not null,
     created_at  timestamp default now() not null,
     updated_at  timestamp,
     deleted_at  timestamp

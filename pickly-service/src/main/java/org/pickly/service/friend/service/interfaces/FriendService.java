@@ -6,4 +6,7 @@ public interface FriendService {
 
   void unfollow(Long followerId, Long memberId);
 
+  void enableNotification(Long followerId, Long memberId);
+
+  void disableNotification(Long followerId, Long memberId);
 }

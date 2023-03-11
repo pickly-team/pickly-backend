@@ -44,4 +44,28 @@ public class FriendController {
     friendService.unfollow(followerId, memberId);
   }
 
+  // TODO: JWT 개발 후 followerId를 삭제 예정
+  @PostMapping("/members/{followerId}/following/{memberId}/notification")
+  @Operation(summary = "특정 멤버 알림 설정")
+  public void enableNotification(
+      @Parameter(name = "followerId", description = "언팔로우 요청을 보낸 유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long followerId,
+
+      @Parameter(name = "memberId", description = "언팔로우 할 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    friendService.enableNotification(followerId, memberId);
+  }
+
+  @DeleteMapping("/members/{followerId}/following/{memberId}/notification")
+  @Operation(summary = "특정 멤버 알림 해제")
+  public void disableNotification(
+      @Parameter(name = "followerId", description = "언팔로우 요청을 보낸 유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long followerId,
+
+      @Parameter(name = "memberId", description = "언팔로우 할 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    friendService.disableNotification(followerId, memberId);
+  }
 }
