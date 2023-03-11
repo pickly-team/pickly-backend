@@ -42,10 +42,10 @@ public class FriendServiceImpl implements FriendService {
   }
 
   private Friend checkIsFollower(final Long followerId, final Long memberId) {
-    Friend friend = friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId);
-    if (friend == null) {
-      throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
-    }
+    Friend friend = friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId)
+        .orElseThrow(
+            () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+
     return friend;
   }
 
