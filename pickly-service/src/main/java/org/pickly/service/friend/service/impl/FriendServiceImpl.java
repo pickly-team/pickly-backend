@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class FriendServiceImpl implements FriendService {
 
+  static final boolean FRIEND_ALERT_ON = true;
   private final FriendRepository friendRepository;
   private final MemberService memberService;
 
@@ -25,7 +26,7 @@ public class FriendServiceImpl implements FriendService {
     checkAlreadyFriend(followerId, memberId);
     Member follower = memberService.findById(followerId);
     Member followee = memberService.findById(memberId);
-    friendRepository.save(new Friend(followee, follower, true));
+    friendRepository.save(new Friend(followee, follower, FRIEND_ALERT_ON));
   }
 
   @Override
@@ -40,25 +41,25 @@ public class FriendServiceImpl implements FriendService {
     }
   }
 
-  private Friend checkIsFollower(final Long followerId) {
-    Friend friend = friendRepository.findById(followerId)
-        .orElseThrow(() -> new BusinessException("팔로우 중이 아닙니다", ErrorCode.INVALID_INPUT_VALUE));
+  private Friend checkIsFollower(final Long followerId, final Long memberId) {
+    Friend friend = friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId);
+    if (friend == null) {
+      throw new BusinessException(ErrorCode.ENTITY_NOT_FOUND);
+    }
     return friend;
   }
 
   @Override
   @Transactional
   public void enableNotification(Long followerId, Long memberId) {
-    Friend follower = checkIsFollower(followerId);
-
+    Friend follower = checkIsFollower(followerId, memberId);
     follower.enableNotification();
   }
 
   @Override
   @Transactional
   public void disableNotification(Long followerId, Long memberId) {
-    Friend follower = checkIsFollower(followerId);
-
+    Friend follower = checkIsFollower(followerId, memberId);
     follower.disableNotification();
   }
 }
