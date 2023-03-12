@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.pickly.service.common.version.ApiVersion;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.member.controller.request.MemberStatusReq;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MemberStatusRes;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import version.VersionResource;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,7 +50,6 @@ public class MemberController {
 
   @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
-  @VersionResource(from = ApiVersion.V1)
   public MemberProfileRes getMemberProfile(
       @PathVariable
       @Positive(message = "유저 ID는 양수입니다.")
@@ -72,11 +70,14 @@ public class MemberController {
       @RequestParam
       @Positive(message = "유저 ID는 양수입니다.")
       @Schema(description = "Member ID", example = "1")
-      Long memberId
+      Long memberId,
+
+      @RequestBody
+      @Valid
+      MemberStatusReq request
   ) {
     return memberMapper.toMemberStatusRes(
-        memberService.setHardMode(memberId)
-    );
+        memberService.setHardMode(memberId, memberMapper.toStatusDTO(request)));
   }
 
 }
