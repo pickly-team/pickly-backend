@@ -8,6 +8,8 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberStatusReqDTO;
+import org.pickly.service.member.service.dto.MemberStatusResDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,15 @@ public class MemberServiceImpl implements MemberService {
     Member member = findById(memberId);
     Boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
     return memberMapper.toMemberProfileDTO(member, isFollowing);
+  }
+
+  @Override
+  @Transactional
+  public MemberStatusResDTO setHardMode(Long memberId, MemberStatusReqDTO request) {
+    Member member = findById(memberId);
+
+    member.setHardMode(request.getIsHardMode());
+    return memberMapper.toMemberStatusDTO(member.isHardMode(member.getIsHardMode()));
   }
 
   @Override
