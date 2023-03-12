@@ -1,11 +1,9 @@
 package org.pickly.service.common.utils.base;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 public class RequestUtil {
 
   public static String getAuthorizationToken(String header) {
-    if (!header.startsWith("Bearer ")) {
+    if (header == null || !header.startsWith("Bearer ")) {
       throw new IllegalArgumentException("Invalid authorization header");
     }
 
