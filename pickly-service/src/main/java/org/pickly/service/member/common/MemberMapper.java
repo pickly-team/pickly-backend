@@ -59,7 +59,8 @@ public class MemberMapper {
   }
 
 
-  public MemberRegisterDto toMemberRegisterDTO(String username, Boolean isHardMode, String email, String name, String nickname){
+  public MemberRegisterDto toMemberRegisterDTO(String username, Boolean isHardMode, String email,
+      String name, String nickname) {
     return new MemberRegisterDto(
         username,
         isHardMode,
@@ -68,7 +69,9 @@ public class MemberMapper {
         nickname
     );
   }
-  public MemberRegisterRes toMemberRegisterResponse(MemberRegisterDto dto){
-    return new MemberRegisterRes(dto.getUsername(), dto.getIsHardMode(), dto.getEmail(), dto.getName(), dto.getNickname());
+
+  public MemberRegisterRes toMemberRegisterResponse(MemberRegisterDto dto) {
+    return new MemberRegisterRes(dto.getUsername(), dto.getIsHardMode(), dto.getEmail(),
+        dto.getName(), dto.getNickname());
   }
 }

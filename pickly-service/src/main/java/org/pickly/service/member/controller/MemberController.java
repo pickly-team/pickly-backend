@@ -76,18 +76,20 @@ public class MemberController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<MemberRegisterRes> register(@RequestHeader("Authorization") String authorization){
+  public ResponseEntity<MemberRegisterRes> register(
+      @RequestHeader("Authorization") String authorization) {
     FirebaseToken decodedToken;
 
-    try{
+    try {
       String token = RequestUtil.getAuthorizationToken(authorization);
       decodedToken = firebaseAuth.verifyIdToken(token);
-    }catch (IllegalArgumentException | FirebaseAuthException e){
+    } catch (IllegalArgumentException | FirebaseAuthException e) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
           "{\"code\":\"INVALID_TOKEN\", \"message\":\"" + e.getMessage() + "\"}");
     }
 
-    MemberRegisterDto memberRegisterDto = memberMapper.toMemberRegisterDTO(decodedToken.getUid(), false,
+    MemberRegisterDto memberRegisterDto = memberMapper.toMemberRegisterDTO(decodedToken.getUid(),
+        false,
         decodedToken.getEmail(), decodedToken.getName(), "");
 
     memberService.register(memberRegisterDto);

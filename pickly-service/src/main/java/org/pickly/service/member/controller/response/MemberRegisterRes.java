@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Schema(description = "Member register response")
 public class MemberRegisterRes {
+
   private String username;
   private Boolean isHardMode;
   private String email;

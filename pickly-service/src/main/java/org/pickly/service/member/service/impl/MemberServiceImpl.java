@@ -39,7 +39,8 @@ public class MemberServiceImpl implements MemberService {
         request.getProfileEmoji()
     );
   }
-  public void register(MemberRegisterDto request){
+
+  public void register(MemberRegisterDto request) {
     Member member = Member.builder()
         .username(request.getUsername())
         .isHardMode(request.getIsHardMode())
