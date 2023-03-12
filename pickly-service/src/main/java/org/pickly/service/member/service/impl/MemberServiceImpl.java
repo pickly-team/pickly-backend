@@ -7,6 +7,7 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,5 +39,19 @@ public class MemberServiceImpl implements MemberService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
 
     return memberMapper.toMemberProfileDTO(member);
+  }
+
+  @Override
+  @Transactional
+  public void register(MemberRegisterDto request){
+    Member member = Member.builder()
+        .username(request.getUsername())
+        .isHardMode(request.getIsHardMode())
+        .email(request.getEmail())
+        .name(request.getName())
+        .nickname(request.getNickname())
+        .build();
+
+    memberRepository.save(member);
   }
 }
