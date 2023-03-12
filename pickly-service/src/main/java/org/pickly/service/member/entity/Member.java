@@ -49,4 +49,8 @@ public class Member extends BaseEntity {
   public void setHardMode(Boolean isHardMode) {
     this.isHardMode = isHardMode;
   }
+
+  public MemberMode isHardMode(Boolean isHardMode) {
+    return isHardMode ? MemberMode.HARD : MemberMode.NORMAL;
+  }
 }
