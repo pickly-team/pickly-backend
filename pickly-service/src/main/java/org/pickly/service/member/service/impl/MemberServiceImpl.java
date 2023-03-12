@@ -8,8 +8,8 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.member.service.dto.MemberStatusRequestDTO;
-import org.pickly.service.member.service.dto.MemberStatusResponseDTO;
+import org.pickly.service.member.service.dto.MemberStatusReqDTO;
+import org.pickly.service.member.service.dto.MemberStatusResDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional
-  public MemberStatusResponseDTO setHardMode(Long memberId, MemberStatusRequestDTO request) {
+  public MemberStatusResDTO setHardMode(Long memberId, MemberStatusReqDTO request) {
     Member member = findById(memberId);
 
     member.setHardMode(request.getIsHardMode());

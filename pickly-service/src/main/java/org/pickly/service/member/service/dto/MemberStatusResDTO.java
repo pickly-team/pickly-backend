@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MemberStatusRequestDTO {
+public class MemberStatusResDTO {
 
-  private Boolean isHardMode;
+  private String userMode;
+
 }
