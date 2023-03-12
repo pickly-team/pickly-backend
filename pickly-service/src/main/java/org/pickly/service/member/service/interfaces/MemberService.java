@@ -5,7 +5,7 @@ import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 
-public interface MemberService{
+public interface MemberService {
 
   void existsById(Long memberId);
 
