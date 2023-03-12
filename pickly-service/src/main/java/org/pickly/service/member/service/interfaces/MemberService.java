@@ -1,14 +1,19 @@
 package org.pickly.service.member.service.interfaces;
 
+import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 
 public interface MemberService{
 
+  void existsById(Long memberId);
+
   void updateMyProfile(Long memberId, MemberProfileUpdateDTO request);
 
-  MemberProfileDTO findProfileByNickname(String nickname);
+  Member findById(Long id);
+
+  MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
 
   void register(MemberRegisterDto request);
 }

@@ -4,8 +4,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.base.RequestUtil;
 import org.pickly.service.member.common.MemberMapper;
@@ -16,6 +19,7 @@ import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,39 +34,45 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
+@Validated
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
 
   private final MemberService memberService;
   private final MemberMapper memberMapper;
+
   private final FirebaseAuth firebaseAuth;
 
   @PutMapping("/me")
   @Operation(summary = "Update my profile")
-  public ResponseEntity<Void> updateMyProfile(
+  public void updateMyProfile(
       // TODO: Replace with member ID from JWT or that from any other authentication method
-      @RequestParam(value = "member_id")
+      @RequestParam
+      @Positive(message = "유저 ID는 양수입니다.")
       @Schema(description = "Member ID (should be replaced later on)", example = "1")
       Long memberId,
 
       @RequestBody
+      @Valid
       MemberProfileUpdateReq request
   ) {
     memberService.updateMyProfile(memberId, memberMapper.toDTO(request));
-    return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/{nickname}")
+  @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
-  public ResponseEntity<MemberProfileRes> getMemberProfile(
+  public MemberProfileRes getMemberProfile(
       @PathVariable
-      @Schema(description = "Member nickname", example = "pickly")
-      String nickname
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId,
+
+      @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
   ) {
-    MemberProfileRes response = memberMapper.toResponse(
-        memberService.findProfileByNickname(nickname)
+    return memberMapper.toResponse(
+        memberService.findProfileByMemberId(memberId, loginId)
     );
-    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/register")

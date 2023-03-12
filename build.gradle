@@ -71,12 +71,10 @@ subprojects {
         testAnnotationProcessor "org.projectlombok:lombok"
 
         // querydsl
-        implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}"
+        implementation "com.querydsl:querydsl-jpa:${QUERYDSL_VERSION}:jakarta"
         annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-
         annotationProcessor "jakarta.annotation:jakarta.annotation-api"
         annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
 
         // spock
         testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
