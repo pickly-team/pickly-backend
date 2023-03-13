@@ -30,4 +30,5 @@ public interface BookmarkService {
   void deleteBookmarks(BookmarkListDeleteDTO request);
 
   Bookmark create(BookmarkCreateReq dto);
+
 }

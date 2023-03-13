@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Visibility {
 
-  c("나만 보기"),
+  SCOPE_PRIVATE("나만 보기"),
   SCOPE_PUBLIC("전체 공개");
 
   private String description;

@@ -97,7 +97,8 @@ public class BookmarkController {
 
       @Parameter @RequestBody PageRequest pageRequest
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser, visibility);
+    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser,
+        visibility);
   }
 
   @Operation(summary = "특정 북마크 삭제")
@@ -155,11 +156,20 @@ public class BookmarkController {
   public ResponseEntity<BookmarkRes> create(
       @Valid @RequestBody BookmarkCreateReq dto
   ) {
-      Bookmark entity = bookmarkService.create(dto);
-      BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+    Bookmark entity = bookmarkService.create(dto);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
 
-      return ResponseEntity
-          .status(HttpStatus.CREATED)
-          .body(response);
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(response);
+  }
+
+  @GetMapping("/bookmarks/{bookmarkId}")
+  public ResponseEntity<BookmarkRes> getBookmarkById(
+      @PathVariable Long bookmarkId
+  ) {
+    Bookmark entity = bookmarkService.findById(bookmarkId);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+    return ResponseEntity.ok(response);
   }
 }

@@ -26,6 +26,6 @@ public class BookmarkRes {
 
   private Boolean readByUser;
 
-  private Visibility visibility;
+  private String visibility;
 }
 

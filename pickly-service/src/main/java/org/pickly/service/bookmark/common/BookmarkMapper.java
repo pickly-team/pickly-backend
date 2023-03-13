@@ -27,7 +27,7 @@ public class BookmarkMapper {
         .previewImageUrl(request.getPreviewImageUrl())
         .isUserLike(request.getIsUserLike())
         .readByUser(request.getReadByUser())
-        .visibility(request.getVisibility())
+        .visibility(request.getVisibility().getDescription())
         .build();
   }
 }
