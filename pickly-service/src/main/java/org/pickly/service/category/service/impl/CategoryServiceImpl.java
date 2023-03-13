@@ -50,4 +50,10 @@ public class CategoryServiceImpl implements CategoryService {
     List<Category> categories = categoryRepository.findAllByCategoryId(ids);
     categories.stream().forEach(category -> category.delete());
   }
+
+  @Override
+  public Integer getCategoryCntByMember(Long memberId) {
+    Integer cnt = categoryRepository.getCategoryCntByMemberId(memberId);
+    return cnt == null ? 0 : cnt;
+  }
 }

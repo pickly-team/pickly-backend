@@ -12,6 +12,7 @@ import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.service.interfaces.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,5 +65,13 @@ public class CategoryController {
         return ResponseEntity
             .noContent()
             .build();
+    }
+
+    @GetMapping("/cnt")
+    public ResponseEntity<Integer> getCategoryCntByMember(
+        @RequestParam(value = "memberId") Long memberId
+    ) {
+        Integer response = categoryService.getCategoryCntByMember(memberId);
+        return ResponseEntity.ok(response);
     }
 }
