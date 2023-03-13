@@ -1,5 +1,7 @@
 package org.pickly.service.bookmark.service.interfaces;
 
+import java.util.Optional;
+import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -27,4 +29,5 @@ public interface BookmarkService {
 
   void deleteBookmarks(BookmarkListDeleteDTO request);
 
+  Bookmark create(BookmarkCreateReq dto);
 }

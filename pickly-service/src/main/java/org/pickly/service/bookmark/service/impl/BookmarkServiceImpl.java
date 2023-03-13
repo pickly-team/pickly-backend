@@ -4,9 +4,11 @@ package org.pickly.service.bookmark.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -15,9 +17,15 @@ import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
+import org.pickly.service.category.entity.Category;
+import org.pickly.service.category.exception.custom.CategoryNotFoundException;
+import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.exception.custom.MemberNotFoundException;
+import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +40,8 @@ public class BookmarkServiceImpl implements BookmarkService {
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
   private final MemberService memberService;
+  private final CategoryRepository categoryRepository;
+  private final MemberRepository memberRepository;
 
   @Override
   public Long countMemberLikes(final Long memberId) {
@@ -122,5 +132,19 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional
   public void deleteBookmarks(BookmarkListDeleteDTO request) {
     request.getBookmarkIds().forEach(this::deleteBookmark);
+  }
+
+  @Override
+  public Bookmark create(BookmarkCreateReq dto) {
+
+    Category category = categoryRepository.findById(dto.getCategoryId())
+            .orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryId()));
+    Member member = memberRepository.findById(dto.getMemberId())
+        .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
+    Bookmark entity = new Bookmark(category, member, dto.getUrl(),
+        dto.getTitle(), dto.getPreviewImageUrl(), dto.getIsUserLike(),
+        dto.getReadByUser(), dto.getVisibility());
+
+    return bookmarkRepository.save(entity);
   }
 }
