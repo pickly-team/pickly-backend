@@ -52,6 +52,11 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  public List<Category> getCategoryByMember(Long memberId) {
+    return categoryRepository.findAllByMemberId(memberId);
+  }
+
+  @Override
   public Integer getCategoryCntByMember(Long memberId) {
     Integer cnt = categoryRepository.getCategoryCntByMemberId(memberId);
     return cnt == null ? 0 : cnt;

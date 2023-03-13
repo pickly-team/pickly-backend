@@ -3,6 +3,7 @@ package org.pickly.service.category.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.dto.controller.CategoryMapper;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
@@ -65,6 +66,17 @@ public class CategoryController {
         return ResponseEntity
             .noContent()
             .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryResponseDTO>> getCategoryByMember(
+        @RequestParam(value = "memberId") Long memberId
+    ) {
+        List<CategoryResponseDTO> response = categoryService.getCategoryByMember(memberId)
+            .stream()
+            .map(category -> CategoryMapper.toResponseDTO(category))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/cnt")

@@ -18,6 +18,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c WHERE c.id IN :ids")
     List<Category> findAllByCategoryId(@Param("ids") List<Long> ids);
 
+    List<Category> findAllByMemberId(Long memberId);
     @Query(value = "SELECT COUNT(c.id) FROM Category c "
         + "WHERE c.member_id = :member_id AND c.deleted_at IS NULL "
         + "GROUP BY c.member_id", nativeQuery = true)

@@ -6,13 +6,16 @@ import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.entity.Category;
 
 public interface CategoryService {
-  Category create(CategoryRequestDTO request);
 
-  Category update(Long categoryId, CategoryUpdateRequestDTO dto);
+    Category create(CategoryRequestDTO request);
 
-  void delete(Long categoryId);
+    Category update(Long categoryId, CategoryUpdateRequestDTO dto);
 
-  void deleteAllByCategoryId(List<Long> ids);
+    void delete(Long categoryId);
 
-  Integer getCategoryCntByMember(Long memberId);
+    void deleteAllByCategoryId(List<Long> ids);
+
+    List<Category> getCategoryByMember(Long memberId);
+
+    Integer getCategoryCntByMember(Long memberId);
 }
