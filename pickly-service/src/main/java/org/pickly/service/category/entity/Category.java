@@ -35,4 +35,14 @@ public class Category extends BaseEntity {
   @Column(columnDefinition = "text")
   private String emoji;
 
+  public Category(Member member, String name) {
+    this(member, false, name, "🥒");
+  }
+
+
+  public void update(Boolean isAutoDeleteMode, String name, String emoji) {
+    this.isAutoDeleteMode = isAutoDeleteMode;
+    this.name = name;
+    this.emoji = emoji;
+  }
 }
