@@ -148,5 +148,10 @@ public class BookmarkServiceImpl implements BookmarkService {
     return bookmarkRepository.save(entity);
   }
 
+  @Override
+  public List<Bookmark> findBookmarkByCategoryId(Long categoryId) {
+    return bookmarkRepository.findBookmarkByCategoryId(categoryId);
+  }
+
 
 }

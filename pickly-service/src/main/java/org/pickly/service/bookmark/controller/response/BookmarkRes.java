@@ -3,6 +3,7 @@ package org.pickly.service.bookmark.controller.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import org.pickly.service.bookmark.entity.Visibility;
 
 @Getter
@@ -10,10 +11,13 @@ import org.pickly.service.bookmark.entity.Visibility;
 @AllArgsConstructor
 public class BookmarkRes {
 
+  @NonNull
   private Long id;
 
+  @NonNull
   private Long categoryId;
 
+  @NonNull
   private Long memberId;
 
   private String url;

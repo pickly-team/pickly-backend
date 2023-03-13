@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
@@ -170,6 +172,18 @@ public class BookmarkController {
   ) {
     Bookmark entity = bookmarkService.findById(bookmarkId);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/categories/{categoryId}/bookmarks")
+  public ResponseEntity<List<BookmarkRes>> getBookmarkByCategoryId(
+      @PathVariable Long categoryId
+  ) {
+
+    List<BookmarkRes> response = bookmarkService.findBookmarkByCategoryId(categoryId)
+        .stream()
+        .map(bookmark -> bookmarkMapper.entityToResponseDto(bookmark))
+        .collect(Collectors.toList());
     return ResponseEntity.ok(response);
   }
 }

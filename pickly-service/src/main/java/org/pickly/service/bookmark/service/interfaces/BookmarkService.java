@@ -1,5 +1,7 @@
 package org.pickly.service.bookmark.service.interfaces;
 
+import java.awt.print.Book;
+import java.util.List;
 import java.util.Optional;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
@@ -31,4 +33,5 @@ public interface BookmarkService {
 
   Bookmark create(BookmarkCreateReq dto);
 
+  List<Bookmark> findBookmarkByCategoryId(Long categoryId);
 }
