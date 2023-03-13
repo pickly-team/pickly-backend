@@ -36,4 +36,23 @@ public class CategoryController {
   ) {
     categoryService.create(memberId, request);
   }
+
+  @Operation(summary = "카테고리 수정 요청")
+  @PutMapping("/members/{memberId}/categories/{categoryId}")
+  public void updateCategory(
+      @PathVariable
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId,
+
+      @PathVariable
+      @Positive(message = "카테고리 ID는 양수입니다.")
+      @Schema(description = "Category ID", example = "1")
+      Long categoryId,
+
+      @Valid @RequestBody
+      CategoryUpdateReq request
+  ) {
+    categoryService.update(memberId, categoryId, request);
+  }
 }

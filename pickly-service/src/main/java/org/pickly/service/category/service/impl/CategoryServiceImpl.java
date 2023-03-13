@@ -25,4 +25,12 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = new Category(memberService.findById(memberId), request.getCategoryName());
     categoryRepository.save(category);
   }
+
+  @Transactional
+  public void update(Long memberId, Long categoryId, CategoryUpdateReq request) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(() -> new EntityNotFoundException("요청하신 카테고리가 존재하지 않습니다."));
+
+    category.update(request.getIsAutoDeleteMode(), request.getCategoryName(), request.getEmoji());
+  }
 }

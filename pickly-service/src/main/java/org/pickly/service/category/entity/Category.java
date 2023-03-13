@@ -39,7 +39,6 @@ public class Category extends BaseEntity {
     this(member, false, name, "🥒");
   }
 
-
   public void update(Boolean isAutoDeleteMode, String name, String emoji) {
     this.isAutoDeleteMode = isAutoDeleteMode;
     this.name = name;
