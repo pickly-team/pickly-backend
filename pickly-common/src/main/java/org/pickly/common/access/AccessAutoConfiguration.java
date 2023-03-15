@@ -1,8 +1,9 @@
-package access;
+package org.pickly.common.access;
 
 import jakarta.servlet.Servlet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.pickly.common.version.CustomRequestMappingHandlerMapping;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,7 +21,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
-import version.CustomRequestMappingHandlerMapping;
 
 @Configuration
 @ConditionalOnProperty(
@@ -32,7 +32,6 @@ import version.CustomRequestMappingHandlerMapping;
 @ConditionalOnMissingBean({WebMvcAutoConfiguration.class})
 @AutoConfigureBefore({WebMvcAutoConfiguration.class})
 public class AccessAutoConfiguration {
-
 
   /*
    * AccessAutoConfiguration이 선언된 interceptor를 injection 받기 위해 이너클래스로 선언
@@ -74,7 +73,5 @@ public class AccessAutoConfiguration {
     protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
       configurer.defaultContentType(MediaType.APPLICATION_JSON);
     }
-
   }
-
 }

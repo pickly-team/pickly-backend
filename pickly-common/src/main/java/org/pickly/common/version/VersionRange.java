@@ -1,4 +1,4 @@
-package version;
+package org.pickly.common.version;
 
 import java.util.HashSet;
 import java.util.Set;

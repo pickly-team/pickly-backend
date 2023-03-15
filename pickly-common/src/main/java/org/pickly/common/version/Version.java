@@ -1,4 +1,4 @@
-package version;
+package org.pickly.common.version;
 
 /*
  * 버전 정보를 표현하기 위한 클래스
