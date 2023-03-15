@@ -33,12 +33,11 @@ public class Friend extends BaseEntity {
   @Column(name = "notification_enabled", nullable = false)
   private Boolean notificationEnabled;
 
-  public void enableNotification() {
-    this.notificationEnabled = true;
+  public void updateNotificationEnabled(Boolean notificationEnabled) {
+    this.notificationEnabled = notificationEnabled;
   }
 
-  public void disableNotification() {
-    this.notificationEnabled = false;
+  public FriendNotificationMode getNotificationMode() {
+    return notificationEnabled ? FriendNotificationMode.ALLOWED : FriendNotificationMode.NOT_ALLOWED;
   }
-
 }
