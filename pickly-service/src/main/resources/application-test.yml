@@ -9,8 +9,8 @@ spring:
     database: postgresql
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
   # schema.sql, data.sql 사용 여부
   sql:
     init:
@@ -31,3 +31,9 @@ logging:
 pickly:
   enabled:
     access: true
+
+# p6spy
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
