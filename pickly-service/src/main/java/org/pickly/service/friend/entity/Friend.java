@@ -38,6 +38,7 @@ public class Friend extends BaseEntity {
   }
 
   public FriendNotificationMode getNotificationMode() {
-    return notificationEnabled ? FriendNotificationMode.ALLOWED : FriendNotificationMode.NOT_ALLOWED;
+    return notificationEnabled ? FriendNotificationMode.ALLOWED
+        : FriendNotificationMode.NOT_ALLOWED;
   }
 }
