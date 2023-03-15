@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.pickly.common.error.exception.BusinessException
 import org.pickly.common.error.exception.ErrorCode
 import org.pickly.service.friend.repository.interfaces.FriendRepository
+import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO
 import org.pickly.service.friend.service.interfaces.FriendService
 import org.pickly.service.member.entity.Member
 import org.pickly.service.member.entity.Password
@@ -57,9 +58,10 @@ class FriendServiceSpec extends Specification {
                 .build());
 
         friendService.follow(follower.id, followee.id)
+        var REQUEST = new FriendNotificationStatusReqDTO(followee.id, true)
 
         when:
-        friendService.enableNotification(follower.id, followee.id)
+        friendService.setNotification(follower.id, REQUEST)
 
         then:
         def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
@@ -91,9 +93,11 @@ class FriendServiceSpec extends Specification {
                 .build());
 
         friendService.follow(follower.id, followee.id)
+        var REQUEST = new FriendNotificationStatusReqDTO(followee.id, false)
+
 
         when:
-        friendService.disableNotification(follower.id, followee.id)
+        friendService.setNotification(follower.id, REQUEST)
 
         then:
         def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
@@ -123,9 +127,11 @@ class FriendServiceSpec extends Specification {
                 .isHardMode(false)
                 .build());
 
+        var REQUEST = new FriendNotificationStatusReqDTO(followee.id, true)
+
 
         when:
-        friendService.disableNotification(follower.id, followee.id)
+        friendService.setNotification(follower.id, REQUEST)
 
         then:
         thrown BusinessException
