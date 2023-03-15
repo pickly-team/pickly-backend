@@ -55,7 +55,8 @@ public class FriendServiceImpl implements FriendService {
 
   @Override
   @Transactional
-  public FriendNotificationStatusResDTO setNotification(Long followerId, FriendNotificationStatusReqDTO request) {
+  public FriendNotificationStatusResDTO setNotification(Long followerId,
+      FriendNotificationStatusReqDTO request) {
     Friend friend = findFollowerById(followerId, request.getMemberId());
     friend.updateNotificationEnabled(request.getIsFollowing());
     return friendMapper.toFriendStatusResDTO(friend.getNotificationMode());

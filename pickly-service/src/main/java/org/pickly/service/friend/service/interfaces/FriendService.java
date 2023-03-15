@@ -9,5 +9,6 @@ public interface FriendService {
 
   void unfollow(Long followerId, Long memberId);
 
-  FriendNotificationStatusResDTO setNotification(Long followerId, FriendNotificationStatusReqDTO request);
+  FriendNotificationStatusResDTO setNotification(Long followerId,
+      FriendNotificationStatusReqDTO request);
 }

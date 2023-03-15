@@ -68,7 +68,8 @@ public class FriendController {
   ) {
     FriendNotificationStatusResDTO friendStatusResDTO = friendService.setNotification(followerId,
         friendMapper.toDTO(memberId, request));
-    return friendMapper.toFriendStatusDTO(friendStatusResDTO.getNotificationMode(friendStatusResDTO.getIsNotificationAllowed()));
+    return friendMapper.toFriendStatusDTO(
+        friendStatusResDTO.getNotificationMode(friendStatusResDTO.getIsNotificationAllowed()));
 
   }
 }
