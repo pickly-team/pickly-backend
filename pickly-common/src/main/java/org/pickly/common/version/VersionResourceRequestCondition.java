@@ -1,4 +1,4 @@
-package version;
+package org.pickly.common.version;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public class VersionResourceRequestCondition extends
   @Override
   public VersionResourceRequestCondition getMatchingCondition(HttpServletRequest request) {
 
-    String accept = Optional.ofNullable(request.getHeader("Accept")).orElse("");
+    String accept = Optional.ofNullable(request.getHeader("version")).orElse("");
     Pattern pattern = Pattern.compile("(.*)-(\\d+\\.\\d+)");
     Matcher matcher = pattern.matcher(accept);
     if (isAcceptMatched(matcher)) {
@@ -140,7 +140,6 @@ public class VersionResourceRequestCondition extends
         return true;
       }
     }
-
     return false;
   }
 
