@@ -8,6 +8,9 @@ import java.util.ArrayDeque;
 import org.hibernate.engine.jdbc.internal.FormatStyle;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * p6spy 설정.
+ */
 @Configuration
 public class P6SpySqlFormatter implements MessageFormattingStrategy {
 
@@ -20,10 +23,12 @@ public class P6SpySqlFormatter implements MessageFormattingStrategy {
   }
 
   @Override
-  public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared,
+  public String formatMessage(int connectionId, String now, long elapsed, String category,
+      String prepared,
       String sql, String url) {
     sql = formatSql(category, sql);
-    return String.format("[%s] | %d ms | %s | %s", category, elapsed, createStack(), formatSql(category, sql));
+    return String.format("[%s] | %d ms | %s | %s", category, elapsed, createStack(),
+        formatSql(category, sql));
   }
 
   private String formatSql(String category, String sql) {
