@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MemberStatusResDTO {
+public class MemberModeDTO {
 
   private String userMode;
 

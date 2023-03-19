@@ -10,8 +10,8 @@ import org.pickly.service.member.entity.MemberMode;
 import org.pickly.service.member.service.dto.MemberInfoDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.member.service.dto.MemberStatusReqDTO;
-import org.pickly.service.member.service.dto.MemberStatusResDTO;
+import org.pickly.service.member.service.dto.MemberStatusDTO;
+import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,7 +36,7 @@ public class MemberMapper {
         .build();
   }
 
-  public MemberStatusRes toMemberStatusRes(MemberStatusResDTO statusDTO) {
+  public MemberStatusRes toMemberStatusRes(MemberModeDTO statusDTO) {
     return new MemberStatusRes(statusDTO.getUserMode());
   }
 
@@ -46,8 +46,8 @@ public class MemberMapper {
     );
   }
 
-  public MemberStatusReqDTO toStatusDTO(MemberStatusReq request) {
-    return new MemberStatusReqDTO(request.getIsHardMode());
+  public MemberStatusDTO toStatusDTO(MemberStatusReq request) {
+    return new MemberStatusDTO(request.getIsHardMode());
   }
 
   public MemberProfileDTO toMemberProfileDTO(Member member, Boolean isFollowing) {
@@ -69,8 +69,8 @@ public class MemberMapper {
         .build();
   }
 
-  public MemberStatusResDTO toMemberStatusDTO(MemberMode isHardMode) {
-    return new MemberStatusResDTO(isHardMode.getDescription());
+  public MemberModeDTO toMemberStatusDTO(MemberMode isHardMode) {
+    return new MemberModeDTO(isHardMode.getDescription());
   }
 
 }
