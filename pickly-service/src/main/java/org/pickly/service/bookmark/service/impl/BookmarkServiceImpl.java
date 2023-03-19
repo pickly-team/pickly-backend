@@ -13,7 +13,8 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
-import org.pickly.service.bookmark.service.dto.BookmarkListDeleteDTO;
+import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
+import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
@@ -60,6 +61,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
   }
+
 
   private <T> List<T> mapToDtoList(final List<Bookmark> bookmarks,
       final Function<Bookmark, T> mapper) {
@@ -116,17 +118,21 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmark.deleteLike();
   }
 
-  @Override
-  @Transactional
-  public void deleteBookmark(Long bookmarkId) {
-    Bookmark oneById = bookmarkRepository.findOneById(bookmarkId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
-    bookmarkRepository.delete(oneById);
-  }
 
   @Override
   @Transactional
-  public void deleteBookmarks(BookmarkListDeleteDTO request) {
-    request.getBookmarkIds().forEach(this::deleteBookmark);
+  public BookmarkDeleteResDTO deleteBookmark(Long bookmarkId) {
+    BookmarkDeleteResDTO bookmarkDeleteReqDTO = new BookmarkDeleteResDTO();
+    bookmarkDeleteReqDTO.setIsDeleted(bookmarkRepository.deleteBookmarkById(bookmarkId));
+    return bookmarkDeleteReqDTO;
+  }
+
+
+  @Override
+  @Transactional
+  public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
+    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
+    bookmarkListDeleteResDTO.setIsDeleted(bookmarkRepository.deleteBookmarksByIds(bookmarkIds));
+    return bookmarkListDeleteResDTO;
   }
 }
