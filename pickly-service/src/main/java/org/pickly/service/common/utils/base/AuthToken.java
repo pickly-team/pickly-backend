@@ -9,13 +9,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 public class AuthToken {
+
   private final FirebaseAuth firebaseAuth;
-  public FirebaseToken getDecodedToken(String token){
+
+  public FirebaseToken getDecodedToken(String token) {
 
     FirebaseToken decodedToken;
 
     try {
-      decodedToken= firebaseAuth.verifyIdToken(token);
+      decodedToken = firebaseAuth.verifyIdToken(token);
       return decodedToken;
     } catch (IllegalArgumentException | FirebaseAuthException e) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
