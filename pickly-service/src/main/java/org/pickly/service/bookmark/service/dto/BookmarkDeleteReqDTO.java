@@ -1,12 +1,11 @@
 package org.pickly.service.bookmark.service.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BookmarkListDeleteDTO {
+public class BookmarkDeleteReqDTO {
 
-  private final List<Long> bookmarkIds;
+  private Long bookmarkId;
 }
