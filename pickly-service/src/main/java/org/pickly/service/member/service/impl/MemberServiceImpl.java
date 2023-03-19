@@ -7,7 +7,6 @@ import org.pickly.service.common.utils.base.AuthToken;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
@@ -44,21 +43,11 @@ public class MemberServiceImpl implements MemberService {
     );
   }
 
+  @Override
+  @Transactional
   public MemberRegisterDto register(String token) {
-    FirebaseToken decodedToken= authToken.getDecodedToken(token);
-
-    //TODO: password nullable한 값으로 변경?
-    Password password = new Password("test123");
-
-    Member member = Member.builder()
-        .username(decodedToken.getUid())
-        .email(decodedToken.getEmail())
-        .name(decodedToken.getName())
-        .nickname("")
-        .isHardMode(false)
-        .password(password)
-        .build();
-
+    FirebaseToken decodedToken = authToken.getDecodedToken(token);
+    Member member = memberMapper.tokenToMember(decodedToken);
     memberRepository.save(member);
     return memberMapper.toMemberRegisterDTO(member);
   }
