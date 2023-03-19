@@ -30,6 +30,9 @@ dependencies {
     // firebase
     implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.0.1'
 
+    // p6spy
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+
     runtimeOnly 'org.postgresql:postgresql:42.5.3'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
