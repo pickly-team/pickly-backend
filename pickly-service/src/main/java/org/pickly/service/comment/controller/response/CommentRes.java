@@ -1,7 +1,6 @@
 package org.pickly.service.comment.controller.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import org.pickly.service.comment.service.dto.CommentDTO;
 
@@ -20,16 +19,15 @@ public class CommentRes {
   @Schema(description = "Comment 내용", example = "가슴이 웅장해지는 글이다..")
   private String content;
 
-  @Schema(description = "Comment 생성일자", example = "2023/01/31 01:23:11")
-  private String createdDateTime;
+  @Schema(description = "Comment 생성일자. Unix timestamp 사용", example = "1678802356")
+  private Long createdTimestamp;
 
   public CommentRes(CommentDTO dto) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     this.id = dto.getId();
     this.member = dto.getMember();
     this.isOwnerComment = dto.getIsOwnerComment();
     this.content = dto.getContent();
-    this.createdDateTime = dto.getCreatedDateTime().format(formatter);
+    this.createdTimestamp = dto.getCreatedTimestamp();
   }
 
 }
