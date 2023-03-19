@@ -1,8 +1,5 @@
 package org.pickly.service.member.controller;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,10 +12,8 @@ import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MemberRegisterRes;
-import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,8 +35,6 @@ public class MemberController {
 
   private final MemberService memberService;
   private final MemberMapper memberMapper;
-
-  private final FirebaseAuth firebaseAuth;
 
   @PutMapping("/me")
   @Operation(summary = "Update my profile")
@@ -79,24 +71,9 @@ public class MemberController {
   @PostMapping("/register")
   public ResponseEntity<MemberRegisterRes> register(
       @RequestHeader("Authorization") String authorization) {
-    FirebaseToken decodedToken;
+    String token = RequestUtil.getAuthorizationToken(authorization);
 
-    try {
-      String token = RequestUtil.getAuthorizationToken(authorization);
-      decodedToken = firebaseAuth.verifyIdToken(token);
-    } catch (IllegalArgumentException | FirebaseAuthException e) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-          "{\"code\":\"INVALID_TOKEN\", \"message\":\"" + e.getMessage() + "\"}");
-    }
-
-    //TODO: password nullable한 값으로 변경?
-    Password password = new Password("test123");
-
-    MemberRegisterDto memberRegisterDto = memberMapper.toMemberRegisterDTO(decodedToken.getUid(),
-        false,
-        decodedToken.getEmail(), decodedToken.getName(), "", password);
-
-    memberService.register(memberRegisterDto);
+    MemberRegisterDto memberRegisterDto = memberService.register(token);
 
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
 

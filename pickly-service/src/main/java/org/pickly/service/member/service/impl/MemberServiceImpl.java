@@ -1,10 +1,13 @@
 package org.pickly.service.member.service.impl;
 
+import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.common.utils.base.AuthToken;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
@@ -20,6 +23,7 @@ public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
+  private final AuthToken authToken;
 
   @Override
   public void existsById(Long memberId) {
@@ -40,17 +44,23 @@ public class MemberServiceImpl implements MemberService {
     );
   }
 
-  public void register(MemberRegisterDto request) {
+  public MemberRegisterDto register(String token) {
+    FirebaseToken decodedToken= authToken.getDecodedToken(token);
+
+    //TODO: password nullable한 값으로 변경?
+    Password password = new Password("test123");
+
     Member member = Member.builder()
-        .username(request.getUsername())
-        .isHardMode(request.getIsHardMode())
-        .email(request.getEmail())
-        .name(request.getName())
-        .nickname(request.getNickname())
-        .password(request.getPassword())
+        .username(decodedToken.getUid())
+        .email(decodedToken.getEmail())
+        .name(decodedToken.getName())
+        .nickname("")
+        .isHardMode(false)
+        .password(password)
         .build();
 
     memberRepository.save(member);
+    return memberMapper.toMemberRegisterDTO(member);
   }
 
   @Override

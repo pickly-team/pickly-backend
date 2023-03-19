@@ -15,5 +15,5 @@ public interface MemberService {
 
   MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
 
-  void register(MemberRegisterDto request);
+  MemberRegisterDto register(String token);
 }
