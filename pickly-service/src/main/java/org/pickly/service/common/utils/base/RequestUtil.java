@@ -11,10 +11,10 @@ public class RequestUtil {
     if (header == null || !header.startsWith(BEARER_PREFIX)) {
       throw new IllegalArgumentException("Invalid authorization header");
     }
-    return RequestUtil.getBearerToken(header);
+    return RequestUtil.getBearerTokenFromHeader(header);
   }
 
-  private static String getBearerToken(String authorization) {
+  private static String getBearerTokenFromHeader(String authorization) {
     String[] parts = authorization.split(" ");
 
     if (parts.length != 2) {
