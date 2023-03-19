@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.service.common.utils.base.AuthToken;
+import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.common.utils.base.RequestUtil;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -22,14 +22,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtFilter extends OncePerRequestFilter {
 
   private final UserDetailsService userDetailsService;
-  private final AuthToken authToken;
+  private final AuthTokenUtil authTokenUtil;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain)
       throws IOException, ServletException {
     String bearerToken = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
-    FirebaseToken decodedToken = authToken.getDecodedToken(bearerToken);
+    FirebaseToken decodedToken = authTokenUtil.getDecodedToken(bearerToken);
 
     //TODO: decodedToken security context에 저장 필요
     filterChain.doFilter(request, response);

@@ -3,7 +3,7 @@ package org.pickly.service.member.service.impl;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
-import org.pickly.service.common.utils.base.AuthToken;
+import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
@@ -22,7 +22,7 @@ public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
-  private final AuthToken authToken;
+  private final AuthTokenUtil authTokenUtil;
 
   @Override
   public void existsById(Long memberId) {
@@ -46,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   @Transactional
   public MemberRegisterDto register(String token) {
-    FirebaseToken decodedToken = authToken.getDecodedToken(token);
+    FirebaseToken decodedToken = authTokenUtil.getDecodedToken(token);
     Member member = memberMapper.tokenToMember(decodedToken);
     memberRepository.save(member);
     return memberMapper.toMemberRegisterDTO(member);

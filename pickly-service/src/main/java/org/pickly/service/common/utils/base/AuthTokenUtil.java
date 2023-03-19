@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
-public class AuthToken {
+public class AuthTokenUtil {
 
   private final FirebaseAuth firebaseAuth;
 
