@@ -72,11 +72,8 @@ public class MemberController {
   public ResponseEntity<MemberRegisterRes> register(
       @RequestHeader("Authorization") String authorization) {
     String token = RequestUtil.getAuthorizationToken(authorization);
-
     MemberRegisterDto memberRegisterDto = memberService.register(token);
-
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
-
     return ResponseEntity.ok(response);
   }
 }
