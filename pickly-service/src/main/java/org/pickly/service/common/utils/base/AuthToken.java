@@ -13,12 +13,8 @@ public class AuthToken {
   private final FirebaseAuth firebaseAuth;
 
   public FirebaseToken getDecodedToken(String token) {
-
-    FirebaseToken decodedToken;
-
     try {
-      decodedToken = firebaseAuth.verifyIdToken(token);
-      return decodedToken;
+      return firebaseAuth.verifyIdToken(token);
     } catch (IllegalArgumentException | FirebaseAuthException e) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
           "{\"code\":\"INVALID_TOKEN\", \"message\":\"" + e.getMessage() + "\"}");
