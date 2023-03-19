@@ -1,11 +1,12 @@
 package org.pickly.service.common.utils.base;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestUtil {
 
   private static final String BEARER_PREFIX = "Bearer";
-
-  private RequestUtil() {
-  }
 
   public static String getAuthorizationToken(String header) {
     if (header == null || !header.startsWith(BEARER_PREFIX)) {
