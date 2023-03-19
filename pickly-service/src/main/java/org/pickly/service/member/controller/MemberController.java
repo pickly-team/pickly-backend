@@ -15,6 +15,7 @@ import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MemberRegisterRes;
+import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.http.HttpStatus;
@@ -88,9 +89,12 @@ public class MemberController {
           "{\"code\":\"INVALID_TOKEN\", \"message\":\"" + e.getMessage() + "\"}");
     }
 
+    //TODO: password nullable한 값으로 변경?
+    Password password = new Password("test123");
+
     MemberRegisterDto memberRegisterDto = memberMapper.toMemberRegisterDTO(decodedToken.getUid(),
         false,
-        decodedToken.getEmail(), decodedToken.getName(), "");
+        decodedToken.getEmail(), decodedToken.getName(), "", password);
 
     memberService.register(memberRegisterDto);
 

@@ -9,14 +9,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.pickly.service.common.utils.base.RequestUtil;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -44,16 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
 
-    try{
-      UserDetails user = userDetailsService.loadUserByUsername(decodedToken.getUid());
-      UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    }catch (NoSuchElementException e){
-      response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-      response.setContentType("application/json");
-      response.getWriter().write("{\"code\":\"USER_NOT_FOUND\"}");
-      return;
-    }
+    //TODO: decodedToken security context에 저장 필요
 
     filterChain.doFilter(request, response);
   }

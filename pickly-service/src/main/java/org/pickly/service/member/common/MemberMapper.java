@@ -5,6 +5,7 @@ import org.pickly.service.member.controller.response.MemberInfoRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MemberRegisterRes;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.service.dto.MemberInfoDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
@@ -60,13 +61,14 @@ public class MemberMapper {
 
 
   public MemberRegisterDto toMemberRegisterDTO(String username, Boolean isHardMode, String email,
-      String name, String nickname) {
+      String name, String nickname, Password password) {
     return new MemberRegisterDto(
         username,
         isHardMode,
         email,
         name,
-        nickname
+        nickname,
+        password
     );
   }
 
