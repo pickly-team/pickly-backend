@@ -6,6 +6,7 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.entity.Comment;
+import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
 
   private final CommentRepository commentRepository;
+  private final CommentQueryRepository commentQueryRepository;
   private final CommentMapper commentMapper;
   private final BookmarkService bookmarkService;
   private final MemberService memberService;
@@ -28,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional
   public CommentDTO create(final Long bookmarkId, final Long memberId, final CommentCreateDTO request) {
-    Bookmark bookmark = bookmarkService.findById(bookmarkId);
+    Bookmark bookmark = bookmarkService.findWithCategoryById(bookmarkId);
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);
@@ -37,8 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public List<CommentDTO> findByBookmark(final Long bookmarkId) {
-    List<Comment> comments = commentRepository.findByBookmark(bookmarkId);
-    return comments.stream().map(commentMapper::toDTO).toList();
+    return commentQueryRepository.findComments(null, bookmarkId);
   }
 
   @Override

@@ -13,6 +13,12 @@ public class CommentRes {
   @Schema(description = "Comment를 추가한 Member 닉네임", example = "피클리마스터")
   private String member;
 
+  @Schema(description = "Comment를 추가한 Bookmark 제목", example = "JS 기초 다루기")
+  private String bookmark;
+
+  @Schema(description = "Comment를 추가한 Bookmark의 Category", example = "TypeScript")
+  private String category;
+
   @Schema(description = "Bookmark의 소유자의 Comment 여부", example = "true")
   private Boolean isOwnerComment;
 
@@ -25,6 +31,8 @@ public class CommentRes {
   public CommentRes(CommentDTO dto) {
     this.id = dto.getId();
     this.member = dto.getMember();
+    this.bookmark = dto.getBookmark();
+    this.category = dto.getCategory();
     this.isOwnerComment = dto.getIsOwnerComment();
     this.content = dto.getContent();
     this.createdTimestamp = dto.getCreatedTimestamp();

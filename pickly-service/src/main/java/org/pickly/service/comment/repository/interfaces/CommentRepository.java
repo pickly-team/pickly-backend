@@ -8,7 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-  @Query("select c from Comment c join fetch c.member where c.bookmark.id = :bookmarkId")
+  @Query("select c from Comment c "
+      + "join fetch c.member m "
+      + "join fetch c.bookmark b "
+      + "join fetch b.category ct "
+      + "where c.bookmark.id = :bookmarkId")
   List<Comment> findByBookmark(@Param("bookmarkId") Long bookmarkId);
 
   Long countAllByMemberId(Long memberId);
