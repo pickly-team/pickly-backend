@@ -14,5 +14,8 @@ public class MemberProfileDTO {
   private String nickname;
   private String profileEmoji;
   private Boolean isFollowing;
+  private Long followersCount;
+  private Long followeesCount;
+  private Long bookmarksCount;
 
 }

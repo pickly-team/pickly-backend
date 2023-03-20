@@ -2,6 +2,7 @@ package org.pickly.service.member.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
@@ -19,6 +20,7 @@ public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
+  private final BookmarkRepository bookmarkRepository;
 
   @Override
   public void existsById(Long memberId) {
@@ -43,7 +45,11 @@ public class MemberServiceImpl implements MemberService {
   public MemberProfileDTO findProfileByMemberId(final Long memberId, final Long loginId) {
     Member member = findById(memberId);
     Boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
-    return memberMapper.toMemberProfileDTO(member, isFollowing);
+    Long followersCount = friendRepository.countByFolloweeId(memberId);
+    Long followeesCount = friendRepository.countByFollowerId(memberId);
+    Long bookmarksCount = bookmarkRepository.countByMemberId(memberId);
+    return memberMapper.toMemberProfileDTO(member, isFollowing, followersCount, followeesCount,
+        bookmarksCount);
   }
 
   @Override

@@ -17,6 +17,9 @@ public class MemberMapper {
         .nickname(dto.getNickname())
         .profileEmoji(dto.getProfileEmoji())
         .isFollowing(dto.getIsFollowing())
+        .followersCount(dto.getFollowersCount())
+        .followeesCount(dto.getFolloweesCount())
+        .bookmarksCount(dto.getBookmarksCount())
         .build();
   }
 
@@ -26,13 +29,17 @@ public class MemberMapper {
     );
   }
 
-  public MemberProfileDTO toMemberProfileDTO(Member member, Boolean isFollowing) {
+  public MemberProfileDTO toMemberProfileDTO(Member member, Boolean isFollowing,
+      Long followersCount, Long followeesCount, Long bookmarksCount) {
     return MemberProfileDTO.builder()
         .id(member.getId())
         .name(member.getName())
         .nickname(member.getNickname())
         .profileEmoji(member.getProfileEmoji())
         .isFollowing(isFollowing)
+        .followersCount(followersCount)
+        .followeesCount(followeesCount)
+        .bookmarksCount(bookmarksCount)
         .build();
   }
 
