@@ -1,4 +1,4 @@
-package org.pickly.service.notification.entity;
+package org.pickly.service.member.notification.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

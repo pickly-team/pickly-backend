@@ -1,10 +1,10 @@
-package org.pickly.service.notification.service.impl;
+package org.pickly.service.member.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
-import org.pickly.service.notification.entity.NotificationStandard;
-import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
-import org.pickly.service.notification.service.interfaces.NotificationStandardService;
+import org.pickly.service.member.notification.service.interfaces.NotificationStandardService;
+import org.pickly.service.member.notification.entity.NotificationStandard;
+import org.pickly.service.member.notification.repository.interfaces.NotificationStandardRepository;
 import org.springframework.stereotype.Service;
 
 @Service
