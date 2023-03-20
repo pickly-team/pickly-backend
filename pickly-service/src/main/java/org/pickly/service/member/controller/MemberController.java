@@ -2,7 +2,10 @@ package org.pickly.service.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -48,6 +51,12 @@ public class MemberController {
 
   @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = {
+              @Content(schema = @Schema(implementation = MemberProfileRes.class))
+          })
+  })
   public MemberProfileRes getMemberProfile(
       @PathVariable
       @Positive(message = "유저 ID는 양수입니다.")
