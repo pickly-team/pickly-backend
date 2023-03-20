@@ -43,6 +43,22 @@ public class CommentController {
     return commentService.countMemberComments(memberId);
   }
 
+  @Operation(summary = "특정 유저의 댓글 전체 조회")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  @GetMapping("/members/{memberId}/comments")
+  public List<CommentRes> findByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    List<CommentDTO> dtoList = commentService.findByMember(memberId);
+    return dtoList.stream()
+        .map(commentMapper::toResponse)
+        .toList();
+  }
+
   @PostMapping("/bookmarks/{bookmarkId}/comment")
   @Operation(summary = "특정 Bookmark에 Comment 추가")
   public CommentRes create(
@@ -65,7 +81,6 @@ public class CommentController {
       @Parameter(name = "bookmarkId", description = "Bookmark ID 값", example = "1", required = true)
       @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId
   ) {
-
     List<CommentDTO> dtoList = commentService.findByBookmark(bookmarkId);
     return dtoList.stream()
         .map(commentMapper::toResponse)

@@ -12,4 +12,6 @@ public interface CommentService {
 
   Long countMemberComments(Long memberId);
 
+  List<CommentDTO> findByMember(Long memberId);
+
 }

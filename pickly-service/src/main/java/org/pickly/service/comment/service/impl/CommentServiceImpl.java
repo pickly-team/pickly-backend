@@ -48,4 +48,9 @@ public class CommentServiceImpl implements CommentService {
     return commentRepository.countAllByMemberId(memberId);
   }
 
+  @Override
+  public List<CommentDTO> findByMember(Long memberId) {
+    return commentQueryRepository.findComments(memberId, null);
+  }
+
 }
