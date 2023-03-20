@@ -13,9 +13,9 @@ spring:
       mode: always
   # postgreSQL local 설정
   datasource:
-    url: jdbc:postgresql://localhost:5432/pickly
-    username: dev
-    password: postgres
+    url: jdbc:postgresql://localhost:5434/pickly_test
+    username: postgres
+    password:
 
 # 로깅 관련
 logging:
