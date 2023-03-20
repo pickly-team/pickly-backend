@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.validation.annotation.Validated;
@@ -68,6 +69,24 @@ public class MemberController {
   ) {
     return memberMapper.toResponse(
         memberService.findProfileByMemberId(memberId, loginId)
+    );
+  }
+
+  @GetMapping("/{memberId}/mode")
+  @Operation(summary = "Get member mode info")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = {
+              @Content(schema = @Schema(implementation = MemberModeRes.class))
+          })
+  })
+  public MemberModeRes getMemberProfile(
+      @PathVariable @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId
+  ) {
+    return memberMapper.toResponse(
+        memberService.findModeByMemberId(memberId)
     );
   }
 
