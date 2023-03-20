@@ -25,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public void existsById(Long memberId) {
-    if (!memberRepository.existsById(memberId)) {
+    if (!memberRepository.existsByIdAndDeletedAtIsNull(memberId)) {
       throw new EntityNotFoundException("존재하지 않는 유저입니다.");
     }
   }
@@ -61,8 +61,14 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public Member findById(Long id) {
-    return memberRepository.findById(id)
+    return memberRepository.findByIdAndDeletedAtIsNull(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
   }
 
+  @Override
+  @Transactional
+  public void deleteMember(Long memberId) {
+    Member member = findById(memberId);
+    member.delete();
+  }
 }

@@ -102,4 +102,25 @@ class MemberServiceSpec extends Specification {
         found.nickname == "수정"
         found.profileEmoji == "👎"
     }
+
+    def "사용자 탈퇴"() {
+        given:
+        var member = memberRepository.save(Member.builder()
+                .email("test@pickly.com")
+                .username("test")
+                .password(new Password("test"))
+                .name("테스트")
+                .nickname("테스트")
+                .profileEmoji("👍")
+                .isHardMode(false)
+                .build())
+
+        when:
+        memberService.deleteMember(member.id)
+
+        then:
+        var found = memberRepository.findById(member.id).orElse(null)
+
+        found != null
+    }
 }
