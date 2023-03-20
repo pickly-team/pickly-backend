@@ -10,4 +10,6 @@ public interface CommentService {
 
   List<CommentDTO> findByBookmark(Long bookmarkId);
 
+  Long countMemberComments(Long memberId);
+
 }

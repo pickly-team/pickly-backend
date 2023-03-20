@@ -2,6 +2,8 @@ package org.pickly.service.comment.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
@@ -26,6 +28,20 @@ public class CommentController {
 
   private final CommentService commentService;
   private final CommentMapper commentMapper;
+
+
+  @Operation(summary = "특정 유저의 댓글 수 조회")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  @GetMapping("/members/{memberId}/comments/count")
+  public Long countMemberComments(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    return commentService.countMemberComments(memberId);
+  }
 
   @PostMapping("/bookmarks/{bookmarkId}/comment")
   @Operation(summary = "특정 Bookmark에 Comment 추가")

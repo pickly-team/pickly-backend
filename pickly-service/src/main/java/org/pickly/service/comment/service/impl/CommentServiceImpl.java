@@ -36,9 +36,15 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<CommentDTO> findByBookmark(Long bookmarkId) {
+  public List<CommentDTO> findByBookmark(final Long bookmarkId) {
     List<Comment> comments = commentRepository.findByBookmark(bookmarkId);
     return comments.stream().map(commentMapper::toDTO).toList();
+  }
+
+  @Override
+  public Long countMemberComments(final Long memberId) {
+    memberService.existsById(memberId);
+    return commentRepository.countAllByMemberId(memberId);
   }
 
 }

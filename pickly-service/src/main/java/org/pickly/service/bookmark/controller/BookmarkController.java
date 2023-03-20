@@ -36,9 +36,7 @@ public class BookmarkController {
 
   @Operation(summary = "특정 유저의 좋아요 북마크 수 조회")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = PageResponse.class))),
+      @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/bookmarks/likes/count")
