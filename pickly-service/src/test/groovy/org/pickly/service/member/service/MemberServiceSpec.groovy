@@ -39,7 +39,7 @@ class MemberServiceSpec extends Specification {
                 .build())
 
         when:
-        def dto = memberService.findProfileByMemberId(member.id)
+        def dto = memberService.findProfileByMemberId(member.id, member.id)
 
         then:
         dto != null
