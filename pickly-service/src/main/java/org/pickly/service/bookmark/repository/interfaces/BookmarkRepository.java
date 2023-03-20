@@ -11,4 +11,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
   @Query("select b from Bookmark b join fetch b.member m where b.id = :id")
   Optional<Bookmark> findOneById(@Param("id") Long id);
 
+  Long countByMemberId(Long memberId);
 }

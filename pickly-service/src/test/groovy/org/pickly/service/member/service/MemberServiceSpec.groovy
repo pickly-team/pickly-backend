@@ -1,6 +1,12 @@
 package org.pickly.service.member.service
 
 import org.junit.jupiter.api.BeforeEach
+import org.pickly.service.bookmark.BookmarkFactory
+import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
+import org.pickly.service.category.CategoryFactory
+import org.pickly.service.category.repository.interfaces.CategoryRepository
+import org.pickly.service.friend.repository.interfaces.FriendRepository
+import org.pickly.service.friend.service.interfaces.FriendService
 import org.pickly.service.member.entity.Member
 import org.pickly.service.member.entity.Password
 import org.pickly.service.member.repository.interfaces.MemberRepository
@@ -21,6 +27,18 @@ class MemberServiceSpec extends Specification {
     @Autowired
     private MemberRepository memberRepository
 
+    @Autowired
+    private BookmarkRepository bookmarkRepository
+
+    @Autowired
+    private CategoryRepository categoryRepository
+
+    @Autowired
+    private FriendService friendService
+
+    private bookmarkFactory = new BookmarkFactory()
+    private categoryFactory = new CategoryFactory()
+
     @BeforeEach
     void setup() {
         memberRepository.deleteAll()
@@ -38,14 +56,33 @@ class MemberServiceSpec extends Specification {
                 .isHardMode(false)
                 .build())
 
+        var category = categoryRepository.save(categoryFactory.testCategory(member))
+        bookmarkRepository.save(bookmarkFactory.testBookmark(member, category))
+
+        var member2 = memberRepository.save(Member.builder()
+                .email("test2@pickly.com")
+                .username("test2")
+                .password(new Password("test"))
+                .name("테스트2")
+                .nickname("테스트2")
+                .profileEmoji("👍")
+                .isHardMode(false)
+                .build())
+
+        friendService.follow(member.id, member2.id)
+        friendService.follow(member2.id, member.id)
+
         when:
-        def dto = memberService.findProfileByMemberId(member.id)
+        def dto = memberService.findProfileByMemberId(member.id, member.id)
 
         then:
         dto != null
         dto.name == "테스트"
         dto.nickname == "테스트"
         dto.profileEmoji == "👍"
+        dto.bookmarksCount == 1
+        dto.followersCount == 1
+        dto.followeesCount == 1
     }
 
 

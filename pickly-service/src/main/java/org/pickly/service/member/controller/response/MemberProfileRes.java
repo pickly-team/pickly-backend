@@ -26,4 +26,12 @@ public class MemberProfileRes {
   @Schema(description = "is login member's followee?", example = "true")
   private Boolean isFollowing;
 
+  @Schema(description = "number of followers", example = "10")
+  private Long followersCount;
+
+  @Schema(description = "number of followees", example = "10")
+  private Long followeesCount;
+
+  @Schema(description = "number of bookmarks", example = "10")
+  private Long bookmarksCount;
 }
