@@ -1,8 +1,6 @@
 package org.pickly.service.member.common;
 
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
-import org.pickly.service.member.controller.request.MemberStatusReq;
-import org.pickly.service.member.controller.response.MemberInfoRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MemberStatusRes;
 import org.pickly.service.member.entity.Member;
@@ -39,7 +37,7 @@ public class MemberMapper {
   public MemberStatusRes toMemberStatusRes(MemberModeDTO statusDTO) {
     return new MemberStatusRes(statusDTO.getUserMode());
   }
-
+  
   public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
     return new MemberProfileUpdateDTO(
         request.getName(), request.getNickname(), request.getProfileEmoji()
@@ -72,5 +70,4 @@ public class MemberMapper {
   public MemberModeDTO toMemberStatusDTO(MemberMode isHardMode) {
     return new MemberModeDTO(isHardMode.getDescription());
   }
-
 }
