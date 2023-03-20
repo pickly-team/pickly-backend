@@ -16,4 +16,6 @@ public interface MemberService {
   MyProfileDTO findMyProfile(Long memberId);
 
   MemberProfileDTO findProfileById(Long loginId, Long memberId);
+
+  void deleteMember(Long memberId);
 }
