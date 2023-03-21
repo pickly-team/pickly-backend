@@ -10,8 +10,8 @@ import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
-import org.pickly.service.member.notification.entity.NotificationStandard;
-import org.pickly.service.member.notification.service.interfaces.NotificationStandardService;
+import org.pickly.service.notification.entity.NotificationStandard;
+import org.pickly.service.notification.service.interfaces.NotificationStandardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

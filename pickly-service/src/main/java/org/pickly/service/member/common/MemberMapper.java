@@ -4,7 +4,7 @@ import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.notification.entity.NotificationStandard;
+import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
