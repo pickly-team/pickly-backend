@@ -47,7 +47,7 @@ class BookmarkServiceSpec extends Specification {
         }
 
         when:
-        def count = bookmarkService.countMemberLikes(bookmarkList[0].member.id)
+        def count = bookmarkService.countMemberLikes(member.id)
 
         then:
         count == 3
