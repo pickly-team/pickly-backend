@@ -23,17 +23,17 @@ class BookmarkServiceSpec extends Specification {
     private BookmarkService bookmarkService
 
     @Autowired
-    private BookmarkRepository bookmarkRepository;
+    private BookmarkRepository bookmarkRepository
 
     @Autowired
     private CategoryRepository categoryRepository
 
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberRepository memberRepository
 
-    private BookmarkFactory bookmarkFactory = new BookmarkFactory();
-    private CategoryFactory categoryFactory = new CategoryFactory();
-    private MemberFactory memberFactory = new MemberFactory();
+    private BookmarkFactory bookmarkFactory = new BookmarkFactory()
+    private CategoryFactory categoryFactory = new CategoryFactory()
+    private MemberFactory memberFactory = new MemberFactory()
 
     def "유저가 좋아하는 북마크 수 조회"() {
         given:
@@ -41,7 +41,7 @@ class BookmarkServiceSpec extends Specification {
         memberRepository.save(member)
         var category = categoryFactory.testCategory(member)
         categoryRepository.save(category)
-        List<Bookmark> bookmarkList = bookmarkFactory.testBookmarks(3, member, category);
+        List<Bookmark> bookmarkList = bookmarkFactory.testBookmarks(3, member, category)
         bookmarkList.each { entity ->
             bookmarkRepository.save(entity)
         }

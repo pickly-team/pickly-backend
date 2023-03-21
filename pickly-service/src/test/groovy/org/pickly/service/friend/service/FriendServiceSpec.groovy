@@ -45,7 +45,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("프론트엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var followee = memberRepository.save(Member.builder()
                 .email("backend@pickly.com")
@@ -55,7 +55,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("백엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         friendService.follow(follower.id, followee.id)
         var REQUEST = new FriendNotificationStatusReqDTO(followee.id, true)
@@ -65,7 +65,7 @@ class FriendServiceSpec extends Specification {
 
         then:
         def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
-                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE))
         friend.notificationEnabled == true
     }
 
@@ -80,7 +80,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("프론트엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var followee = memberRepository.save(Member.builder()
                 .email("backend@pickly.com")
@@ -90,7 +90,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("백엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         friendService.follow(follower.id, followee.id)
         var REQUEST = new FriendNotificationStatusReqDTO(followee.id, false)
@@ -101,7 +101,7 @@ class FriendServiceSpec extends Specification {
 
         then:
         def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
-                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE))
         friend.notificationEnabled == false
     }
 
@@ -115,7 +115,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("프론트엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var followee = memberRepository.save(Member.builder()
                 .email("backend@pickly.com")
@@ -125,7 +125,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("백엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var REQUEST = new FriendNotificationStatusReqDTO(followee.id, true)
 
