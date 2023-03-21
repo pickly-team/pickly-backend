@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
@@ -30,7 +31,6 @@ public class MemberServiceImpl implements MemberService {
     }
   }
 
-  @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
     Member member = findById(memberId);
 
@@ -66,7 +66,6 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  @Transactional
   public void deleteMember(Long memberId) {
     Member member = findById(memberId);
     member.delete();
