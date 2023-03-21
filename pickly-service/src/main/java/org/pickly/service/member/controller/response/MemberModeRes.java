@@ -12,9 +12,13 @@ import lombok.Getter;
 public class MemberModeRes {
 
   @Schema(description = "하드 모드 사용 유저인가?", example = "true")
-  private Boolean isHardMode;
+  private boolean isHardMode;
 
   @Schema(description = "알림 기준 일자. 00일 안에 읽지 않으면 알림 발생", example = "3")
-  private Integer standardDate;
+  private int standardDate;
+
+  public boolean getIsHardMode() {
+    return this.isHardMode;
+  }
 
 }
