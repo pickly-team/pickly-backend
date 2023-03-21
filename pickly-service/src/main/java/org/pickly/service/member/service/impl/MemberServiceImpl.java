@@ -8,6 +8,7 @@ import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
+import org.pickly.service.member.service.dto.MyProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
@@ -42,14 +43,20 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional(readOnly = true)
-  public MemberProfileDTO findProfileByMemberId(final Long memberId, final Long loginId) {
+  public MyProfileDTO findMyProfile(final Long memberId) {
     Member member = findById(memberId);
-    Boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
     Long followersCount = friendRepository.countByFolloweeId(memberId);
     Long followeesCount = friendRepository.countByFollowerId(memberId);
     Long bookmarksCount = bookmarkRepository.countByMemberId(memberId);
-    return memberMapper.toMemberProfileDTO(member, isFollowing, followersCount, followeesCount,
-        bookmarksCount);
+    return memberMapper.toMyProfileDTO(member, followersCount, followeesCount, bookmarksCount);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public MemberProfileDTO findProfileById(final Long loginId, final Long memberId) {
+    boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
+    Member member = findById(memberId);
+    return memberMapper.toMemberProfileDTO(member, isFollowing);
   }
 
   @Override
