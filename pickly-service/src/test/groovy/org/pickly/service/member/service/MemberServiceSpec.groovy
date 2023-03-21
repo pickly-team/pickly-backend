@@ -7,8 +7,6 @@ import org.pickly.service.category.CategoryFactory
 import org.pickly.service.category.repository.interfaces.CategoryRepository
 import org.pickly.service.friend.service.interfaces.FriendService
 import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.entity.Member
-import org.pickly.service.member.entity.Password
 import org.pickly.service.member.repository.interfaces.MemberRepository
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO
 import org.pickly.service.member.service.interfaces.MemberService
@@ -105,15 +103,7 @@ class MemberServiceSpec extends Specification {
 
     def "사용자 탈퇴"() {
         given:
-        var member = memberRepository.save(Member.builder()
-                .email("test@pickly.com")
-                .username("test")
-                .password(new Password("test"))
-                .name("테스트")
-                .nickname("테스트")
-                .profileEmoji("👍")
-                .isHardMode(false)
-                .build())
+        var member = memberRepository.save(memberFactory.testMember())
 
         when:
         memberService.deleteMember(member.id)
