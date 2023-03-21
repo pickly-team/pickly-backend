@@ -50,6 +50,7 @@ public class MemberController {
     memberService.updateMyProfile(memberId, memberMapper.toDTO(request));
   }
 
+// TODO: ApiResponse.content 없어도 Swagger Schema 동작하는지 확인 필요
   @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
   @ApiResponses(value = {
