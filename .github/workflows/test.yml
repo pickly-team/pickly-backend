@@ -38,6 +38,9 @@ jobs:
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
+          with:
+            github_token: ${{ secrets.github_token }}
+            reporter: github-pr-review
         if: always()
         with:
           files: pickly-service/build/test-results/test/TEST-*.xml
