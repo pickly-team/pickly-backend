@@ -44,7 +44,6 @@ jobs:
         if: always()
         with:
           files: '**/build/test-results/test/TEST-*.xml'
-          token: ${{ github.token }}
 
       - name: Add comments to a pull request
         uses: mikepenz/action-junit-report@v3
