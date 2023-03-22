@@ -12,10 +12,15 @@ spring:
     init:
       mode: always
   # postgreSQL local 설정
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/pickly
+#    username: dev
+#    password: postgres
   datasource:
-    url: jdbc:postgresql://localhost:5432/pickly
-    username: dev
-    password: postgres
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:///testdb?TC_INITSCRIPT=file:src/test/resources/schema.sql
+    username: testuser
+    password: testpassword
 
 # 로깅 관련
 logging:
