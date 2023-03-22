@@ -13,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import spock.lang.Specification
 
@@ -24,12 +22,6 @@ import spock.lang.Specification
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 class BookmarkServiceSpec extends Specification {
-
-    @Container
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13")
-            .withDatabaseName("testdb")
-            .withUsername("testuser")
-            .withPassword("testpassword")
 
     @Autowired
     private BookmarkService bookmarkService
@@ -46,17 +38,6 @@ class BookmarkServiceSpec extends Specification {
     private BookmarkFactory bookmarkFactory = new BookmarkFactory()
     private CategoryFactory categoryFactory = new CategoryFactory()
     private MemberFactory memberFactory = new MemberFactory()
-
-    def setupSpec() {
-        postgreSQLContainer.start()
-        System.setProperty("spring.datasource.url", postgreSQLContainer.jdbcUrl)
-        System.setProperty("spring.datasource.username", postgreSQLContainer.username)
-        System.setProperty("spring.datasource.password", postgreSQLContainer.password)
-    }
-
-    def cleanupSpec() {
-        postgreSQLContainer.stop()
-    }
 
     def "유저가 좋아하는 북마크 수 조회"() {
         given:

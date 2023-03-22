@@ -8,15 +8,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:13-alpine
-        ports:
-          - 5432/tcp
-        env:
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpassword
-          POSTGRES_DB: testdb
     steps:
       - uses: actions/checkout@v2
 
@@ -41,20 +32,9 @@ jobs:
       - name: Build Gradle wrapper
         run: gradle wrap
 
-#      - name: Build with Gradle
-#        run: ./gradlew clean build test
-#        shell: bash
-
       - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Run Tests with Testcontainers
-        env:
-          SPRING_PROFILES_ACTIVE: test
-          DATABASE_URL: jdbc:postgresql://localhost:5432/testdb
-          DATABASE_USERNAME: testuser
-          DATABASE_PASSWORD: testpassword
-        run: ./gradlew test
+        run: ./gradlew clean build test
+        shell: bash
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
