@@ -6,7 +6,9 @@ on:
       - develop
 
 permissions:
-  pull-requests: write
+  contents: read
+  checks: write
+  id-token: write
 
 jobs:
   test:
