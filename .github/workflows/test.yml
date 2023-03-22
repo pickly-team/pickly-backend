@@ -33,14 +33,24 @@ jobs:
         run: gradle wrap
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build test
         shell: bash
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: ${{ always() }}
+      - name: Archive Test Results
+        uses: actions/upload-artifact@v2
+        if: always()
         with:
-          files: build/test-results/**/*.xml
+          name: test-results
+          path: build/test-results
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v2.0.0
+        if: always()
+        with:
+          result_files: "**/TEST-*.xml"
+          report_name: "Spock Test Report"
+          report_title: "Spock Test Report"
+          check_threshold: "0"
 
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.

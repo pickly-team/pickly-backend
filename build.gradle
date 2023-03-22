@@ -87,6 +87,10 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        reports {
+            html.enabled(true)
+            html.destination(file("$buildDir/reports/tests/spock"))
+        }
     }
 
     tasks.withType(Test) {
