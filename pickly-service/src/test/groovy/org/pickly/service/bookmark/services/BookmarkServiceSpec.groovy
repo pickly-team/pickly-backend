@@ -54,7 +54,6 @@ class BookmarkServiceSpec extends Specification {
         def count = bookmarkService.countMemberLikes(member.id)
 
         then:
-            count == 100
-//        count == 3
+        count == 3
     }
 }
