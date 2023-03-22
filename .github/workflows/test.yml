@@ -44,13 +44,14 @@ jobs:
         if: always()
         with:
           files: pickly-service/build/test-results/test/TEST-*.xml
-          github_token: ${{ secrets.TEST_REPORT_TOKEN }}
+          token: ${{ secrets.TEST_REPORT_TOKEN }}
 
       - name: Add comments to a pull request
         uses: mikepenz/action-junit-report@v3
         if: always()
         with:
           report_paths: pickly-service/build/test-results/test/TEST-*.xml
+          token: ${{ secrets.TEST_REPORT_TOKEN }}
 
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
