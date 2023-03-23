@@ -12,12 +12,7 @@ spring:
   sql:
     init:
       mode: never
-  # postgreSQL local 설정
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/pickly
-#    username: dev
-#    password: postgres
-  # testcontainer
+  # Postgres testcontainer
   datasource:
     url: jdbc:tc:postgresql:9.4:///testdb?TC_INITSCRIPT=file:src/test/resources/schema.sql
     username: testuser
