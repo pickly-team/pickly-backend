@@ -4,6 +4,7 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MyProfileDTO;
 
 public interface MemberService {
 
@@ -13,8 +14,12 @@ public interface MemberService {
 
   Member findById(Long id);
 
-  MemberProfileDTO findProfileByMemberId(Long memberId, Long loginId);
+  MyProfileDTO findMyProfile(Long memberId);
 
   MemberModeDTO findModeByMemberId(Long memberId);
+
+  MemberProfileDTO findProfileById(Long loginId, Long memberId);
+
+  void deleteMember(Long memberId);
 
 }
