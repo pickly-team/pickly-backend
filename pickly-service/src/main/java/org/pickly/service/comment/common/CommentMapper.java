@@ -1,10 +1,12 @@
 package org.pickly.service.comment.common;
 
 import org.pickly.service.comment.controller.request.CommentCreateReq;
+import org.pickly.service.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.comment.controller.response.CommentRes;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
+import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,6 +22,10 @@ public class CommentMapper {
 
   public CommentCreateDTO toCreateDTO(CommentCreateReq req) {
     return new CommentCreateDTO(req.getContent());
+  }
+
+  public CommentUpdateDTO toUpdateDTO(CommentUpdateReq req) {
+    return new CommentUpdateDTO(req.getContent());
   }
 
 }
