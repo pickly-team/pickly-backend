@@ -1,6 +1,7 @@
 package org.pickly.service.comment.service.interfaces;
 
 import java.util.List;
+import org.pickly.service.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
 
@@ -14,6 +15,8 @@ public interface CommentService {
 
   List<CommentDTO> findByMember(Long memberId);
 
-  void deleteComment(Long commentId);
+  void delete(Long commentId);
+
+  CommentDTO update(Long commentId, CommentUpdateReq request);
 
 }
