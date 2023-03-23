@@ -11,7 +11,7 @@ public interface BookmarkService {
 
   Bookmark findById(Long id);
 
-  Bookmark findWithCategoryById(Long id);
+  Bookmark findByIdWithCategory(Long id);
 
   void likeBookmark(Long memberId);
 

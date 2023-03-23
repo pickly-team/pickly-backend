@@ -30,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   @Transactional
   public CommentDTO create(final Long bookmarkId, final Long memberId, final CommentCreateDTO request) {
-    Bookmark bookmark = bookmarkService.findWithCategoryById(bookmarkId);
+    Bookmark bookmark = bookmarkService.findByIdWithCategory(bookmarkId);
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);
