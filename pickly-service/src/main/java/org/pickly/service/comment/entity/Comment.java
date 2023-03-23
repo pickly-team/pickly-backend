@@ -42,4 +42,8 @@ public class Comment extends BaseEntity {
     return new Comment(member, bookmark, isOwnerComment, content);
   }
 
+  public void updateContent(final String content) {
+    this.content = content;
+  }
+
 }

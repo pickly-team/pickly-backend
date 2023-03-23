@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.controller.request.CommentCreateReq;
+import org.pickly.service.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.comment.controller.response.CommentRes;
 import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,11 +92,23 @@ public class CommentController {
 
   @DeleteMapping("/comments/{commentId}")
   @Operation(summary = "특정 Comment 삭제")
-  public void deleteComment(
+  public void delete(
       @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
       @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId
   ) {
-    commentService.deleteComment(commentId);
+    commentService.delete(commentId);
+  }
+
+  @PutMapping("/comments/{commentId}")
+  @Operation(summary = "특정 Comment 수정")
+  public CommentRes updateComment(
+      @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
+      @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId,
+
+      @Valid @RequestBody CommentUpdateReq request
+  ) {
+    CommentDTO dto = commentService.update(commentId, request);
+    return commentMapper.toResponse(dto);
   }
 
 }
