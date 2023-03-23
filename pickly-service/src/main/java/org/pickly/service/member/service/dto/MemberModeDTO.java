@@ -7,11 +7,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class MemberProfileDTO {
+public class MemberModeDTO {
 
-  private Long id;
-  private String name;
-  private String nickname;
-  private String profileEmoji;
-  private Boolean isFollowing;
+  private Boolean isHardMode;
+  private Integer standardDate;
+
 }
