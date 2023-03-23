@@ -31,3 +31,9 @@ INSERT INTO friend
 VALUES
     (1, 2, false),
     (2, 1, true);
+
+INSERT INTO notification_standard
+(member_id, standard_date, is_active)
+VALUES
+    (1, 7, true),
+    (2, 3, false);

@@ -2,6 +2,7 @@ drop table if exists friend;
 drop table if exists comment;
 drop table if exists bookmark;
 drop table if exists category;
+drop table if exists notification_standard;
 drop table if exists member;
 
 CREATE
@@ -130,22 +131,44 @@ create table friend
     id bigserial
         constraint friend_pk
         primary key,
-    followee_id bigint                  not null
+    followee_id          bigint                  not null
         constraint friend_member_id_fk
         references member
         on update cascade on delete cascade,
-    follower_id bigint                  not null
+    follower_id          bigint                  not null
         constraint friend_member_id_fk_2
         references member
         on update cascade on delete cascade,
-    notification_enabled boolean        not null,
-    created_at  timestamp default now() not null,
-    updated_at  timestamp,
-    deleted_at  timestamp
+    notification_enabled boolean                 not null,
+    created_at           timestamp default now() not null,
+    updated_at           timestamp,
+    deleted_at           timestamp
 );
 
 create trigger update_trigger
     before update
     on friend
+    for each row
+    execute procedure updated_at();
+
+create table notification_standard
+(
+    id bigserial
+        constraint notification_standard_pk
+        primary key,
+    member_id     bigint                  not null
+        constraint bookmark_member_id_fk
+        references member
+        on update cascade on delete cascade,
+    standard_date integer default 7 not null,
+    is_active     boolean                 not null,
+    created_at    timestamp default now() not null,
+    updated_at    timestamp,
+    deleted_at    timestamp
+);
+
+create trigger update_trigger
+    before update
+    on notification_standard
     for each row
     execute procedure updated_at();

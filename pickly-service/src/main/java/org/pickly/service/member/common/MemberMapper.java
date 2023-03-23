@@ -1,9 +1,12 @@
 package org.pickly.service.member.common;
 
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MyProfileRes;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.notification.entity.NotificationStandard;
+import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.dto.MyProfileDTO;
@@ -22,6 +25,10 @@ public class MemberMapper {
         .followeesCount(dto.getFolloweesCount())
         .bookmarksCount(dto.getBookmarksCount())
         .build();
+  }
+
+  public MemberModeRes toResponse(MemberModeDTO dto) {
+    return new MemberModeRes(dto.getIsHardMode(), dto.getStandardDate());
   }
 
   public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
@@ -60,6 +67,13 @@ public class MemberMapper {
         .nickname(member.getNickname())
         .profileEmoji(member.getProfileEmoji())
         .isFollowing(isFollowing)
+        .build();
+  }
+
+  public MemberModeDTO toMemberModeDTO(Member member, NotificationStandard standard) {
+    return MemberModeDTO.builder()
+        .isHardMode(member.getIsHardMode())
+        .standardDate(standard.getStandardDate())
         .build();
   }
 

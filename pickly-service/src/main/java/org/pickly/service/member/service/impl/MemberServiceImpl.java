@@ -7,10 +7,13 @@ import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
+import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MyProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
+import org.pickly.service.notification.entity.NotificationStandard;
+import org.pickly.service.notification.service.interfaces.NotificationStandardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+  private final NotificationStandardService notificationStandardService;
   private final MemberRepository memberRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
@@ -57,6 +61,13 @@ public class MemberServiceImpl implements MemberService {
     boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
     Member member = findById(memberId);
     return memberMapper.toMemberProfileDTO(member, isFollowing);
+  }
+
+  @Override
+  public MemberModeDTO findModeByMemberId(final Long memberId) {
+    Member member = findById(memberId);
+    NotificationStandard standard = notificationStandardService.findByMember(memberId);
+    return memberMapper.toMemberModeDTO(member, standard);
   }
 
   @Override
