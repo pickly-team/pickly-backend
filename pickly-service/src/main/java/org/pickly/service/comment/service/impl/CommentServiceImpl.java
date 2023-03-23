@@ -6,12 +6,12 @@ import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;
-import org.pickly.service.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
+import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -64,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public CommentDTO update(final Long commentId, final CommentUpdateReq request) {
+  public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
     Comment comment = findById(commentId);
     comment.updateContent(request.getContent());
     return commentMapper.toDTO(comment);

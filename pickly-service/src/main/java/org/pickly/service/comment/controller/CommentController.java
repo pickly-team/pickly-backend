@@ -107,7 +107,7 @@ public class CommentController {
 
       @Valid @RequestBody CommentUpdateReq request
   ) {
-    CommentDTO dto = commentService.update(commentId, request);
+    CommentDTO dto = commentService.update(commentId, commentMapper.toUpdateDTO(request));
     return commentMapper.toResponse(dto);
   }
 
