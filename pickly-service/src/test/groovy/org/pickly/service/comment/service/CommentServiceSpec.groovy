@@ -1,11 +1,13 @@
-package org.pickly.service.bookmark.services
+package org.pickly.service.comment.service
 
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.bookmark.entity.Bookmark
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
-import org.pickly.service.bookmark.service.interfaces.BookmarkService
 import org.pickly.service.category.CategoryFactory
 import org.pickly.service.category.repository.interfaces.CategoryRepository
+import org.pickly.service.comment.CommentFactory
+import org.pickly.service.comment.repository.interfaces.CommentRepository
+import org.pickly.service.comment.service.dto.CommentUpdateDTO
+import org.pickly.service.comment.service.interfaces.CommentService
 import org.pickly.service.member.MemberFactory
 import org.pickly.service.member.repository.interfaces.MemberRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,10 +23,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class BookmarkServiceSpec extends Specification {
+class CommentServiceSpec extends Specification {
 
     @Autowired
-    private BookmarkService bookmarkService
+    private CommentService commentService
 
     @Autowired
     private BookmarkRepository bookmarkRepository
@@ -35,26 +37,32 @@ class BookmarkServiceSpec extends Specification {
     @Autowired
     private MemberRepository memberRepository
 
+    @Autowired
+    private CommentRepository commentRepository
+
     private BookmarkFactory bookmarkFactory = new BookmarkFactory()
     private CategoryFactory categoryFactory = new CategoryFactory()
     private MemberFactory memberFactory = new MemberFactory()
+    private CommentFactory commentFactory = new CommentFactory()
 
-    def "유저가 좋아하는 북마크 수 조회"() {
+    def "특정 댓글 내용 수정"() {
         given:
         var member = memberFactory.testMember()
         memberRepository.save(member)
         var category = categoryFactory.testCategory(member)
         categoryRepository.save(category)
-        List<Bookmark> bookmarkList = bookmarkFactory.testBookmarks(3, member, category)
-        bookmarkList.each { entity ->
-            bookmarkRepository.save(entity)
-        }
+        var bookmark = bookmarkFactory.testBookmark(member, category)
+        bookmarkRepository.save(bookmark)
+        var comment = commentFactory.testComment(member, bookmark, true, "첫번째 내용")
+        commentRepository.save(comment)
 
         when:
-        def count = bookmarkService.countMemberLikes(member.id)
+        CommentUpdateDTO request = new CommentUpdateDTO("두번째 내용")
+        def updateComment = commentService.update(comment.id, request)
 
         then:
-        count == 3
+        updateComment.isOwnerComment == true
+        updateComment.content == "두번째 내용"
     }
 
 }
