@@ -14,7 +14,7 @@ spring:
       mode: never
   # Postgres testcontainer
   datasource:
-    url: jdbc:tc:postgresql:9.4:///testdb?TC_INITSCRIPT=file:src/test/resources/schema.sql
+    url: jdbc:tc:postgresql:15:///testdb?TC_INITSCRIPT=file:src/test/resources/schema.sql
     username: testuser
     password: testpassword
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

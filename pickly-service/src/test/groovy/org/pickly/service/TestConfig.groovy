@@ -14,7 +14,7 @@ class TestConfig extends Specification {
 
     @Container
     private static final PostgreSQLContainer postgreSQLContainer =
-            new PostgreSQLContainer("postgres:9.4")
+            new PostgreSQLContainer("postgres:15")
                     .withDatabaseName("testdb")
                     .withUsername("testuser")
                     .withPassword("testpassword")
