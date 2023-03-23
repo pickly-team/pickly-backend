@@ -13,6 +13,7 @@ import org.pickly.service.comment.controller.request.CommentCreateReq;
 import org.pickly.service.comment.controller.response.CommentRes;
 import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,6 +86,15 @@ public class CommentController {
     return dtoList.stream()
         .map(commentMapper::toResponse)
         .toList();
+  }
+
+  @DeleteMapping("/comments/{commentId}")
+  @Operation(summary = "특정 Comment 삭제")
+  public void deleteComment(
+      @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
+      @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId
+  ) {
+    commentService.deleteComment(commentId);
   }
 
 }

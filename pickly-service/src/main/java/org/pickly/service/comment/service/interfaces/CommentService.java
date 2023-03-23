@@ -14,4 +14,6 @@ public interface CommentService {
 
   List<CommentDTO> findByMember(Long memberId);
 
+  void deleteComment(Long commentId);
+
 }
