@@ -9,14 +9,18 @@ import org.pickly.service.category.repository.interfaces.CategoryRepository
 import org.pickly.service.member.MemberFactory
 import org.pickly.service.member.repository.interfaces.MemberRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.junit.jupiter.Testcontainers
 import spock.lang.Specification
 
 @Transactional
 @SpringBootTest
-@AutoConfigureMockMvc
+@Testcontainers
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 class BookmarkServiceSpec extends Specification {
 
     @Autowired

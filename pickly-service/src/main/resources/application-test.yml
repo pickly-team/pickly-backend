@@ -7,15 +7,17 @@ spring:
         enabled: always
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
+    defer-datasource-initialization: true
   # schema.sql, data.sql 사용 여부
   sql:
     init:
-      mode: always
-  # postgreSQL local 설정
+      mode: never
+  # Postgres testcontainer
   datasource:
-    url: jdbc:postgresql://localhost:5432/pickly
-    username: dev
-    password: postgres
+    url: jdbc:tc:postgresql:15:///testdb?TC_INITSCRIPT=file:src/test/resources/schema.sql
+    username: testuser
+    password: testpassword
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
 # 로깅 관련
 logging:
