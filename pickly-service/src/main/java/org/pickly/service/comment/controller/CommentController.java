@@ -90,6 +90,7 @@ public class CommentController {
         .toList();
   }
 
+  // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
   @DeleteMapping("/comments/{commentId}")
   @Operation(summary = "특정 Comment 삭제")
   public void delete(
@@ -99,6 +100,7 @@ public class CommentController {
     commentService.delete(commentId);
   }
 
+  // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
   @PutMapping("/comments/{commentId}")
   @Operation(summary = "특정 Comment 수정")
   public CommentRes updateComment(
