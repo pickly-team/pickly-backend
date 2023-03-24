@@ -21,6 +21,8 @@ public class RequestUtil {
     if (parts.length != 2) {
       throw new IllegalArgumentException("Invalid authorization header");
     }
-    return parts[1];
+
+    String authorizationToken = parts[1];
+    return authorizationToken;
   }
 }
