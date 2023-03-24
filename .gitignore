@@ -40,3 +40,4 @@ target
 logs/
 logs
 data/
+firebase.json
