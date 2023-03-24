@@ -46,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   @Transactional
   public MemberRegisterDto register(String token) {
-    FirebaseToken decodedToken = authTokenUtil.getDecodedToken(token);
+    FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberMapper.tokenToMember(decodedToken);
     memberRepository.save(member);
     return memberMapper.toMemberRegisterDTO(member);

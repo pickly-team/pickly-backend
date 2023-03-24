@@ -14,7 +14,7 @@ public class AuthTokenUtil {
 
   private final FirebaseAuth firebaseAuth;
 
-  public FirebaseToken getDecodedToken(String token) {
+  public FirebaseToken validateToken(String token) {
     try {
       return firebaseAuth.verifyIdToken(token);
     } catch (IllegalArgumentException | FirebaseAuthException e) {

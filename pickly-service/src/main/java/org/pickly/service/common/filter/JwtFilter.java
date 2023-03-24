@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
       FilterChain filterChain)
       throws IOException, ServletException {
     String bearerToken = RequestUtil.getAuthorizationToken(request.getHeader("Authorization"));
-    FirebaseToken decodedToken = authTokenUtil.getDecodedToken(bearerToken);
+    FirebaseToken decodedToken = authTokenUtil.validateToken(bearerToken);
 
     //TODO: decodedToken security context에 저장 필요
     filterChain.doFilter(request, response);
