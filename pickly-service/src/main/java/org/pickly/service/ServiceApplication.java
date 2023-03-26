@@ -15,7 +15,7 @@ public class ServiceApplication {
 
   public static void main(String[] args) {
     new SpringApplicationBuilder(ServiceApplication.class)
-        .properties("spring.config.additional-location=" + TEST_PROPERTIES)
+        .properties("spring.config.additional-location=" + LOCAL_PROPERTIES)
         .run(args);
   }
 }
