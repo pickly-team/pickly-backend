@@ -1,0 +1,37 @@
+# local 설정 파일
+spring:
+  # jpa 관련 설정
+  jpa:
+    output:
+      ansi:
+        enabled: always
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+    defer-datasource-initialization: true
+  # schema.sql, data.sql 사용 여부
+  sql:
+    init:
+      mode: never
+  # Postgres testcontainer
+  datasource:
+    url: jdbc:tc:postgresql:15:///testdb?TC_INITSCRIPT=file:src/test/resources/schema.sql
+    username: testuser
+    password: testpassword
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+# 로깅 관련
+logging:
+  level:
+    root: info
+    org.springframework.jdbc.core.JdbcTemplate: info
+
+# 서버 관련
+pickly:
+  enabled:
+    access: true
+
+# p6spy
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true

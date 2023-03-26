@@ -11,13 +11,6 @@ public class CategoryFactory {
 
   private final MemberFactory memberFactory = new MemberFactory();
 
-  public Category testCategory() {
-    return Category.builder()
-        .member(memberFactory.testMember())
-        .isAutoDeleteMode(false)
-        .name("당장 내일 안으로 읽어야 하는 자바 면접 질문")
-        .build();
-  }
 
   public Category testCategory(Member member) {
     return Category.builder()
