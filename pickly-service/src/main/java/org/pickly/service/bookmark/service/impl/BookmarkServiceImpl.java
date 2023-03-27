@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.bookmark.common.BookmarkMapper;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
@@ -107,6 +108,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   @Override
   public Bookmark findById(Long id) {
+    bookmarkRepository.readByUser(id);
     return bookmarkRepository.findOneById(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
   }
@@ -160,4 +162,5 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     return bookmarkRepository.save(entity);
   }
+
 }

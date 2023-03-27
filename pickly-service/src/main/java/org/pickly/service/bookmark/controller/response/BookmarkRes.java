@@ -4,12 +4,11 @@ package org.pickly.service.bookmark.controller.response;
     import lombok.Builder;
     import lombok.Getter;
     import lombok.NonNull;
-    import org.pickly.service.bookmark.entity.Visibility;
 
 @Getter
 @Builder
 @AllArgsConstructor
-public class BookmarkCreateRes {
+public class BookmarkRes {
 
   @NonNull
   private Long id;

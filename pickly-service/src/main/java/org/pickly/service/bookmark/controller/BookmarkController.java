@@ -16,7 +16,7 @@ import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
-import org.pickly.service.bookmark.controller.response.BookmarkCreateRes;
+import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -159,15 +159,23 @@ public class BookmarkController {
   }
 
   @PostMapping("/bookmarks")
-  public ResponseEntity<BookmarkCreateRes> create(
+  public ResponseEntity<BookmarkRes> create(
       @Valid @RequestBody BookmarkCreateReq dto
   ) {
     Bookmark entity = bookmarkService.create(dto);
-    BookmarkCreateRes response = bookmarkMapper.entityToResponseDto(entity);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
 
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(response);
   }
 
+  @GetMapping("/bookmarks/{bookmarkId}")
+  public ResponseEntity<BookmarkRes> getBookmarkById(
+      @PathVariable Long bookmarkId
+  ) {
+    Bookmark entity = bookmarkService.findById(bookmarkId);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+    return ResponseEntity.ok(response);
+  }
 }
