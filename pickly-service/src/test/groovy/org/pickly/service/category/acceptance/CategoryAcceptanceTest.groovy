@@ -44,7 +44,7 @@ class CategoryAcceptanceTest extends Specification {
         String json = objectMapper.writeValueAsString(new CategoryRequestDTO(testMember.getId(), testMember.getName()));
 
         when:
-        var request = mockMvc.perform(post("/api/v1/category")
+        var request = mockMvc.perform(post("/api/categories")
                 .contentType(APPLICATION_JSON)
                 .content(json))
 
@@ -67,7 +67,7 @@ class CategoryAcceptanceTest extends Specification {
         );
 
         when:
-        var request = mockMvc.perform(post("/api/v1/category/" + category.getId())
+        var request = mockMvc.perform(post("/api/categories/" + category.getId())
                 .contentType(APPLICATION_JSON)
                 .content(json))
 
