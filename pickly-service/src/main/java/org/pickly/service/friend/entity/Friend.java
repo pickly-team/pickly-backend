@@ -1,5 +1,6 @@
 package org.pickly.service.friend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -29,4 +30,15 @@ public class Friend extends BaseEntity {
   @JoinColumn(name = "follower_id ")
   private Member follower;
 
+  @Column(name = "notification_enabled", nullable = false)
+  private Boolean notificationEnabled;
+
+  public void updateNotificationEnabled(Boolean notificationEnabled) {
+    this.notificationEnabled = notificationEnabled;
+  }
+
+  public FriendNotificationMode getNotificationMode() {
+    return notificationEnabled ? FriendNotificationMode.ALLOWED
+        : FriendNotificationMode.NOT_ALLOWED;
+  }
 }

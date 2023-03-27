@@ -27,7 +27,13 @@ VALUES
     (2, 1, false, '너 아직도 백엔드하니?');
 
 INSERT INTO friend
-(followee_id, follower_id)
+(followee_id, follower_id, notification_enabled)
 VALUES
-    (1, 2),
-    (2, 1);
+    (1, 2, false),
+    (2, 1, true);
+
+INSERT INTO notification_standard
+(member_id, standard_date, is_active)
+VALUES
+    (1, 7, true),
+    (2, 3, false);
