@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/categories")
+@RequestMapping("/api")
 public class CategoryController {
 
   private final CategoryService categoryService;
 
-  @PostMapping
+  @PostMapping("/categories")
   public ResponseEntity<CategoryResponseDTO> create(
       @RequestBody @Valid final CategoryRequestDTO dto) {
     Category category = categoryService.create(dto);
@@ -40,7 +40,7 @@ public class CategoryController {
         .ok(CategoryMapper.toResponseDTO(category));
   }
 
-  @PostMapping("/{categoryId}")
+  @PostMapping("/categories/{categoryId}")
   public ResponseEntity<CategoryResponseDTO> update(
       @PathVariable @Positive Long categoryId,
       @RequestBody @Valid final CategoryUpdateRequestDTO dto
@@ -51,7 +51,7 @@ public class CategoryController {
         .ok(CategoryMapper.toResponseDTO(category));
   }
 
-  @DeleteMapping("/{categoryId}")
+  @DeleteMapping("/categories/{categoryId}")
   public ResponseEntity<Void> delete(
       @PathVariable Long categoryId
   ) {
@@ -61,7 +61,7 @@ public class CategoryController {
         .build();
   }
 
-  @DeleteMapping
+  @DeleteMapping("/categories")
   public ResponseEntity<Void> deleteAllById(
       @RequestParam(value = "categoryId") List<Long> categoryIds
   ) {
@@ -71,7 +71,7 @@ public class CategoryController {
         .build();
   }
 
-  @GetMapping
+  @GetMapping("/categories")
   public PageResponse<CategoryDTO> getCategoryByMember(
       @RequestParam(value = "memberId") Long memberId,
       @Parameter @RequestBody PageRequest pageRequest
@@ -80,7 +80,7 @@ public class CategoryController {
     return categoryService.getCategoriesByMember(pageRequest, memberId);
   }
 
-  @GetMapping("/cnt")
+  @GetMapping("/categories/cnt")
   public ResponseEntity<Integer> getCategoryCntByMember(
       @RequestParam(value = "memberId") Long memberId
   ) {
