@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.common.BookmarkMapper;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
+import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -28,8 +30,12 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.interfaces.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 @RequiredArgsConstructor
@@ -163,4 +169,12 @@ public class BookmarkServiceImpl implements BookmarkService {
     return bookmarkRepository.save(entity);
   }
 
+
+  @Override
+  public PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(final PageRequest pageRequest,
+      final Long categoryId) {
+    List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
+        categoryId);
+    return makeResponse(pageRequest.getPageSize(), bookmarks);
+  }
 }

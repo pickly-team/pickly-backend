@@ -31,4 +31,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
   @Modifying
   @Query("UPDATE Bookmark b SET b.readByUser=True WHERE b.id=:bookmarkId")
   void readByUser(@Param("bookmarkId") Long id);
+
 }
