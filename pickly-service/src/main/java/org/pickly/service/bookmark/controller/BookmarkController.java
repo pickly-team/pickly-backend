@@ -8,8 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
@@ -18,6 +16,7 @@ import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
+import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
 import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
@@ -28,6 +27,7 @@ import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -189,4 +189,14 @@ public class BookmarkController {
 
     return bookmarkService.findBookmarkByCategoryId(pageRequest, categoryId);
   }
+
+  @PutMapping("/bookmarks/{bookmarkId}")
+  public void updateBookmark(
+      @PathVariable Long bookmarkId,
+      @RequestBody @Valid BookmarkUpdateReq request
+  ) {
+    bookmarkService.updateBookmark(bookmarkId,
+        bookmarkMapper.toBookmarkUpdateReqDTO(request));
+  }
+
 }

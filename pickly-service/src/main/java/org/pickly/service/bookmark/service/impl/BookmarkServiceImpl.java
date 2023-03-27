@@ -4,8 +4,10 @@ package org.pickly.service.bookmark.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.common.BookmarkMapper;
@@ -19,6 +21,7 @@ import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
+import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.exception.custom.CategoryNotFoundException;
@@ -29,6 +32,7 @@ import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
+import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -176,5 +180,21 @@ public class BookmarkServiceImpl implements BookmarkService {
     List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
         categoryId);
     return makeResponse(pageRequest.getPageSize(), bookmarks);
+  }
+
+  @Transactional
+  @Override
+  public void updateBookmark(Long bookmarkId, BookmarkUpdateReqDTO request) {
+    Bookmark bookmark = findById(bookmarkId);
+
+    Category category = categoryRepository.findById(request.getCategoryId())
+        .orElseThrow(() -> new CategoryNotFoundException(request.getCategoryId()));
+
+    bookmark.updateBookmark(
+        category,
+        request.getTitle(),
+        request.getReadByUser(),
+        request.getVisibility()
+    );
   }
 }
