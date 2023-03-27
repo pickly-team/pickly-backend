@@ -4,6 +4,8 @@ import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
+import org.pickly.service.bookmark.controller.response.BookmarkCreateRes;
+import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteReqDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteReqDTO;
@@ -37,5 +39,19 @@ public class BookmarkMapper {
     return new BookmarkListDeleteResDTO(request);
   }
 
+  public BookmarkCreateRes entityToResponseDto(Bookmark request) {
 
+    return BookmarkCreateRes
+        .builder()
+        .id(request.getId())
+        .categoryId(request.getCategory().getId())
+        .memberId(request.getMember().getId())
+        .url(request.getUrl())
+        .title(request.getTitle())
+        .previewImageUrl(request.getPreviewImageUrl())
+        .isUserLike(request.getIsUserLike())
+        .readByUser(request.getReadByUser())
+        .visibility(request.getVisibility().getDescription())
+        .build();
+  }
 }
