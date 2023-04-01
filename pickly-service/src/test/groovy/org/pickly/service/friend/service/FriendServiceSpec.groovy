@@ -10,12 +10,18 @@ import org.pickly.service.member.entity.Member
 import org.pickly.service.member.entity.Password
 import org.pickly.service.member.repository.interfaces.MemberRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.junit.jupiter.Testcontainers
 import spock.lang.Specification
 
+@Transactional
 @SpringBootTest
-@AutoConfigureMockMvc
+@Testcontainers
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 class FriendServiceSpec extends Specification {
 
     @Autowired
@@ -26,7 +32,6 @@ class FriendServiceSpec extends Specification {
 
     @Autowired
     private MemberRepository memberRepository
-
 
     @BeforeEach
     void setup() {
@@ -45,7 +50,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("프론트엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var followee = memberRepository.save(Member.builder()
                 .email("backend@pickly.com")
@@ -55,7 +60,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("백엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         friendService.follow(follower.id, followee.id)
         var REQUEST = new FriendNotificationStatusReqDTO(followee.id, true)
@@ -65,7 +70,7 @@ class FriendServiceSpec extends Specification {
 
         then:
         def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
-                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE))
         friend.notificationEnabled == true
     }
 
@@ -80,7 +85,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("프론트엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var followee = memberRepository.save(Member.builder()
                 .email("backend@pickly.com")
@@ -90,7 +95,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("백엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         friendService.follow(follower.id, followee.id)
         var REQUEST = new FriendNotificationStatusReqDTO(followee.id, false)
@@ -101,7 +106,7 @@ class FriendServiceSpec extends Specification {
 
         then:
         def friend = friendRepository.findByFollowerIdAndFolloweeId(follower.getId(), followee.getId()).orElseThrow(
-                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
+                () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE))
         friend.notificationEnabled == false
     }
 
@@ -115,7 +120,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("프론트엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var followee = memberRepository.save(Member.builder()
                 .email("backend@pickly.com")
@@ -125,7 +130,7 @@ class FriendServiceSpec extends Specification {
                 .nickname("백엔드")
                 .profileEmoji("👍")
                 .isHardMode(false)
-                .build());
+                .build())
 
         var REQUEST = new FriendNotificationStatusReqDTO(followee.id, true)
 

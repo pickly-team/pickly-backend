@@ -1,5 +1,6 @@
 package org.pickly.service.bookmark.service.impl;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,24 +13,26 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
+import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
+import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class BookmarkServiceImpl implements BookmarkService {
 
+  private static final boolean USER_LIKE = true;
+  private static final int LAST_ITEM = 1;
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
   private final MemberService memberService;
-
-  private static final boolean USER_LIKE = true;
-  private static final int LAST_ITEM = 1;
 
   @Override
   public Long countMemberLikes(final Long memberId) {
@@ -58,6 +61,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
   }
+
 
   private <T> List<T> mapToDtoList(final List<Bookmark> bookmarks,
       final Function<Bookmark, T> mapper) {
@@ -97,6 +101,12 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
+  public Bookmark findByIdWithCategory(Long id) {
+    return bookmarkRepository.findByIdWithCategory(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+  }
+
+  @Override
   public void likeBookmark(Long bookmarkId) {
     Bookmark bookmark = findById(bookmarkId);
     bookmark.like();
@@ -108,4 +118,21 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmark.deleteLike();
   }
 
+
+  @Override
+  @Transactional
+  public BookmarkDeleteResDTO deleteBookmark(Long bookmarkId) {
+    BookmarkDeleteResDTO bookmarkDeleteReqDTO = new BookmarkDeleteResDTO();
+    bookmarkDeleteReqDTO.setIsDeleted(bookmarkRepository.deleteBookmarkById(bookmarkId));
+    return bookmarkDeleteReqDTO;
+  }
+
+
+  @Override
+  @Transactional
+  public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
+    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
+    bookmarkListDeleteResDTO.setIsDeleted(bookmarkRepository.deleteBookmarksByIds(bookmarkIds));
+    return bookmarkListDeleteResDTO;
+  }
 }

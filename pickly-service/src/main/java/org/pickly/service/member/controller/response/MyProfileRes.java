@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 @Schema(description = "Member profile response")
-public class MemberProfileRes {
+public class MyProfileRes {
 
   @Schema(description = "member ID (PK)", example = "1")
   private Long id;
@@ -22,7 +22,12 @@ public class MemberProfileRes {
 
   @Schema(description = "member profile emoji", example = "👨🏻‍💻")
   private String profileEmoji;
+  @Schema(description = "number of followers", example = "10")
+  private Long followersCount;
 
-  @Schema(description = "is login member's followee?", example = "true")
-  private Boolean isFollowing;
+  @Schema(description = "number of followees", example = "10")
+  private Long followeesCount;
+
+  @Schema(description = "number of bookmarks", example = "10")
+  private Long bookmarksCount;
 }

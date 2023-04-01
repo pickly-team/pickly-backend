@@ -9,20 +9,30 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.pickly.service.bookmark.common.BookmarkMapper;
+import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
+import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
+import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
+import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
+import org.pickly.service.bookmark.common.BookmarkMapper;
+import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Visibility;
+import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
+import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,12 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookmarkController {
 
   private final BookmarkService bookmarkService;
+  private final BookmarkMapper bookmarkMapper;
 
   @Operation(summary = "특정 유저의 좋아요 북마크 수 조회")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = PageResponse.class))),
+      @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/bookmarks/likes/count")
@@ -88,7 +97,36 @@ public class BookmarkController {
 
       @Parameter @RequestBody PageRequest pageRequest
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser, visibility);
+    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser,
+        visibility);
+  }
+
+  @Operation(summary = "특정 북마크 삭제")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+  })
+  @PutMapping("/bookmarks")
+  public BookmarkDeleteRes deleteBookmark(
+      @RequestBody
+      BookmarkDeleteReq request
+  ) {
+    BookmarkDeleteResDTO bookmarkDeleteResDTO = bookmarkService.deleteBookmark(
+        request.getBookmarkId());
+    return bookmarkMapper.toBookmarkDelete(bookmarkDeleteResDTO.getIsDeleted());
+  }
+
+  @Operation(summary = "북마크 리스트 삭제")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+  })
+  @PutMapping("/bookmarks/list")
+  public BookmarkListDeleteRes deleteBookmarks(
+      @RequestBody
+      BookmarkListDeleteReq request
+  ) {
+    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = bookmarkService.deleteBookmarks(
+        request.getBookmarkIds());
+    return bookmarkMapper.toBookmarkListDelete(bookmarkListDeleteResDTO.getIsDeleted());
   }
 
   // TODO : 멤버 아이디를 토큰에서 가져오도록 수정
