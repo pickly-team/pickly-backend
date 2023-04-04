@@ -7,12 +7,12 @@ import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
+import org.pickly.service.member.service.dto.HardModeDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
-import org.pickly.service.member.service.dto.MyProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.dto.MemberStatusDTO;
-import org.pickly.service.member.service.dto.MemberModeDTO;
+import org.pickly.service.member.service.dto.MyProfileDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.service.interfaces.NotificationStandardService;
@@ -67,12 +67,13 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional
-  public MemberModeDTO setHardMode(Long memberId, MemberStatusDTO request) {
+  public HardModeDTO setHardMode(Long memberId, MemberStatusDTO request) {
     Member member = findById(memberId);
 
     member.setHardMode(request.getIsHardMode());
     return memberMapper.toMemberStatusDTO(member.isHardMode(member.getIsHardMode()));
-    
+  }
+
   public MemberModeDTO findModeByMemberId(final Long memberId) {
     Member member = findById(memberId);
     NotificationStandard standard = notificationStandardService.findByMember(memberId);

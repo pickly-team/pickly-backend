@@ -1,6 +1,7 @@
 package org.pickly.service.member.service.interfaces;
 
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.service.dto.HardModeDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
@@ -24,5 +25,5 @@ public interface MemberService {
 
   void deleteMember(Long memberId);
 
-  MemberModeDTO setHardMode(Long memberId, MemberStatusDTO request);
+  HardModeDTO setHardMode(Long memberId, MemberStatusDTO request);
 }
