@@ -1,15 +1,20 @@
 package org.pickly.service.member.common;
 
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.member.controller.request.MemberStatusReq;
+import org.pickly.service.member.controller.response.HardModeRes;
 import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MyProfileRes;
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.notification.entity.NotificationStandard;
+import org.pickly.service.member.entity.MemberMode;
+import org.pickly.service.member.service.dto.HardModeDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberStatusDTO;
 import org.pickly.service.member.service.dto.MyProfileDTO;
+import org.pickly.service.notification.entity.NotificationStandard;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,19 +32,10 @@ public class MemberMapper {
         .build();
   }
 
-  public MemberInfoRes toMemberInfoRes(MemberInfoDTO dto) {
-    return MemberInfoRes.builder()
-        .id(dto.getId())
-        .nickname(dto.getNickname())
-        .profileEmoji(dto.getProfileEmoji())
-        .isFollowing(dto.getIsFollowing())
-        .build();
+  public HardModeRes toMemberStatusRes(HardModeDTO hardModeDTO) {
+    return new HardModeRes(hardModeDTO.getIsHardMode());
   }
 
-  public MemberStatusRes toMemberStatusRes(MemberModeDTO statusDTO) {
-    return new MemberStatusRes(statusDTO.getUserMode());
-  }
-  
   public MemberModeRes toResponse(MemberModeDTO dto) {
     return new MemberModeRes(dto.getIsHardMode(), dto.getStandardDate());
   }
@@ -87,19 +83,10 @@ public class MemberMapper {
         .build();
   }
 
-  public MemberInfoDTO toMemberInfoDTO(Member member, Boolean isFollowing) {
-    return MemberInfoDTO.builder()
-        .id(member.getId())
-        .nickname(member.getNickname())
-        .profileEmoji(member.getProfileEmoji())
-        .isFollowing(isFollowing)
-        .build();
+  public HardModeDTO toMemberStatusDTO(MemberMode isHardMode) {
+    return new HardModeDTO(isHardMode.getDescription());
   }
 
-  public MemberModeDTO toMemberStatusDTO(MemberMode isHardMode) {
-    return new MemberModeDTO(isHardMode.getDescription());
-  }
-  
   public MemberModeDTO toMemberModeDTO(Member member, NotificationStandard standard) {
     return MemberModeDTO.builder()
         .isHardMode(member.getIsHardMode())
