@@ -3,6 +3,7 @@ drop table if exists comment;
 drop table if exists bookmark;
 drop table if exists category;
 drop table if exists notification_standard;
+drop table if exists notifiaction;
 drop table if exists member;
 
 CREATE
@@ -171,5 +172,26 @@ create table notification_standard
 create trigger update_trigger
     before update
     on notification_standard
+    for each row
+    execute procedure updated_at();
+
+create table notification
+(
+    id bigserial
+        constraint notification_pk
+        primary key,
+    member_id         bigint                  not null,
+    title             varchar(255)            not null,
+    message           varchar(255)            not null,
+    is_checked        boolean                 not null,
+    notification_type integer                 not null,
+    created_at        timestamp default now() not null,
+    updated_at        timestamp,
+    deleted_at        timestamp
+);
+
+create trigger update_trigger
+    before update
+    on notification
     for each row
     execute procedure updated_at();

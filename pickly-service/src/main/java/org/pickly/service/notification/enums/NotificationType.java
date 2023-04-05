@@ -11,8 +11,7 @@ public enum NotificationType {
 
   NORMAL(1),
   HARD(2),
-  UNKNOWN(0)
-  ;
+  UNKNOWN(0);
 
   private final int type;
 
