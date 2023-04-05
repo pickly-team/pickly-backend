@@ -27,6 +27,7 @@ create table member
     name          varchar(20)             not null,
     nickname      varchar(20)             not null,
     profile_emoji text,
+    fcm_token     varchar(200),
     created_at    timestamp default now() not null,
     updated_at    timestamp,
     deleted_at    timestamp
@@ -160,7 +161,7 @@ create table notification_standard
         constraint bookmark_member_id_fk
         references member
         on update cascade on delete cascade,
-    standard_date integer default 7 not null,
+    standard_date integer   default 7     not null,
     is_active     boolean                 not null,
     created_at    timestamp default now() not null,
     updated_at    timestamp,
