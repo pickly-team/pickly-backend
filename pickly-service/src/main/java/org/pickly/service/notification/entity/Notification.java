@@ -30,7 +30,7 @@ public class Notification extends BaseEntity {
   @Column(nullable = false)
   private String message;
 
-  @Column(nullable = false)
+  @Column(name = "is_checked", nullable = false)
   private boolean isChecked;
 
   @Column(name = "notification_type", nullable = false)
