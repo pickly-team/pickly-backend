@@ -1,8 +1,8 @@
 INSERT INTO member
-    (username, password, is_hard_mode, email, name, nickname, profile_emoji)
+    (username, password, is_hard_mode, email, name, nickname, profile_emoji, fcm_token)
 VALUES
-    ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '😎'),
-    ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳');
+    ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '😎', null),
+    ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳', null);
 
 INSERT INTO category
 (member_id, is_auto_delete_mode, name, emoji)

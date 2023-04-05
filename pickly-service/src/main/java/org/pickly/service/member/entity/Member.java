@@ -40,6 +40,13 @@ public class Member extends BaseEntity {
   @Column(name = "profile_emoji", columnDefinition = "text")
   private String profileEmoji;
 
+  @Column(name = "fcm_token", length = 200)
+  private String fcmToken;
+
+  public void updateToken(final String newToken) {
+    this.fcmToken = newToken;
+  }
+
   public void updateProfile(String name, String nickname, String profileEmoji) {
     this.name = name;
     this.nickname = nickname;
