@@ -40,7 +40,7 @@ public class BlockController {
   /*
    * User Block
    */
-  @PostMapping("/members/{blockerId}/block/{blockeeId}")
+  @PostMapping("/member/{blockerId}/block/{blockeeId}")
   @Operation(summary = "Block Member")
   public void blockMember(
       @Parameter(name = "blokerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
@@ -52,7 +52,7 @@ public class BlockController {
     blockService.blockMember(blockerId, blockeeId);
   }
 
-  @DeleteMapping("/members/{blockerId}/block/{blockeeId}")
+  @DeleteMapping("/member/{blockerId}/block/{blockeeId}")
   @Operation(summary = "Unblock Member")
   public void unBlockMember(
       @Parameter(name = "blokerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
@@ -64,7 +64,7 @@ public class BlockController {
     blockService.unBlockMember(blockerId, blockeeId);
   }
 
-  @GetMapping("/members/blocks/{blockerId}")
+  @GetMapping("/member/blocks/{blockerId}")
   @Operation(summary = "Get Blocked Member")
   public BlockMemberRes getBlockedMembers(
       @Parameter(name = "blokerId", description = "유저 차단조회를 위한 대상 ID 값", example = "1", required = true)
@@ -81,7 +81,7 @@ public class BlockController {
   /*
    * Bookmark Block
    */
-  @PostMapping("/bookmarks/{blockerId}/block/{bookmarkId}")
+  @PostMapping("/bookmark/{blockerId}/block/{bookmarkId}")
   @Operation(summary = "Block Bookmark")
   public void blockBookmark(
       @Parameter(name = "blokerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
@@ -93,7 +93,7 @@ public class BlockController {
     blockService.blockBookmark(blockerId, bookmarkId);
   }
 
-  @DeleteMapping("/bookmarks/{blockerId}/block/{bookmarkId}")
+  @DeleteMapping("/bookmark/{blockerId}/block/{bookmarkId}")
   @Operation(summary = "Unblock Bookmark")
   public void unBlockBookmark(
       @Parameter(name = "blokerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
