@@ -4,6 +4,7 @@ drop table if exists block;
 drop table if exists bookmark;
 drop table if exists category;
 drop table if exists notification_standard;
+drop table if exists notifiaction;
 drop table if exists member;
 
 CREATE
@@ -28,6 +29,7 @@ create table member
     name          varchar(20)             not null,
     nickname      varchar(20)             not null,
     profile_emoji text,
+    fcm_token     varchar(200),
     created_at    timestamp default now() not null,
     updated_at    timestamp,
     deleted_at    timestamp
@@ -161,7 +163,7 @@ create table notification_standard
         constraint bookmark_member_id_fk
         references member
         on update cascade on delete cascade,
-    standard_date integer default 7 not null,
+    standard_date integer   default 7     not null,
     is_active     boolean                 not null,
     created_at    timestamp default now() not null,
     updated_at    timestamp,
@@ -174,6 +176,29 @@ create trigger update_trigger
     for each row
     execute procedure updated_at();
 
+
+create table notification
+(
+    id bigserial
+        constraint notification_pk
+        primary key,
+    member_id         bigint                  not null,
+    title             varchar(255)            not null,
+    message           varchar(255)            not null,
+    is_checked        boolean                 not null,
+    notification_type integer                 not null,
+    created_at        timestamp default now() not null,
+    updated_at        timestamp,
+    deleted_at        timestamp
+);
+
+create trigger update_trigger
+    before update
+    on notification
+    for each row
+    execute procedure updated_at();
+    
+    
 create table block
 (
     id bigserial

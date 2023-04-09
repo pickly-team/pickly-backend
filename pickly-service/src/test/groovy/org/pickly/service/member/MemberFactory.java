@@ -15,6 +15,7 @@ public class MemberFactory {
         .name(name)
         .nickname(nickname)
         .profileEmoji(profileEmoji)
+        .fcmToken("test1234566")
         .build();
   }
 

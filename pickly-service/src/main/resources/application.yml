@@ -1,7 +1,7 @@
 spring:
   # 실행할 프로필 정보
   profiles:
-    active: test
+    active: local
   # multipart 이용 시 파일/리퀘스트 사이즈 제한
   servlet:
     multipart:
