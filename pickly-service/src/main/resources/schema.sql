@@ -1,5 +1,6 @@
 drop table if exists friend;
 drop table if exists comment;
+drop table if exists block;
 drop table if exists bookmark;
 drop table if exists category;
 drop table if exists notification_standard;
@@ -170,5 +171,37 @@ create table notification_standard
 create trigger update_trigger
     before update
     on notification_standard
+    for each row
+    execute procedure updated_at();
+
+create table block
+(
+    id bigserial
+        constraint block_pk
+        primary key,
+
+    blocker_id bigint not null
+        constraint block_member_id_fk_2
+            references member
+            on update cascade on delete cascade,
+
+    blockee_id bigint
+        constraint block_member_id_fk
+        references member
+        on update cascade on delete cascade,
+
+    bookmark_id bigint
+        constraint block_bookmark_id_fk
+        references bookmark
+        on update cascade on delete cascade,
+
+    created_at timestamp default now() not null,
+    updated_at timestamp,
+    deleted_at timestamp
+);
+
+create trigger update_trigger
+    before update
+    on block
     for each row
     execute procedure updated_at();
