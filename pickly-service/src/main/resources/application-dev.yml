@@ -11,10 +11,6 @@ spring:
         enabled: always
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
   # schema.sql, data.sql 사용 여부
   sql:
     init:
@@ -40,4 +36,4 @@ pickly:
 decorator:
   datasource:
     p6spy:
-      enable-logging: true
+      enable-logging: false
