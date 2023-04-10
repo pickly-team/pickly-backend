@@ -40,3 +40,4 @@ target
 logs/
 logs
 data/
+.env-dev
