@@ -1,19 +1,43 @@
 # dev 설정 파일
 spring:
+  # .env파일 이용 여부
+  config:
+    import:
+      - optional:file:.env-dev[.properties]
   # jpa 관련 설정
   jpa:
     output:
       ansi:
         enabled: always
-    hibernate:
-      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
   # schema.sql, data.sql 사용 여부
   sql:
     init:
-      mode: never
+      mode: always
+  # postgreSQL local 설정
+  datasource:
+    url: jdbc:postgresql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DB_DBNAME}
+    username: ${DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
 
 # 로깅 관련
 logging:
   level:
-    root: debug
-    org.springframework.jdbc.core.JdbcTemplate: debug
+    root: info
+    org.springframework.jdbc.core.JdbcTemplate: info
+
+# 서버 관련
+pickly:
+  enabled:
+    access: true
+
+# p6spy
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
