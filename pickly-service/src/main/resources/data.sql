@@ -27,10 +27,11 @@ INSERT INTO friend
 VALUES (1, 2, false),
        (2, 1, true);
 
+-- notify_daily_at is  time without timezone
 INSERT INTO notification_standard
-    (member_id, standard_date, is_active)
-VALUES (1, 7, true),
-       (2, 3, false);
+    (member_id, notify_daily_at, is_active)
+VALUES (1, '09:00:00', true),
+       (2, '18:00:00', false);
 
 INSERT INTO notification
     (member_id, bookmark_id, title, content, is_checked, notification_type)
