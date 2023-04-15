@@ -15,7 +15,7 @@ import org.pickly.service.member.service.dto.MemberStatusDTO;
 import org.pickly.service.member.service.dto.MyProfileDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
-import org.pickly.service.notification.service.interfaces.NotificationStandardService;
+import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +24,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-  private final NotificationStandardService notificationStandardService;
   private final MemberRepository memberRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
   private final BookmarkRepository bookmarkRepository;
+  private final NotificationStandardRepository notificationStandardRepository;
+
+  @Transactional(readOnly = true)
+  public NotificationStandard findNotificationStandardByMemberId(final Long memberId) {
+    return notificationStandardRepository.findByMemberId(memberId)
+        .orElseThrow(() -> new EntityNotFoundException("요청 member의 알림 기준이 존재하지 않습니다."));
+  }
 
   @Override
   public void existsById(Long memberId) {
@@ -76,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
 
   public MemberModeDTO findModeByMemberId(final Long memberId) {
     Member member = findById(memberId);
-    NotificationStandard standard = notificationStandardService.findByMember(memberId);
+    NotificationStandard standard = findNotificationStandardByMemberId(memberId);
     return memberMapper.toMemberModeDTO(member, standard);
   }
 
