@@ -1,9 +1,11 @@
 package org.pickly.service.notification.controller.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class NotificationRes {
 
   @Schema(description = "Notification ID", example = "1")
