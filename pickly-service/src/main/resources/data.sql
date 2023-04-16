@@ -33,7 +33,6 @@ VALUES (1, 7, true),
        (2, 3, false);
 
 INSERT INTO notification
-    (member_id, title, content, is_checked, notification_type)
-VALUES (1, '테스트 알림', '테스트입니다', false, 1),
-       (1, '테스트 알림2', '이것도 테스트에요', true, 1),
-       (2, '안녕안녕', '마이크테스트 아아', true, 1);
+    (member_id, bookmark_id, title, content, is_checked, notification_type)
+VALUES (1, 1, '테스트 알림', '테스트입니다', false, 1),
+       (1, 1, '테스트 알림2', '이것도 테스트에요', true, 1);

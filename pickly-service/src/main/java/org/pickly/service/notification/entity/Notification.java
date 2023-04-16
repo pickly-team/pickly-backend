@@ -24,6 +24,9 @@ public class Notification extends BaseEntity {
   @Column(name = "member_id", nullable = false)
   private Long memberId;
 
+  @Column(name = "bookmark_id", nullable = false)
+  private Long bookmarkId;
+
   @Column(nullable = false)
   private String title;
 

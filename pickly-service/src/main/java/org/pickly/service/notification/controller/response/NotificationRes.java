@@ -20,4 +20,7 @@ public class NotificationRes {
   @Schema(description = "Bookmark ID", example = "112")
   private Long bookmarkId;
 
+  @Schema(description = "Is member read this notification?", example = "true")
+  private Boolean isChecked;
+
 }

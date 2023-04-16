@@ -181,6 +181,7 @@ create table notification
         constraint notification_pk
         primary key,
     member_id         bigint                  not null,
+    bookmark_id       bigint                  not null,
     title             varchar(255)            not null,
     content           varchar(255)            not null,
     is_checked        boolean                 not null,
