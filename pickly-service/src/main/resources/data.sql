@@ -32,7 +32,7 @@ INSERT INTO notification_standard
 VALUES (1, 7, true),
        (2, 3, false);
 
-INSERT INTO notifiaction
+INSERT INTO notification
     (member_id, title, content, is_checked, notification_type)
 VALUES (1, '테스트 알림', '테스트입니다', false, 1),
        (1, '테스트 알림2', '이것도 테스트에요', true, 1),
