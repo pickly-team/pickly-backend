@@ -11,11 +11,11 @@ public interface BlockService {
 
   void unBlockMember(Long blockerId, Long blockeeId);
 
-  List<BlockMemberDTO> getBlockedMembers(Long blockerId, Pageable page);
+  List<BlockMemberDTO> getBlockedMembers(Long blockerId, Long cursorId, Integer size);
 
   void blockBookmark(Long blockerId, Long bookmarkId);
 
   void unBlockBookmark(Long blockerId, Long bookmarkId);
 
-  List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Pageable page);
+  List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Long cursorId, Integer size);
 }
