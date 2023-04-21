@@ -14,7 +14,6 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,12 +44,15 @@ public class BlockServiceImpl implements BlockService {
   @Override
   @Transactional
   public void unBlockMember(Long blockerId, Long blockeeId) {
-    blockRepository.unBlockMember(blockerId, blockeeId);
+    Member blocker = memberService.findById(blockerId);
+    Member blockee = memberService.findById(blockeeId);
+
+    blockRepository.unBlockMember(blocker.getId(), blockee.getId());
   }
 
   @Override
-  public List<BlockMemberDTO> getBlockedMembers(Long blockerId, Pageable page) {
-    return blockQueryRepository.getBlockedMembers(blockerId, page);
+  public List<BlockMemberDTO> getBlockedMembers(Long blockerId, Long cursorId, Integer size) {
+    return blockQueryRepository.getBlockedMembers(blockerId, cursorId, size);
   }
 
 
@@ -72,8 +74,8 @@ public class BlockServiceImpl implements BlockService {
   }
 
   @Override
-  public List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Pageable page) {
-    return blockQueryRepository.getBlockedBookmarks(blockerId, page);
+  public List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Long cursorId, Integer size) {
+    return blockQueryRepository.getBlockedBookmarks(blockerId, cursorId, size);
   }
 
   private void checkAlreadyBlock(Long blockerId, Long blockeeId) {
@@ -87,5 +89,4 @@ public class BlockServiceImpl implements BlockService {
       throw new BusinessException(ErrorCode.ENTITY_CONFLICT);
     }
   }
-
 }
