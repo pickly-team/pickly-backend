@@ -176,6 +176,7 @@ create trigger update_trigger
     for each row
     execute procedure updated_at();
 
+
 create table notification
 (
     id bigserial
