@@ -13,13 +13,13 @@ import org.pickly.service.block.controller.response.BlockMemberRes;
 import org.pickly.service.block.service.BlockService;
 import org.pickly.service.block.service.dto.BlockBookmarkDTO;
 import org.pickly.service.block.service.dto.BlockMemberDTO;
-import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -70,9 +70,10 @@ public class BlockController {
       @Parameter(name = "blokerId", description = "유저 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
-      @Parameter(name = "page & size", description = "페이지 번호 & 페이지 사이즈", example = "1 & 2", required = true) final Pageable page
+      @Parameter(name = "cursor", description = "마지막 끝의 Id", example = "1", required = true) final @RequestParam Long cursorId,
+      @Parameter(name = "size", description = "페이지 사이즈", example = "1", required = true) final @RequestParam Integer size
   ) {
-    List<BlockMemberDTO> blockedMembers = blockService.getBlockedMembers(blockerId, page);
+    List<BlockMemberDTO> blockedMembers = blockService.getBlockedMembers(blockerId, cursorId, size);
 
     return BlockMapper.toMember(blockedMembers);
   }
@@ -111,9 +112,10 @@ public class BlockController {
       @Parameter(name = "blokerId", description = "북마크 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
-      @Parameter(name = "page & size", description = "페이지 번호 & 페이지 사이즈", example = "1 & 2", required = true) final Pageable page
+      @Parameter(name = "page", description = "페이지 번호", example = "1", required = true) final @RequestParam Long cursorId,
+      @Parameter(name = "size", description = "페이지 사이즈", example = "1", required = true) final @RequestParam Integer size
   ) {
-    List<BlockBookmarkDTO> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, page);
+    List<BlockBookmarkDTO> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, cursorId, size);
 
     return BlockMapper.toBookmark(blockedBookmarks);
   }
