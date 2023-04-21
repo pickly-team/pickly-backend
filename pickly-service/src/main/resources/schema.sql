@@ -4,7 +4,7 @@ drop table if exists block;
 drop table if exists bookmark;
 drop table if exists category;
 drop table if exists notification_standard;
-drop table if exists notifiaction;
+drop table if exists notification;
 drop table if exists member;
 
 CREATE
