@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface BlockQueryRepository {
 
-  List<BlockMemberDTO> getBlockedMembers(Long blockerId, Pageable page);
+  List<BlockMemberDTO> getBlockedMembers(Long blockerId, Long cursorId, Integer size);
 
-  List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Pageable page);
+  List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Long cursorId, Integer size);
 
 }
