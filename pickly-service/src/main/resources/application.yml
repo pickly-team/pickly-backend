@@ -18,6 +18,7 @@ spring:
       pageable:
         max-page-size: 20
         default-page-size: 20
+        one-indexed-parameters: true
   # GraphQL 관련
   graphql:
     graphiql:
