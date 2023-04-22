@@ -182,8 +182,9 @@ create table notification
         constraint notification_pk
         primary key,
     member_id         bigint                  not null,
+    bookmark_id       bigint                  not null,
     title             varchar(255)            not null,
-    message           varchar(255)            not null,
+    content           varchar(255)            not null,
     is_checked        boolean                 not null,
     notification_type integer                 not null,
     created_at        timestamp default now() not null,
@@ -196,6 +197,29 @@ create trigger update_trigger
     on notification
     for each row
     execute procedure updated_at();
+
+
+create table notification_template
+(
+    id bigserial
+        constraint notification_pk
+        primary key,
+    title             varchar(255)            NOT NULL,
+    content           varchar(255)            NOT NULL,
+    notification_type integer                 not null,
+    created_at        timestamp default now() not null,
+    updated_at        timestamp,
+    deleted_at        timestamp
+);
+
+
+create trigger update_trigger
+    before update
+    on notification_template
+    for each row
+    execute procedure updated_at();
+
+
 
 create table block
 (

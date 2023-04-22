@@ -13,7 +13,15 @@ import org.springframework.stereotype.Component;
 public class CommentMapper {
 
   public CommentRes toResponse(CommentDTO dto) {
-    return new CommentRes(dto);
+    return CommentRes.builder()
+        .id(dto.getId())
+        .member(dto.getMember())
+        .bookmark(dto.getBookmark())
+        .category(dto.getCategory())
+        .isOwnerComment(dto.getIsOwnerComment())
+        .content(dto.getContent())
+        .createdTimestamp(dto.getCreatedTimestamp())
+        .build();
   }
 
   public CommentDTO toDTO(Comment comment) {
