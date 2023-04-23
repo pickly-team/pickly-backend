@@ -202,7 +202,7 @@ create trigger update_trigger
 create table notification_template
 (
     id bigserial
-        constraint notification_pk
+        constraint notification_template_pk
         primary key,
     title             varchar(255)            NOT NULL,
     content           varchar(255)            NOT NULL,
