@@ -3,6 +3,7 @@ drop table if exists comment;
 drop table if exists block;
 drop table if exists bookmark;
 drop table if exists category;
+drop table if exists notification_template;
 drop table if exists notification_standard;
 drop table if exists notification;
 drop table if exists member;
@@ -202,7 +203,7 @@ create trigger update_trigger
 create table notification_template
 (
     id bigserial
-        constraint notification_pk
+        constraint notification_template_pk
         primary key,
     title             varchar(255)            NOT NULL,
     content           varchar(255)            NOT NULL,
