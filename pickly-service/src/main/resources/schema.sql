@@ -164,7 +164,7 @@ create table notification_standard
         constraint bookmark_member_id_fk
         references member
         on update cascade on delete cascade,
-    standard_date integer   default 7     not null,
+    notify_daily_at time                  not null,
     is_active     boolean                 not null,
     created_at    timestamp default now() not null,
     updated_at    timestamp,

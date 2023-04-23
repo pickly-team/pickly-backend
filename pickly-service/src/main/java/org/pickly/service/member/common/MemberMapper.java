@@ -37,7 +37,7 @@ public class MemberMapper {
   }
 
   public MemberModeRes toResponse(MemberModeDTO dto) {
-    return new MemberModeRes(dto.getIsHardMode(), dto.getStandardDate());
+    return new MemberModeRes(dto.getIsHardMode(), dto.getNotifyDailyAt());
   }
 
   public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
@@ -90,7 +90,7 @@ public class MemberMapper {
   public MemberModeDTO toMemberModeDTO(Member member, NotificationStandard standard) {
     return MemberModeDTO.builder()
         .isHardMode(member.getIsHardMode())
-        .standardDate(standard.getStandardDate())
+        .notifyDailyAt(standard.getNotifyDailyAt())
         .build();
   }
 
