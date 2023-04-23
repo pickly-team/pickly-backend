@@ -14,8 +14,6 @@ import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
-import org.pickly.service.bookmark.common.BookmarkMapper;
-import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Visibility;
@@ -71,8 +69,14 @@ public class BookmarkController {
   public PageResponse<BookmarkItemDTO> findMemberLikes(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
-      @Parameter @RequestBody PageRequest pageRequest
+
+      @Parameter(name = "cursorId", description = "커서 ID 값 :: 직전 response의 마지막 요소의 ID. default value = null", example = "1")
+      @RequestParam final Long cursorId,
+
+      @Parameter(name = "pageSize", description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam final Integer pageSize
   ) {
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     return bookmarkService.findMemberLikeBookmarks(pageRequest, memberId);
   }
 
@@ -95,10 +99,16 @@ public class BookmarkController {
       @Parameter(name = "visibility", description = "북마크 공개 범위", example = "SCOPE_PUBLIC")
       @RequestParam(required = false) final Visibility visibility,
 
-      @Parameter @RequestBody PageRequest pageRequest
+      @Parameter(name = "cursorId", description = "커서 ID 값 :: 직전 response의 마지막 요소의 ID. default value = null", example = "1")
+      @RequestParam final Long cursorId,
+
+      @Parameter(name = "pageSize", description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam final Integer pageSize
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser,
-        visibility);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    return bookmarkService.findMemberBookmarks(
+        pageRequest, memberId, categoryId, readByUser, visibility
+    );
   }
 
   @Operation(summary = "특정 북마크 삭제")
