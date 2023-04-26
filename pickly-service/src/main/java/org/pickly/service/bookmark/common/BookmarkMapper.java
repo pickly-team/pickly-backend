@@ -41,19 +41,19 @@ public class BookmarkMapper {
     return new BookmarkListDeleteResDTO(request);
   }
 
-  public BookmarkRes entityToResponseDto(Bookmark request) {
+  public BookmarkRes entityToResponseDto(Bookmark bookmark) {
 
     return BookmarkRes
         .builder()
-        .id(request.getId())
-        .categoryId(request.getCategory().getId())
-        .memberId(request.getMember().getId())
-        .url(request.getUrl())
-        .title(request.getTitle())
-        .previewImageUrl(request.getPreviewImageUrl())
-        .isUserLike(request.getIsUserLike())
-        .readByUser(request.getReadByUser())
-        .visibility(request.getVisibility().getDescription())
+        .id(bookmark.getId())
+        .categoryId(bookmark.getCategory().getId())
+        .memberId(bookmark.getMember().getId())
+        .url(bookmark.getUrl())
+        .title(bookmark.getTitle())
+        .previewImageUrl(bookmark.getPreviewImageUrl())
+        .isUserLike(bookmark.getIsUserLike())
+        .readByUser(bookmark.getReadByUser())
+        .visibility(bookmark.getVisibility().getDescription())
         .build();
   }
 
