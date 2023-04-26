@@ -160,6 +160,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
+  @Transactional
   public Bookmark create(BookmarkCreateReq dto) {
 
     Category category = categoryRepository.findById(dto.getCategoryId())
