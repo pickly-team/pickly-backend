@@ -1,9 +1,8 @@
 package org.pickly.service.bookmark.controller.request;
 
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +24,10 @@ public class BookmarkUpdateReq {
   @NotBlank(message = "제목을 입력해주세요")
   private String title;
 
-  @NotBlank(message = "읽음 표시 정보는 필수입니다. ")
+  @NotNull(message = "읽음 표시 정보는 필수입니다. ")
   private Boolean readByUser;
 
-  @NotBlank(message = "공개 범위 정보는 필수입니다. ")
+  @NotNull(message = "공개 범위 표시 정보는 필수입니다. ")
   private Visibility visibility;
 
 }
