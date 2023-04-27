@@ -6,16 +6,21 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
+import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
+import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
+import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
+import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
@@ -23,6 +28,7 @@ import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -163,6 +169,45 @@ public class BookmarkController {
       Long bookmarkId
   ) {
     bookmarkService.cancelLikeBookmark(bookmarkId);
+  }
+
+  @PostMapping("/bookmarks")
+  public ResponseEntity<BookmarkRes> create(
+      @Valid @RequestBody BookmarkCreateReq dto
+  ) {
+    Bookmark entity = bookmarkService.create(dto);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(response);
+  }
+
+  @GetMapping("/bookmarks/{bookmarkId}")
+  public ResponseEntity<BookmarkRes> getBookmarkById(
+      @PathVariable Long bookmarkId
+  ) {
+    Bookmark entity = bookmarkService.findById(bookmarkId);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/categories/{categoryId}/bookmarks")
+  public PageResponse<BookmarkItemDTO> getBookmarkByCategoryId(
+      @PathVariable Long categoryId,
+      @Parameter @RequestBody PageRequest pageRequest
+  ) {
+
+    return bookmarkService.findBookmarkByCategoryId(pageRequest, categoryId);
+  }
+
+  @PutMapping("/bookmarks/{bookmarkId}")
+  public void updateBookmark(
+      @PathVariable Long bookmarkId,
+      @RequestBody @Valid BookmarkUpdateReq request
+  ) {
+    bookmarkService.updateBookmark(bookmarkId,
+        bookmarkMapper.toBookmarkUpdateReqDTO(request));
   }
 
 }

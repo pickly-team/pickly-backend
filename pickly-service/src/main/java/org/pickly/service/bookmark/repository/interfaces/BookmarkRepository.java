@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
@@ -25,4 +26,10 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
   @Modifying(clearAutomatically = true)
   @Query("DELETE FROM Bookmark b WHERE b.id IN :bookmarkIds")
   Integer deleteBookmarksByIds(@Param("bookmarkIds") List<Long> bookmarkIds);
+
+  @Transactional
+  @Modifying
+  @Query("UPDATE Bookmark b SET b.readByUser=True WHERE b.id=:bookmarkId")
+  void readByUser(@Param("bookmarkId") Long id);
+
 }
