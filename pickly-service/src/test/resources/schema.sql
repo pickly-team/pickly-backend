@@ -1,7 +1,11 @@
 drop table if exists friend;
 drop table if exists comment;
+drop table if exists block;
 drop table if exists bookmark;
 drop table if exists category;
+drop table if exists notification_template;
+drop table if exists notification_standard;
+drop table if exists notification;
 drop table if exists member;
 
 CREATE
@@ -26,6 +30,7 @@ create table member
     name          varchar(20)             not null,
     nickname      varchar(20)             not null,
     profile_emoji text,
+    fcm_token     varchar(200),
     created_at    timestamp default now() not null,
     updated_at    timestamp,
     deleted_at    timestamp
@@ -130,18 +135,18 @@ create table friend
     id bigserial
         constraint friend_pk
         primary key,
-    followee_id bigint                  not null
+    followee_id          bigint                  not null
         constraint friend_member_id_fk
         references member
         on update cascade on delete cascade,
-    follower_id bigint                  not null
+    follower_id          bigint                  not null
         constraint friend_member_id_fk_2
         references member
         on update cascade on delete cascade,
-    notification_enabled boolean        not null,
-    created_at  timestamp default now() not null,
-    updated_at  timestamp,
-    deleted_at  timestamp
+    notification_enabled boolean                 not null,
+    created_at           timestamp default now() not null,
+    updated_at           timestamp,
+    deleted_at           timestamp
 );
 
 create trigger update_trigger
@@ -149,3 +154,102 @@ create trigger update_trigger
     on friend
     for each row
     execute procedure updated_at();
+
+create table notification_standard
+(
+    id bigserial
+        constraint notification_standard_pk
+        primary key,
+    member_id     bigint                  not null
+        constraint bookmark_member_id_fk
+        references member
+        on update cascade on delete cascade,
+    notify_daily_at time                  not null,
+    is_active     boolean                 not null,
+    created_at    timestamp default now() not null,
+    updated_at    timestamp,
+    deleted_at    timestamp
+);
+
+create trigger update_trigger
+    before update
+    on notification_standard
+    for each row
+    execute procedure updated_at();
+
+create table notification
+(
+    id bigserial
+        constraint notification_pk
+        primary key,
+    member_id         bigint                  not null,
+    bookmark_id       bigint                  not null,
+    title             varchar(255)            not null,
+    content           varchar(255)            not null,
+    is_checked        boolean                 not null,
+    notification_type integer                 not null,
+    created_at        timestamp default now() not null,
+    updated_at        timestamp,
+    deleted_at        timestamp
+);
+
+create trigger update_trigger
+    before update
+    on notification
+    for each row
+    execute procedure updated_at();
+
+
+create table notification_template
+(
+    id bigserial
+        constraint notification_template_pk
+        primary key,
+    title             varchar(255)            NOT NULL,
+    content           varchar(255)            NOT NULL,
+    notification_type integer                 not null,
+    created_at        timestamp default now() not null,
+    updated_at        timestamp,
+    deleted_at        timestamp
+);
+
+
+create trigger update_trigger
+    before update
+    on notification_template
+    for each row
+    execute procedure updated_at();
+
+
+create table block
+(
+    id bigserial
+        constraint block_pk
+        primary key,
+
+    blocker_id bigint not null
+        constraint block_member_id_fk_2
+        references member
+        on update cascade on delete cascade,
+
+    blockee_id bigint
+        constraint block_member_id_fk
+        references member
+        on update cascade on delete cascade,
+
+    bookmark_id bigint
+        constraint block_bookmark_id_fk
+        references bookmark
+        on update cascade on delete cascade,
+
+    created_at timestamp default now() not null,
+    updated_at timestamp,
+    deleted_at timestamp
+);
+
+create trigger update_trigger
+    before update
+    on block
+    for each row
+    execute procedure updated_at();
+

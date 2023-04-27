@@ -64,7 +64,7 @@ public class BookmarkController {
 
   @Operation(
       summary = "특정 유저가 좋아요한 북마크 전체 조회",
-      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 MAX(bookmarkId)"
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID"
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
@@ -75,14 +75,20 @@ public class BookmarkController {
   public PageResponse<BookmarkItemDTO> findMemberLikes(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
-      @Parameter @RequestBody PageRequest pageRequest
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
   ) {
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     return bookmarkService.findMemberLikeBookmarks(pageRequest, memberId);
   }
 
   @Operation(
       summary = "특정 유저의 북마크 전체 조회",
-      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 MAX(bookmarkId). 필터링이 필요하지 않다면 queryParam null로!"
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID. 필터링이 필요하지 않다면 queryParam null로!"
   )
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/members/{memberId}/bookmarks")
@@ -99,10 +105,16 @@ public class BookmarkController {
       @Parameter(name = "visibility", description = "북마크 공개 범위", example = "SCOPE_PUBLIC")
       @RequestParam(required = false) final Visibility visibility,
 
-      @Parameter @RequestBody PageRequest pageRequest
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser,
-        visibility);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    return bookmarkService.findMemberBookmarks(
+        pageRequest, memberId, categoryId, readByUser, visibility
+    );
   }
 
   @Operation(summary = "특정 북마크 삭제")

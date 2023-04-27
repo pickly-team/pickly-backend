@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.member.controller.request.MemberStatusReq;
+import org.pickly.service.member.controller.response.HardModeRes;
 import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MyProfileRes;
@@ -55,17 +57,17 @@ public class MemberController {
     memberService.updateMyProfile(memberId, memberMapper.toDTO(request));
   }
 
-// TODO: ApiResponse.content 없어도 Swagger Schema 동작하는지 확인 필요
-@GetMapping("/me")
-@Operation(summary = "Get member profile")
-public MyProfileRes getMemberProfile(
-    @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
-    @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
-) {
-  return memberMapper.toResponse(
-      memberService.findMyProfile(loginId)
-  );
-}
+  // TODO: ApiResponse.content 없어도 Swagger Schema 동작하는지 확인 필요
+  @GetMapping("/me")
+  @Operation(summary = "Get member profile")
+  public MyProfileRes getMemberProfile(
+      @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
+  ) {
+    return memberMapper.toResponse(
+        memberService.findMyProfile(loginId)
+    );
+  }
 
   @GetMapping("/{memberId}")
   @Operation(summary = "Get member profile")
@@ -105,6 +107,22 @@ public MyProfileRes getMemberProfile(
     return memberMapper.toResponse(
         memberService.findModeByMemberId(memberId)
     );
+  }
+
+  @PutMapping("/status")
+  @Operation(summary = "HardMode Status ON / OFF")
+  public HardModeRes switchToHardMode(
+      @RequestParam
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId,
+
+      @RequestBody
+      @Valid
+      MemberStatusReq request
+  ) {
+    return memberMapper.toMemberStatusRes(
+        memberService.setHardMode(memberId, memberMapper.toStatusDTO(request)));
   }
 
   @DeleteMapping("/me")

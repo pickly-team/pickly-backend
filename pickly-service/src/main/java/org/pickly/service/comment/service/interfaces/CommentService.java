@@ -3,6 +3,7 @@ package org.pickly.service.comment.service.interfaces;
 import java.util.List;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
+import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 
 public interface CommentService {
 
@@ -13,5 +14,9 @@ public interface CommentService {
   Long countMemberComments(Long memberId);
 
   List<CommentDTO> findByMember(Long memberId);
+
+  void delete(Long commentId);
+
+  CommentDTO update(Long commentId, CommentUpdateDTO request);
 
 }

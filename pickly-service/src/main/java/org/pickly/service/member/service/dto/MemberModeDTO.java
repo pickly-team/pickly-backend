@@ -1,5 +1,6 @@
 package org.pickly.service.member.service.dto;
 
+import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,6 @@ import lombok.Getter;
 public class MemberModeDTO {
 
   private Boolean isHardMode;
-  private Integer standardDate;
+  private LocalTime notifyDailyAt;
 
 }
