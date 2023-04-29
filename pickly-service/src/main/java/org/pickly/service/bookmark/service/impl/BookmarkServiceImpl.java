@@ -1,6 +1,7 @@
 package org.pickly.service.bookmark.service.impl;
 
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -168,8 +169,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     Member member = memberRepository.findById(dto.getMemberId())
         .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
     Bookmark entity = new Bookmark(category, member, dto.getUrl(),
-        dto.getTitle(), dto.getPreviewImageUrl(), dto.getIsUserLike(),
-        dto.getReadByUser(), dto.getVisibility());
+        dto.getTitle(), dto.getPreviewImageUrl(), false,
+        false, dto.getVisibility());
 
     return bookmarkRepository.save(entity);
   }
