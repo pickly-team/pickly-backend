@@ -33,12 +33,6 @@ public class BookmarkCreateReq {
   @NotBlank(message = "프리뷰 이미지 URL을 입력해주세요")
   private String previewImageUrl;
 
-  @NotNull(message = "좋아요 정보는 필수입니다. ")
-  private Boolean isUserLike;
-
-  @NotNull(message = "읽음 표시 정보는 필수입니다. ")
-  private Boolean readByUser;
-
   @NotNull(message = "공개 범위 표시 정보는 필수입니다. ")
   private Visibility visibility;
 
