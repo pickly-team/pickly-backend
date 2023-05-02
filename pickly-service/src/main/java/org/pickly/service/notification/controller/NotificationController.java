@@ -13,7 +13,9 @@ import org.pickly.service.notification.common.NotificationMapper;
 import org.pickly.service.notification.controller.response.NotificationRes;
 import org.pickly.service.notification.service.dto.NotificationDTO;
 import org.pickly.service.notification.service.interfaces.NotificationService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,30 @@ public class NotificationController {
   ) {
     List<NotificationDTO> dtoList = notificationService.findMemberNotifications(memberId);
     return dtoList.stream().map(notificationMapper::toResponse).collect(Collectors.toList());
+  }
+
+  @Operation(summary = "특정 알림 읽기")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공")
+  })
+  @PatchMapping("notifications/{notificationId}")
+  public void readNotification(
+      @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
+      @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId
+  ) {
+    notificationService.readNotification(notificationId);
+  }
+
+  @Operation(summary = "특정 알림 삭제")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공")
+  })
+  @DeleteMapping("notifications/{notificationId}")
+  public void deleteNotification(
+      @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
+      @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId
+  ) {
+    notificationService.deleteNotification(notificationId);
   }
 
 }

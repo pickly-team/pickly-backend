@@ -7,4 +7,8 @@ public interface NotificationService {
 
   List<NotificationDTO> findMemberNotifications(Long memberId);
 
+  void readNotification(Long notificationId);
+
+  void deleteNotification(Long notificationId);
+
 }
