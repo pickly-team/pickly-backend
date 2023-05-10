@@ -54,6 +54,22 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
         .fetchFirst();
   }
 
+  @Override
+  public List<Bookmark> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId) {
+
+    Long cursorId = pageRequest.getCursorId();
+    Integer pageSize = pageRequest.getPageSize();
+
+    return queryFactory
+        .selectFrom(bookmark)
+        .where(
+            eqCategoryId(categoryId)
+        )
+        .orderBy(bookmark.id.desc())
+        .limit(pageSize + CHECK_LAST)
+        .fetch();
+  }
+
   private BooleanExpression eqMemberId(final Long memberId) {
     if (memberId == null) {
       return null;

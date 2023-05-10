@@ -10,12 +10,15 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.controller.request.CommentCreateReq;
+import org.pickly.service.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.comment.controller.response.CommentRes;
 import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,6 +88,29 @@ public class CommentController {
     return dtoList.stream()
         .map(commentMapper::toResponse)
         .toList();
+  }
+
+  // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
+  @DeleteMapping("/comments/{commentId}")
+  @Operation(summary = "특정 Comment 삭제")
+  public void delete(
+      @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
+      @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId
+  ) {
+    commentService.delete(commentId);
+  }
+
+  // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
+  @PutMapping("/comments/{commentId}")
+  @Operation(summary = "특정 Comment 수정")
+  public CommentRes updateComment(
+      @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
+      @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId,
+
+      @Valid @RequestBody CommentUpdateReq request
+  ) {
+    CommentDTO dto = commentService.update(commentId, commentMapper.toUpdateDTO(request));
+    return commentMapper.toResponse(dto);
   }
 
 }

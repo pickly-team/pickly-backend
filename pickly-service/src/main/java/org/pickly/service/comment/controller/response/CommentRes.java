@@ -1,10 +1,11 @@
 package org.pickly.service.comment.controller.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
-import org.pickly.service.comment.service.dto.CommentDTO;
 
 @Getter
+@Builder
 public class CommentRes {
 
   @Schema(description = "Comment ID", example = "1")
@@ -27,15 +28,5 @@ public class CommentRes {
 
   @Schema(description = "Comment 생성일자. Unix timestamp 사용", example = "1678802356")
   private Long createdTimestamp;
-
-  public CommentRes(CommentDTO dto) {
-    this.id = dto.getId();
-    this.member = dto.getMember();
-    this.bookmark = dto.getBookmark();
-    this.category = dto.getCategory();
-    this.isOwnerComment = dto.getIsOwnerComment();
-    this.content = dto.getContent();
-    this.createdTimestamp = dto.getCreatedTimestamp();
-  }
 
 }

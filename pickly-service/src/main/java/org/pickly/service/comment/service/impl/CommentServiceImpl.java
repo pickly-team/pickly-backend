@@ -2,6 +2,7 @@ package org.pickly.service.comment.service.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;
@@ -10,6 +11,7 @@ import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
+import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -29,7 +31,8 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentDTO create(final Long bookmarkId, final Long memberId, final CommentCreateDTO request) {
+  public CommentDTO create(final Long bookmarkId, final Long memberId,
+      final CommentCreateDTO request) {
     Bookmark bookmark = bookmarkService.findByIdWithCategory(bookmarkId);
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
@@ -49,8 +52,27 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<CommentDTO> findByMember(Long memberId) {
+  public List<CommentDTO> findByMember(final Long memberId) {
     return commentQueryRepository.findComments(memberId, null);
+  }
+
+  @Override
+  @Transactional
+  public void delete(final Long commentId) {
+    Comment comment = findById(commentId);
+    commentRepository.delete(comment);
+  }
+
+  @Override
+  public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
+    Comment comment = findById(commentId);
+    comment.updateContent(request.getContent());
+    return commentMapper.toDTO(comment);
+  }
+
+  public Comment findById(final Long id) {
+    return commentRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
   }
 
 }

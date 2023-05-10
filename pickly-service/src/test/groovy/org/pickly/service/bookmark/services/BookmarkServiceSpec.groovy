@@ -56,4 +56,5 @@ class BookmarkServiceSpec extends Specification {
         then:
         count == 3
     }
+
 }

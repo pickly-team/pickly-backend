@@ -8,4 +8,5 @@ public interface NotificationStandardRepository extends JpaRepository<Notificati
 
   Optional<NotificationStandard> findByMemberId(Long memberId);
 
+  boolean existsByMemberId(Long memberId);
 }

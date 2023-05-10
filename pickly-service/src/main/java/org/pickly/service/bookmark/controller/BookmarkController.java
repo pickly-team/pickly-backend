@@ -6,18 +6,21 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
+import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
 import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
-import org.pickly.service.bookmark.common.BookmarkMapper;
-import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
+import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
+import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
+import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
@@ -25,6 +28,7 @@ import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,7 +64,7 @@ public class BookmarkController {
 
   @Operation(
       summary = "특정 유저가 좋아요한 북마크 전체 조회",
-      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 MAX(bookmarkId)"
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID"
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
@@ -71,14 +75,20 @@ public class BookmarkController {
   public PageResponse<BookmarkItemDTO> findMemberLikes(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
-      @Parameter @RequestBody PageRequest pageRequest
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
   ) {
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     return bookmarkService.findMemberLikeBookmarks(pageRequest, memberId);
   }
 
   @Operation(
       summary = "특정 유저의 북마크 전체 조회",
-      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 MAX(bookmarkId). 필터링이 필요하지 않다면 queryParam null로!"
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID. 필터링이 필요하지 않다면 queryParam null로!"
   )
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/members/{memberId}/bookmarks")
@@ -95,10 +105,16 @@ public class BookmarkController {
       @Parameter(name = "visibility", description = "북마크 공개 범위", example = "SCOPE_PUBLIC")
       @RequestParam(required = false) final Visibility visibility,
 
-      @Parameter @RequestBody PageRequest pageRequest
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
   ) {
-    return bookmarkService.findMemberBookmarks(pageRequest, memberId, categoryId, readByUser,
-        visibility);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    return bookmarkService.findMemberBookmarks(
+        pageRequest, memberId, categoryId, readByUser, visibility
+    );
   }
 
   @Operation(summary = "특정 북마크 삭제")
@@ -153,6 +169,45 @@ public class BookmarkController {
       Long bookmarkId
   ) {
     bookmarkService.cancelLikeBookmark(bookmarkId);
+  }
+
+  @PostMapping("/bookmarks")
+  public ResponseEntity<BookmarkRes> create(
+      @Valid @RequestBody BookmarkCreateReq dto
+  ) {
+    Bookmark entity = bookmarkService.create(dto);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(response);
+  }
+
+  @GetMapping("/bookmarks/{bookmarkId}")
+  public ResponseEntity<BookmarkRes> getBookmarkById(
+      @PathVariable Long bookmarkId
+  ) {
+    Bookmark entity = bookmarkService.findById(bookmarkId);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/categories/{categoryId}/bookmarks")
+  public PageResponse<BookmarkItemDTO> getBookmarkByCategoryId(
+      @PathVariable Long categoryId,
+      @Parameter @RequestBody PageRequest pageRequest
+  ) {
+
+    return bookmarkService.findBookmarkByCategoryId(pageRequest, categoryId);
+  }
+
+  @PutMapping("/bookmarks/{bookmarkId}")
+  public void updateBookmark(
+      @PathVariable Long bookmarkId,
+      @RequestBody @Valid BookmarkUpdateReq request
+  ) {
+    bookmarkService.updateBookmark(bookmarkId,
+        bookmarkMapper.toBookmarkUpdateReqDTO(request));
   }
 
 }
