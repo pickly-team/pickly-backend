@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public Category update(Long categoryId, CategoryUpdateRequestDTO dto) {
     Category category = categoryRepository.findById(categoryId)
-        .orElseThrow(CategoryNotFoundException::new);
+        .orElseThrow();
 
     return category.update(dto.isAutoDeleteMode(), dto.name(), dto.emoji());
   }
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public void delete(Long categoryId) {
     Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(CategoryNotFoundException::new);
+            .orElseThrow();
     category.delete();
   }
 
