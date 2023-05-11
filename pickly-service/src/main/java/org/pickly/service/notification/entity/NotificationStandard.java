@@ -32,6 +32,10 @@ public class NotificationStandard extends BaseEntity {
   @Column(name = "is_active", nullable = false)
   private Boolean isActive;
 
+  @Column(name = "notify_standard_day", nullable = false)
+  @ColumnDefault("7")
+  private Integer notifyStandardDay;
+
   @Column(name = "notify_daily_at", nullable = false)
   private LocalTime notifyDailyAt;
 
