@@ -48,4 +48,9 @@ public class NotificationStandard extends BaseEntity {
     this.isActive = isActive;
     this.notifyDailyAt = notifyDailyAt;
   }
+
+  public void updateNotifyStandardDay(Integer notifyStandardDay) {
+    this.notifyStandardDay = notifyStandardDay;
+  }
+
 }

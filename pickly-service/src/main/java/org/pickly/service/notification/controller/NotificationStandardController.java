@@ -7,17 +7,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.notification.controller.request.NotificationStandardCreateReq;
+import org.pickly.service.notification.controller.request.NotifyStandardDayUpdateReq;
 import org.pickly.service.notification.controller.response.NotificationStandardRes;
 import org.pickly.service.notification.mapper.NotificationStandardMapper;
 import org.pickly.service.notification.service.interfaces.NotificationStandardService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/notification-standards")
@@ -83,4 +78,22 @@ public class NotificationStandardController {
         notificationStandardMapper.toUpdateDTO(request)
     );
   }
+
+  @PatchMapping("/unread-bookmark/me")
+  @Operation(summary = "내 '읽지 않은 북마크 알림 기준 일자' 설정 수정")
+  public void updateMyNotifyStandardDay(
+      @RequestParam
+      @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") final Long loginId,
+
+      @RequestBody
+      @Valid
+      NotifyStandardDayUpdateReq request
+  ) {
+    notificationStandardService.updateMyNotifyStandardDay(
+        loginId,
+        notificationStandardMapper.toDto(request)
+    );
+  }
+
 }

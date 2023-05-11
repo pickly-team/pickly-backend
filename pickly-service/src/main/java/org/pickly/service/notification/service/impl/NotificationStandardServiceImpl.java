@@ -10,6 +10,7 @@ import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.mapper.NotificationStandardMapper;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
 import org.pickly.service.notification.service.dto.NotificationStandardDTO;
+import org.pickly.service.notification.service.dto.NotifyStandardDayUpdateDTO;
 import org.pickly.service.notification.service.interfaces.NotificationStandardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,5 +54,11 @@ public class NotificationStandardServiceImpl implements NotificationStandardServ
   public void updateNotificationStandard(Long memberId, NotificationStandardDTO dto) {
     NotificationStandard notificationStandard = findByMemberId(memberId);
     notificationStandard.update(dto.isActive(), dto.getNotifyDailyAt());
+  }
+
+  @Override
+  public void updateMyNotifyStandardDay(Long memberId, NotifyStandardDayUpdateDTO dto) {
+    NotificationStandard notificationStandard = findByMemberId(memberId);
+    notificationStandard.updateNotifyStandardDay(dto.getNotifyStandardDay());
   }
 }
