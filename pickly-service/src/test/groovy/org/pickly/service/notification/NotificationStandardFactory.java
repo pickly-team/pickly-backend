@@ -7,12 +7,12 @@ import org.pickly.service.notification.entity.NotificationStandard;
 public class NotificationStandardFactory {
 
   public NotificationStandard testNotificationStandard(Member member) {
-    return testNotificationStandard(member, true, LocalTime.of(9, 0));
+    return testNotificationStandard(member, true, 1, LocalTime.of(9, 0));
   }
 
   public NotificationStandard testNotificationStandard(
-      Member member, Boolean isActive, LocalTime notifyDailyAt
+      Member member, Boolean isActive, Integer notifyStandardDay, LocalTime notifyDailyAt
   ) {
-    return new NotificationStandard(member, isActive, notifyDailyAt);
+    return new NotificationStandard(member, isActive, notifyStandardDay, notifyDailyAt);
   }
 }
