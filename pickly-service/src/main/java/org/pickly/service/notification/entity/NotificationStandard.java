@@ -1,16 +1,14 @@
 package org.pickly.service.notification.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalTime;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.pickly.service.common.utils.base.BaseEntity;
@@ -38,6 +36,13 @@ public class NotificationStandard extends BaseEntity {
 
   @Column(name = "notify_daily_at", nullable = false)
   private LocalTime notifyDailyAt;
+
+  @PrePersist
+  public void prePersist() {
+    if (this.notifyStandardDay == null) {
+      this.notifyStandardDay = 7;
+    }
+  }
 
   public void update(Boolean isActive, LocalTime notifyDailyAt) {
     this.isActive = isActive;
