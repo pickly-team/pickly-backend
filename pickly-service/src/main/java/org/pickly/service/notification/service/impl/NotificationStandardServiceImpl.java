@@ -37,7 +37,7 @@ public class NotificationStandardServiceImpl implements NotificationStandardServ
 
     notificationStandardRepository.save(
         new NotificationStandard(
-            memberService.findById(memberId), dto.isActive(), dto.getNotifyDailyAt()
+            memberService.findById(memberId), dto.isActive(), null, dto.getNotifyDailyAt()
         )
     );
   }
