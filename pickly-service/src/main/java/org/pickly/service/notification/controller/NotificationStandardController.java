@@ -40,6 +40,16 @@ public class NotificationStandardController {
         notificationStandardService.findByMemberId(loginId));
   }
 
+  @GetMapping("/unread-bookmark/me")
+  @Operation(summary = "내 '읽지 않은 북마크 알림 기준 일자' 설정 조회")
+  public Integer findMyNotifyStandardDay(
+      @RequestParam
+      @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") final Long loginId
+  ) {
+    return notificationStandardService.findMyNotifyStandardDay(loginId);
+  }
+
   @PostMapping
   @Operation(summary = "알림 기준 생성")
   public void createMyNotificationStandard(

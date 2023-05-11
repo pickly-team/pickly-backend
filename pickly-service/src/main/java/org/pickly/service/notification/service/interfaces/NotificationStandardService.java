@@ -7,6 +7,8 @@ public interface NotificationStandardService {
 
   NotificationStandard findByMemberId(Long memberId);
 
+  Integer findMyNotifyStandardDay(Long memberId);
+
   void createNotificationStandard(Long memberId, NotificationStandardDTO dto);
 
   void updateNotificationStandard(Long memberId, NotificationStandardDTO dto);

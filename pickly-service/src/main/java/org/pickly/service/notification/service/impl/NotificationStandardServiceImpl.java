@@ -30,6 +30,13 @@ public class NotificationStandardServiceImpl implements NotificationStandardServ
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public Integer findMyNotifyStandardDay(final Long memberId) {
+    NotificationStandard standard = findByMemberId(memberId);
+    return standard.getNotifyStandardDay();
+  }
+
+  @Override
   public void createNotificationStandard(Long memberId, NotificationStandardDTO dto) {
     if (notificationStandardRepository.existsByMemberId(memberId)) {
       throw new BusinessException("이미 알림 기준 설정이 존재합니다.", ErrorCode.ENTITY_CONFLICT);
