@@ -20,9 +20,9 @@ END;
 
 create table member
 (
-    id bigserial
+    id            bigserial
         constraint member_pk
-        primary key,
+            primary key,
     username      varchar(80)             not null,
     password      varchar(80)             not null,
     is_hard_mode  boolean                 not null,
@@ -53,13 +53,13 @@ create trigger update_trigger
 
 create table category
 (
-    id bigserial
+    id                  bigserial
         constraint category_pk
-        primary key,
+            primary key,
     member_id           bigint                  not null
         constraint category_member_id_fk
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
     is_auto_delete_mode boolean                 not null,
     name                varchar(100)            not null,
     emoji               text,
@@ -76,17 +76,17 @@ create trigger update_trigger
 
 create table bookmark
 (
-    id bigserial
+    id                bigserial
         constraint bookmark_pk
-        primary key,
+            primary key,
     category_id       bigint                  not null
         constraint bookmark_category_id_fk
-        references category
-        on update cascade on delete cascade,
+            references category
+            on update cascade on delete cascade,
     member_id         bigint                  not null
         constraint bookmark_member_id_fk
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
     url               varchar(500)            not null,
     title             varchar(100)            not null,
     preview_image_url varchar(500),
@@ -106,17 +106,17 @@ create trigger update_trigger
 
 create table comment
 (
-    id bigserial
+    id               bigserial
         constraint comment_pk
-        primary key,
+            primary key,
     member_id        bigint                  not null
         constraint comment_member_id_fk
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
     bookmark_id      bigint                  not null
         constraint comment_bookmark_id_fk
-        references bookmark
-        on update cascade on delete cascade,
+            references bookmark
+            on update cascade on delete cascade,
     is_owner_comment boolean                 not null,
     content          varchar(150)            not null,
     created_at       timestamp default now() not null,
@@ -132,17 +132,17 @@ create trigger update_trigger
 
 create table friend
 (
-    id bigserial
+    id                   bigserial
         constraint friend_pk
-        primary key,
+            primary key,
     followee_id          bigint                  not null
         constraint friend_member_id_fk
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
     follower_id          bigint                  not null
         constraint friend_member_id_fk_2
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
     notification_enabled boolean                 not null,
     created_at           timestamp default now() not null,
     updated_at           timestamp,
@@ -157,18 +157,19 @@ create trigger update_trigger
 
 create table notification_standard
 (
-    id bigserial
+    id                  bigserial
         constraint notification_standard_pk
-        primary key,
-    member_id     bigint                  not null
+            primary key,
+    member_id           bigint                  not null
         constraint bookmark_member_id_fk
-        references member
-        on update cascade on delete cascade,
-    notify_daily_at time                  not null,
-    is_active     boolean                 not null,
-    created_at    timestamp default now() not null,
-    updated_at    timestamp,
-    deleted_at    timestamp
+            references member
+            on update cascade on delete cascade,
+    notify_standard_day int       default 7     not null,
+    notify_daily_at     time                    not null,
+    is_active           boolean                 not null,
+    created_at          timestamp default now() not null,
+    updated_at          timestamp,
+    deleted_at          timestamp
 );
 
 create trigger update_trigger
@@ -179,9 +180,9 @@ create trigger update_trigger
 
 create table notification
 (
-    id bigserial
+    id                bigserial
         constraint notification_pk
-        primary key,
+            primary key,
     member_id         bigint                  not null,
     bookmark_id       bigint                  not null,
     title             varchar(255)            not null,
@@ -202,9 +203,9 @@ create trigger update_trigger
 
 create table notification_template
 (
-    id bigserial
+    id                bigserial
         constraint notification_template_pk
-        primary key,
+            primary key,
     title             varchar(255)            NOT NULL,
     content           varchar(255)            NOT NULL,
     notification_type integer                 not null,
@@ -221,30 +222,31 @@ create trigger update_trigger
     execute procedure updated_at();
 
 
+
 create table block
 (
-    id bigserial
+    id          bigserial
         constraint block_pk
-        primary key,
+            primary key,
 
-    blocker_id bigint not null
+    blocker_id  bigint                  not null
         constraint block_member_id_fk_2
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
 
-    blockee_id bigint
+    blockee_id  bigint
         constraint block_member_id_fk
-        references member
-        on update cascade on delete cascade,
+            references member
+            on update cascade on delete cascade,
 
     bookmark_id bigint
         constraint block_bookmark_id_fk
-        references bookmark
-        on update cascade on delete cascade,
+            references bookmark
+            on update cascade on delete cascade,
 
-    created_at timestamp default now() not null,
-    updated_at timestamp,
-    deleted_at timestamp
+    created_at  timestamp default now() not null,
+    updated_at  timestamp,
+    deleted_at  timestamp
 );
 
 create trigger update_trigger
@@ -252,4 +254,3 @@ create trigger update_trigger
     on block
     for each row
     execute procedure updated_at();
-

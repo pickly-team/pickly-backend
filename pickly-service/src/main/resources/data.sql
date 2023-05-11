@@ -29,9 +29,9 @@ VALUES (1, 2, false),
 
 -- notify_daily_at is  time without timezone
 INSERT INTO notification_standard
-    (member_id, notify_daily_at, is_active)
-VALUES (1, '09:00:00', true),
-       (2, '18:00:00', false);
+    (member_id, notify_daily_at, notify_daily_at, is_active)
+VALUES (1, 3, '09:00:00', true),
+       (2, 7, '18:00:00', false);
 
 INSERT INTO notification
     (member_id, bookmark_id, title, content, is_checked, notification_type)
