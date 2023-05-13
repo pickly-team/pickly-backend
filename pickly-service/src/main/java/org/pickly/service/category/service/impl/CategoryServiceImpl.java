@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
-import org.pickly.service.category.dto.controller.CategoryResponseDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.dto.service.CategoryDTO;
 import org.pickly.service.category.entity.Category;
-import org.pickly.service.category.exception.custom.CategoryNotFoundException;
 import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.category.service.interfaces.CategoryService;
@@ -70,9 +68,11 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public PageResponse<CategoryDTO> getCategoriesByMember(final PageRequest pageRequest,
+  public PageResponse<CategoryDTO> getCategoriesByMember(
+      final Long cursorId,
+      final Integer pageSize, 
       final Long memberId) {
-    System.out.println(memberId);
+    PageRequest pageRequest = makePageRequest(cursorId, pageSize);
     List<Category> categories = categoryQueryRepository.findAllByMemberId(pageRequest, memberId);
     return makeResponse(pageRequest.getPageSize(), categories);
   }
@@ -98,5 +98,9 @@ public class CategoryServiceImpl implements CategoryService {
       return resultList;
     }
     return categoryList;
+  }
+
+  private PageRequest makePageRequest(final Long cursorId, final Integer pageSize) {
+    return new PageRequest(cursorId, pageSize);
   }
 }

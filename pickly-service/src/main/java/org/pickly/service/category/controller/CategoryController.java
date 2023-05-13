@@ -85,8 +85,7 @@ public class CategoryController {
       @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
       @RequestParam(required = false) final Integer pageSize
   ) {
-    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    return categoryService.getCategoriesByMember(pageRequest, memberId);
+    return categoryService.getCategoriesByMember(cursorId, pageSize, memberId);
   }
 
   @GetMapping("/categories/cnt")
