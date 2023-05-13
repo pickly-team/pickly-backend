@@ -1,6 +1,7 @@
 package org.pickly.service.category.repository.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.category.dto.controller.CategoryOrderNumUpdateReq;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -33,6 +34,23 @@ public class CategoryJdbcRepositoryImpl implements CategoryJdbcRepository {
           @Override
           public int getBatchSize() {
             return categories.size();
+          }
+        });
+  }
+
+  @Override
+  public void updateCategoryOrderNums(List<CategoryOrderNumUpdateReq> reqs) {
+    jdbcTemplate.batchUpdate("update category set order_num = ? where id = ?",
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setInt(1, reqs.get(i).getOrderNum());
+            ps.setLong(2, reqs.get(i).getCategoryId());
+          }
+
+          @Override
+          public int getBatchSize() {
+            return reqs.size();
           }
         });
   }
