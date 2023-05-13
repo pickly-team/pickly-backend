@@ -1,6 +1,11 @@
 package org.pickly.service.category.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +27,11 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
+  @Operation(summary = "카테고리 생성 (동시에 다수의 카테고리 생성 가능)")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
   @PostMapping("/categories")
   public void create(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
@@ -34,6 +44,12 @@ public class CategoryController {
     categoryService.create(memberId, requests);
   }
 
+  @Operation(summary = "특정 카테고리의 이름, 이모지 수정")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = CategoryResponseDTO.class)))
+  })
   @PutMapping("/categories/{categoryId}")
   public ResponseEntity<CategoryResponseDTO> update(
       @PathVariable @Positive Long categoryId,
@@ -45,6 +61,11 @@ public class CategoryController {
         .ok(CategoryMapper.toResponseDTO(category));
   }
 
+  @Operation(summary = "다수의 카테고리의 순서 수정")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "400", description = "잘못된 순서값 입력"),
+  })
   @PatchMapping("/categories/order-num")
   public void updateOrderNum(
       @RequestBody @Valid
@@ -54,6 +75,11 @@ public class CategoryController {
     categoryService.updateOrderNum(requests);
   }
 
+  @Operation(summary = "특정 카테고리 삭제")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
+  })
   @DeleteMapping("/categories/{categoryId}")
   public ResponseEntity<Void> delete(
       @PathVariable Long categoryId
@@ -64,6 +90,11 @@ public class CategoryController {
         .build();
   }
 
+  @Operation(summary = "다수의 카테고리 삭제")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리"),
+  })
   @DeleteMapping("/categories")
   public ResponseEntity<Void> deleteAllById(
       @RequestParam(value = "categoryId") List<Long> categoryIds
@@ -74,6 +105,12 @@ public class CategoryController {
         .build();
   }
 
+  @Operation(summary = "특정 유저의 카테고리 전체 조회. 페이지네이션 적용")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class)))
+  })
   @GetMapping("/categories")
   public PageResponse<CategoryDTO> getCategoryByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
@@ -88,6 +125,12 @@ public class CategoryController {
     return categoryService.getCategoriesByMember(cursorId, pageSize, memberId);
   }
 
+  @Operation(summary = "특정 유저의 전체 카테고리 수 조회")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = Integer.class)))
+  })
   @GetMapping("/categories/cnt")
   public ResponseEntity<Integer> getCategoryCntByMember(
       @RequestParam(value = "memberId") Long memberId
