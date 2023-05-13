@@ -63,7 +63,7 @@ create table category
     is_auto_delete_mode boolean                 not null,
     name                varchar(100)            not null,
     emoji               text,
-    order_number        integer                 not null,
+    order_num           integer                 not null,
     created_at          timestamp default now() not null,
     updated_at          timestamp,
     deleted_at          timestamp
