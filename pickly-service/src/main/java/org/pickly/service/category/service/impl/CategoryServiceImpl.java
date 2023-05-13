@@ -1,8 +1,5 @@
 package org.pickly.service.category.service.impl;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
@@ -18,6 +15,10 @@ import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     Member member = memberRepository.findById(dto.memberId())
         .orElseThrow(() -> new MemberNotFoundException(dto.memberId()));
 
-    return categoryRepository.save(new Category(member, false, dto.name(), ""));
+    return categoryRepository.save(new Category(member, false, dto.name(), "", 1));
   }
 
   @Transactional

@@ -34,7 +34,7 @@ public class CategoryController {
         .ok(CategoryMapper.toResponseDTO(category));
   }
 
-  @PostMapping("/categories/{categoryId}")
+  @PutMapping("/categories/{categoryId}")
   public ResponseEntity<CategoryResponseDTO> update(
       @PathVariable @Positive Long categoryId,
       @RequestBody @Valid final CategoryUpdateRequestDTO dto
