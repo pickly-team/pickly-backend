@@ -3,6 +3,7 @@ package org.pickly.service.notification.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.common.NotificationMapper;
 import org.pickly.service.notification.entity.Notification;
@@ -27,4 +28,22 @@ public class NotificationServiceImpl implements NotificationService {
     List<Notification> notifications = notificationRepository.findAllByMemberId(memberId);
     return notifications.stream().map(notificationMapper::toDto).collect(Collectors.toList());
   }
+
+  @Override
+  public void readNotification(final Long notificationId) {
+    Notification notification = findById(notificationId);
+    notification.check();
+  }
+
+  @Override
+  public void deleteNotification(final Long notificationId) {
+    Notification notification = findById(notificationId);
+    notificationRepository.delete(notification);
+  }
+
+  public Notification findById(Long id) {
+    return notificationRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
+  }
+
 }
