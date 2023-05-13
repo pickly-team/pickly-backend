@@ -35,6 +35,9 @@ public class Category extends BaseEntity {
   @Column(columnDefinition = "text")
   private String emoji;
 
+  @Column(name = "order_num", nullable = false)
+  private Integer orderNum;
+
   public Category update(Boolean isAutoDeleteMode, String name, String emoji) {
     this.isAutoDeleteMode = isAutoDeleteMode;
     this.name = name;

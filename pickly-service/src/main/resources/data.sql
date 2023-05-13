@@ -4,9 +4,9 @@ VALUES ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '�
        ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳', null);
 
 INSERT INTO category
-    (member_id, is_auto_delete_mode, name, emoji)
-VALUES (1, true, '백엔드', '😎'),
-       (1, false, '프론트엔드', '😳');
+    (member_id, is_auto_delete_mode, name, order_num, emoji)
+VALUES (1, true, '백엔드', 1, '😎'),
+       (1, false, '프론트엔드', 2, '😳');
 
 INSERT INTO bookmark
 (category_id, member_id, url, title, preview_image_url, is_user_like, read_by_user, visibility)
