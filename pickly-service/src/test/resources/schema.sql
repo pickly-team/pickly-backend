@@ -60,7 +60,6 @@ create table category
         constraint category_member_id_fk
             references member
             on update cascade on delete cascade,
-    is_auto_delete_mode boolean                 not null,
     name                varchar(100)            not null,
     emoji               text,
     order_num           integer                 not null,
