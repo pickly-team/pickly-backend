@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.pickly.service.category.dto.controller.CategoryMapper;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryResponseDTO;
@@ -29,7 +30,9 @@ public class CategoryController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") final Long memberId,
 
-      @RequestBody @Valid final List<CategoryRequestDTO> requests
+      @RequestBody @Valid
+      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.")
+      final List<CategoryRequestDTO> requests
   ) {
     categoryService.create(memberId, requests);
   }
