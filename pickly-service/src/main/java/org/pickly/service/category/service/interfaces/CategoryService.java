@@ -1,5 +1,6 @@
 package org.pickly.service.category.service.interfaces;
 
+import org.pickly.service.category.dto.controller.CategoryOrderNumUpdateReq;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.dto.service.CategoryDTO;
@@ -13,6 +14,8 @@ public interface CategoryService {
     void create(Long memberId, List<CategoryRequestDTO> requests);
 
     Category update(Long categoryId, CategoryUpdateRequestDTO dto);
+
+    void updateOrderNum(List<CategoryOrderNumUpdateReq> requests);
 
     void delete(Long categoryId);
 

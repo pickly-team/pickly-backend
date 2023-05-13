@@ -1,10 +1,12 @@
 package org.pickly.service.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.category.dto.controller.CategoryOrderNumUpdateReq;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.dto.service.CategoryDTO;
 import org.pickly.service.category.entity.Category;
+import org.pickly.service.category.exception.custom.CategoryOrderNumDuplicateException;
 import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
 import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
@@ -15,11 +17,14 @@ import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 @Service
@@ -60,6 +65,30 @@ public class CategoryServiceImpl implements CategoryService {
         .orElseThrow();
 
     return category.update(dto.name(), dto.emoji());
+  }
+
+  @Transactional
+  public void updateOrderNum(List<CategoryOrderNumUpdateReq> requests) {
+
+    // {categoryId, orderNum} UK가 걸려있으므로 request에서만 중복 체크해주면 OK
+    if (!checkOrderNumUnique(requests)) {
+      throw new CategoryOrderNumDuplicateException();
+    }
+
+    try {
+      categoryJdbcRepository.updateCategoryOrderNums(requests);
+    } catch (DataIntegrityViolationException e) {
+      throw new CategoryOrderNumDuplicateException();
+    }
+
+  }
+
+  private boolean checkOrderNumUnique(List<CategoryOrderNumUpdateReq> requests) {
+    Set<Integer> orderNums = new HashSet<>();
+    for (CategoryOrderNumUpdateReq req : requests) {
+      orderNums.add(req.getOrderNum());
+    }
+    return orderNums.size() == requests.size();
   }
 
   @Transactional

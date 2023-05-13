@@ -5,10 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.pickly.service.category.dto.controller.CategoryMapper;
-import org.pickly.service.category.dto.controller.CategoryRequestDTO;
-import org.pickly.service.category.dto.controller.CategoryResponseDTO;
-import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
+import org.pickly.service.category.dto.controller.*;
 import org.pickly.service.category.dto.service.CategoryDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.service.interfaces.CategoryService;
@@ -46,6 +43,15 @@ public class CategoryController {
 
     return ResponseEntity
         .ok(CategoryMapper.toResponseDTO(category));
+  }
+
+  @PatchMapping("/categories/order-num")
+  public void updateOrderNum(
+      @RequestBody @Valid
+      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.")
+      final List<CategoryOrderNumUpdateReq> requests
+  ) {
+    categoryService.updateOrderNum(requests);
   }
 
   @DeleteMapping("/categories/{categoryId}")
