@@ -5,6 +5,7 @@ import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.dto.service.CategoryDTO;
 import org.pickly.service.category.entity.Category;
+import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
 import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.category.service.interfaces.CategoryService;
@@ -28,15 +29,28 @@ public class CategoryServiceImpl implements CategoryService {
   private final MemberRepository memberRepository;
   private final CategoryRepository categoryRepository;
   private final CategoryQueryRepository categoryQueryRepository;
+  private final CategoryJdbcRepository categoryJdbcRepository;
 
   private static final int LAST_ITEM = 1;
 
   @Transactional
-  public Category create(CategoryRequestDTO dto) {
-    Member member = memberRepository.findById(dto.memberId())
-        .orElseThrow(() -> new MemberNotFoundException(dto.memberId()));
+  public void create(Long memberId, List<CategoryRequestDTO> requests) {
+    List<Category> categories = new ArrayList<>();
 
-    return categoryRepository.save(new Category(member, false, dto.name(), "", 1));
+    Member member = memberRepository.findById(memberId)
+        .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+    Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId);
+    int orderNum = (lastCategory == null) ? 0 : lastCategory.getOrderNum() + 1;
+
+    for (CategoryRequestDTO dto : requests) {
+      categories.add(
+          new Category(member, dto.name(), dto.emoji(), orderNum)
+      );
+      orderNum++;
+    }
+
+    categoryJdbcRepository.createCategories(categories);
   }
 
   @Transactional
@@ -44,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = categoryRepository.findById(categoryId)
         .orElseThrow();
 
-    return category.update(dto.isAutoDeleteMode(), dto.name(), dto.emoji());
+    return category.update(dto.name(), dto.emoji());
   }
 
   @Transactional

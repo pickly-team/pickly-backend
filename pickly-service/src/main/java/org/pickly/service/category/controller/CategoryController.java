@@ -25,13 +25,13 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @PostMapping("/categories")
-  public ResponseEntity<CategoryResponseDTO> create(
-      @RequestBody @Valid final CategoryRequestDTO dto
-  ) {
-    Category category = categoryService.create(dto);
+  public void create(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") final Long memberId,
 
-    return ResponseEntity
-        .ok(CategoryMapper.toResponseDTO(category));
+      @RequestBody @Valid final List<CategoryRequestDTO> requests
+  ) {
+    categoryService.create(memberId, requests);
   }
 
   @PutMapping("/categories/{categoryId}")

@@ -1,15 +1,16 @@
 package org.pickly.service.category.service.interfaces;
 
-import java.util.List;
 import org.pickly.service.category.dto.controller.CategoryRequestDTO;
 import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
 import org.pickly.service.category.dto.service.CategoryDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.common.utils.page.PageResponse;
 
+import java.util.List;
+
 public interface CategoryService {
 
-    Category create(CategoryRequestDTO request);
+    void create(Long memberId, List<CategoryRequestDTO> requests);
 
     Category update(Long categoryId, CategoryUpdateRequestDTO dto);
 
