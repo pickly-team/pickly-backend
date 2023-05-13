@@ -7,8 +7,8 @@ public class CategoryMapper {
   public static CategoryResponseDTO toResponseDTO(final Category category) {
     return new CategoryResponseDTO(
         category.getId(),
-        category.getMember().getId(),
-        category.getName()
+        category.getName(),
+        category.getEmoji()
     );
   }
 
