@@ -66,7 +66,7 @@ create table category
     created_at          timestamp default now() not null,
     updated_at          timestamp,
     deleted_at          timestamp,
-    constraint category_order_uk unique (id, order_num);
+    constraint category_order_uk unique (id, order_num)
 );
 
 create trigger update_trigger
