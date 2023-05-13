@@ -9,6 +9,7 @@ import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
 import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.category.service.interfaces.CategoryService;
+import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
@@ -71,10 +72,8 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public void deleteAllByCategoryId(List<Long> ids) {
     List<Category> categories = categoryRepository.findAllByCategoryId(ids);
-    categories.stream().forEach(category -> category.delete());
+    categories.forEach(BaseEntity::delete);
   }
-
-
 
   @Override
   public Integer getCategoryCntByMember(Long memberId) {
@@ -86,14 +85,17 @@ public class CategoryServiceImpl implements CategoryService {
   public PageResponse<CategoryDTO> getCategoriesByMember(
       final Long cursorId,
       final Integer pageSize, 
-      final Long memberId) {
+      final Long memberId
+  ) {
     PageRequest pageRequest = makePageRequest(cursorId, pageSize);
     List<Category> categories = categoryQueryRepository.findAllByMemberId(pageRequest, memberId);
     return makeResponse(pageRequest.getPageSize(), categories);
   }
 
-  private <T> List<T> mapToDtoList(final List<Category> categories,
-      final Function<Category, T> mapper) {
+  private <T> List<T> mapToDtoList(
+      final List<Category> categories,
+      final Function<Category, T> mapper
+  ) {
     return categories.stream().map(mapper).toList();
   }
 
@@ -104,9 +106,11 @@ public class CategoryServiceImpl implements CategoryService {
     return new PageResponse<>(contentSize, pageSize, contents);
   }
 
-  private List<Category> removeElement(final List<Category> categoryList,
+  private List<Category> removeElement(
+      final List<Category> categoryList,
       final int size,
-      final int pageSize) {
+      final int pageSize
+  ) {
     if (size - LAST_ITEM >= pageSize) {
       List<Category> resultList = new ArrayList<>(categoryList);
       resultList.remove(size - LAST_ITEM);
