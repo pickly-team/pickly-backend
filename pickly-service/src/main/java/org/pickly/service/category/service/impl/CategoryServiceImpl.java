@@ -70,7 +70,6 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public void updateOrderNum(List<CategoryOrderNumUpdateReq> requests) {
 
-    // {categoryId, orderNum} UK가 걸려있으므로 request에서만 중복 체크해주면 OK
     if (!checkOrderNumUnique(requests)) {
       throw new CategoryOrderNumDuplicateException();
     }
@@ -85,10 +84,12 @@ public class CategoryServiceImpl implements CategoryService {
 
   private boolean checkOrderNumUnique(List<CategoryOrderNumUpdateReq> requests) {
     Set<Integer> orderNums = new HashSet<>();
+    Set<Long> categoryIds = new HashSet<>();
     for (CategoryOrderNumUpdateReq req : requests) {
       orderNums.add(req.getOrderNum());
+      categoryIds.add(req.getCategoryId());
     }
-    return orderNums.size() == requests.size();
+    return orderNums.size() == requests.size() && categoryIds.size() == requests.size();
   }
 
   @Transactional
