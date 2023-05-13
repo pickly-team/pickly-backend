@@ -76,10 +76,16 @@ public class CategoryController {
 
   @GetMapping("/categories")
   public PageResponse<CategoryDTO> getCategoryByMember(
-      @RequestParam(value = "memberId") Long memberId,
-      @Parameter @RequestBody PageRequest pageRequest
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") final Long memberId,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
   ) {
-    System.out.println(memberId);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     return categoryService.getCategoriesByMember(pageRequest, memberId);
   }
 
