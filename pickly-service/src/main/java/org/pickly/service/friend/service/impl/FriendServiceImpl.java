@@ -11,6 +11,7 @@ import org.pickly.service.friend.entity.Friend;
 import org.pickly.service.friend.repository.interfaces.FriendQueryRepository;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.friend.service.dto.FollowerResDTO;
+import org.pickly.service.friend.service.dto.FollowingResDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
 import org.pickly.service.friend.service.interfaces.FriendService;
@@ -58,7 +59,7 @@ public class FriendServiceImpl implements FriendService {
   }
 
   @Override
-  public Long countFolloweeByMember(Long memberId) {
+  public Long countFollowingByMember(Long memberId) {
     memberService.existsById(memberId);
     return friendRepository.countByFollowerId(memberId);
   }
@@ -90,8 +91,14 @@ public class FriendServiceImpl implements FriendService {
   public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
     memberService.existsById(memberId);
     List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId, pageRequest);
-    followerResDtoList = removeElement(followerResDtoList, followerResDtoList.size(), pageRequest.getPageSize());
+//    followerResDtoList = removeElement(followerResDtoList, followerResDtoList.size(), pageRequest.getPageSize());
     return removeBlockFollower(memberId, followerResDtoList);
+  }
+
+  @Override
+  public List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest) {
+    memberService.existsById(memberId);
+    return friendQueryRepository.findAllFollowingByMember(memberId, pageRequest);
   }
 
   private List<FollowerResDTO> removeElement(final List<FollowerResDTO> itemList, final int size, final int pageSize) {

@@ -14,6 +14,7 @@ import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.friend.common.FriendMapper;
 import org.pickly.service.friend.controller.request.FriendNotificationStatusReq;
 import org.pickly.service.friend.controller.response.FollowerRes;
+import org.pickly.service.friend.controller.response.FollowingRes;
 import org.pickly.service.friend.controller.response.FriendNotificationStatusRes;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
 import org.pickly.service.friend.service.interfaces.FriendService;
@@ -113,7 +114,9 @@ public class FriendController {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     List<FollowerRes> resDto = friendService.findAllFollowerByMember(memberId, pageRequest)
             .stream().map(friendMapper::toFollowerRes).toList();
-    return new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
+    PageResponse<FollowerRes> response = new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
+    response.removeElement(pageRequest.getPageSize());
+    return response;
   }
 
   @Operation(summary = "특정 유저의 팔로잉 수 조회")
@@ -122,11 +125,40 @@ public class FriendController {
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/followees/count")
-  public long countFolloweeByMember(
+  public long countFollowingByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    return friendService.countFolloweeByMember(memberId);
+    return friendService.countFollowingByMember(memberId);
+  }
+
+  @Operation(
+      summary = "특정 유저의 팔로잉 정보 조회",
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 loginId"
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  @GetMapping("/members/{memberId}/followings")
+  public PageResponse<FollowingRes> findAllFollowingByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "ww0077")
+      @RequestParam(required = false) final String cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
+  ) {
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    List<FollowingRes> resDto = friendService.findAllFollowingByMember(memberId, pageRequest)
+        .stream().map(friendMapper::toFollowingRes).toList();
+    PageResponse<FollowingRes> response = new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
+    response.removeElement(pageRequest.getPageSize());
+    return response;
   }
 
 }

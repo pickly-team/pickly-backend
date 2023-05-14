@@ -7,7 +7,9 @@ import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.entity.QFriend;
 import org.pickly.service.friend.repository.interfaces.FriendQueryRepository;
 import org.pickly.service.friend.service.dto.FollowerResDTO;
+import org.pickly.service.friend.service.dto.FollowingResDTO;
 import org.pickly.service.friend.service.dto.QFollowerResDTO;
+import org.pickly.service.friend.service.dto.QFollowingResDTO;
 import org.pickly.service.member.entity.QMember;
 import org.springframework.stereotype.Repository;
 
@@ -39,15 +41,48 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
         .leftJoin(follower).on(
             follower.followee.id.eq(friend.follower.id),
             follower.follower.id.eq(friend.followee.id),
-            ltFolloweeUsername(cursorId)
+            ltFollowerUsername(cursorId)
         )
         .innerJoin(member).on(friend.follower.id.eq(member.id))
         .where(
             friend.followee.id.eq(memberId)
         )
+        .orderBy(friend.follower.username.asc())
+        .limit(size + CHECK_LAST)
+        .fetch();
+  }
+
+  @Override
+  public List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest) {
+    QMember member = new QMember("member");
+    QFriend follower = new QFriend("follower");
+    QFriend friend = new QFriend("friend");
+
+    String cursorId = (String) pageRequest.getCursorId();
+    Integer size = pageRequest.getPageSize();
+
+    return queryFactory
+        .select(new QFollowingResDTO(member))
+        .from(friend)
+        .leftJoin(follower).on(
+            follower.followee.id.eq(friend.follower.id),
+            follower.follower.id.eq(friend.followee.id),
+            ltFolloweeUsername(cursorId)
+        )
+        .innerJoin(member).on(friend.followee.id.eq(member.id))
+        .where(
+            friend.follower.id.eq(memberId)
+        )
         .orderBy(friend.followee.username.asc())
         .limit(size + CHECK_LAST)
         .fetch();
+  }
+
+  private BooleanExpression ltFollowerUsername(final String cursorId) {
+    if (cursorId == null) {
+      return null;
+    }
+    return friend.follower.username.lt(cursorId);
   }
 
   private BooleanExpression ltFolloweeUsername(final String cursorId) {

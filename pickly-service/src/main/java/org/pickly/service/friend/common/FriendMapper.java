@@ -2,9 +2,11 @@ package org.pickly.service.friend.common;
 
 import org.pickly.service.friend.controller.request.FriendNotificationStatusReq;
 import org.pickly.service.friend.controller.response.FollowerRes;
+import org.pickly.service.friend.controller.response.FollowingRes;
 import org.pickly.service.friend.controller.response.FriendNotificationStatusRes;
 import org.pickly.service.friend.entity.FriendNotificationMode;
 import org.pickly.service.friend.service.dto.FollowerResDTO;
+import org.pickly.service.friend.service.dto.FollowingResDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,10 @@ public class FriendMapper {
         .loginId(dto.getLoginId())
         .isFollowing(dto.getIsFollowing())
         .build();
+  }
+
+  public FollowingRes toFollowingRes(FollowingResDTO dto) {
+    return new FollowingRes(dto.getMemberId(), dto.getLoginId());
   }
 
 }
