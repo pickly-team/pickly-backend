@@ -53,12 +53,14 @@ public class FriendServiceImpl implements FriendService {
 
   @Override
   public Long countFollowerByMember(Long memberId) {
-    return null;
+    memberService.existsById(memberId);
+    return friendRepository.countByFolloweeId(memberId);
   }
 
   @Override
   public Long countFolloweeByMember(Long memberId) {
-    return null;
+    memberService.existsById(memberId);
+    return friendRepository.countByFollowerId(memberId);
   }
 
   private void checkAlreadyFriend(final Long followerId, final Long memberId) {

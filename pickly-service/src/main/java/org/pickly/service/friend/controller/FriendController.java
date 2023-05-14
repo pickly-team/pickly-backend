@@ -109,4 +109,17 @@ public class FriendController {
     return new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
   }
 
+  @Operation(summary = "특정 유저의 팔로잉 수 조회")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  @GetMapping("/members/{memberId}/followees/count")
+  public long countFolloweeByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    return friendService.countFolloweeByMember(memberId);
+  }
+
 }
