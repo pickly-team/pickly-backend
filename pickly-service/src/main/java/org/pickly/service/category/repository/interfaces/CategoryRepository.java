@@ -11,18 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @EntityGraph(attributePaths = {"member"})
-    Optional<Category> findById(Long id);
+  @EntityGraph(attributePaths = {"member"})
+  Optional<Category> findById(Long id);
 
-    @Query("select c from Category c where c.member.id = :memberId order by c.createdAt desc limit 1")
-    Category findLastCategoryByMemberId(@Param("memberId") Long memberId);
+  @Query("select c from Category c where c.member.id = :memberId order by c.createdAt desc limit 1")
+  Category findLastCategoryByMemberId(@Param("memberId") Long memberId);
 
-    @Modifying
-    @Query("SELECT c FROM Category c WHERE c.id IN :ids")
-    List<Category> findAllByCategoryId(@Param("ids") List<Long> ids);
+  @Query("select c from Category c where c.member.id = :memberId order by c.createdAt desc limit 1")
+  List<Category> findAllCategoryByMemberId(@Param("memberId") Long memberId);
 
-    @Query(value = "SELECT COUNT(c.id) FROM Category c "
-        + "WHERE c.member_id = :member_id AND c.deleted_at IS NULL "
-        + "GROUP BY c.member_id", nativeQuery = true)
-    Integer getCategoryCntByMemberId(@Param("member_id") Long memberod);
+  @Modifying
+  @Query("SELECT c FROM Category c WHERE c.id IN :ids")
+  List<Category> findAllByCategoryId(@Param("ids") List<Long> ids);
+
+  @Query(value = "SELECT COUNT(c.id) FROM Category c "
+      + "WHERE c.member_id = :member_id AND c.deleted_at IS NULL "
+      + "GROUP BY c.member_id", nativeQuery = true)
+  Integer getCategoryCntByMemberId(@Param("member_id") Long memberod);
 }

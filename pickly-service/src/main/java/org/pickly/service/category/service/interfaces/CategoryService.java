@@ -23,5 +23,8 @@ public interface CategoryService {
 
     Integer getCategoryCntByMember(Long memberId);
 
-    PageResponse<CategoryDTO> getCategoriesByMember(Long cursorId, Integer pageSize, Long memberId);
+    PageResponse<CategoryDTO> getCategoriesWithPagingByMember(Long cursorId, Integer pageSize, Long memberId);
+
+    List<CategoryDTO> getCategoriesByMember(Long memberId);
+
 }

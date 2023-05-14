@@ -112,7 +112,7 @@ public class CategoryController {
               schema = @Schema(implementation = PageResponse.class)))
   })
   @GetMapping("/categories")
-  public PageResponse<CategoryDTO> getCategoryByMember(
+  public PageResponse<CategoryDTO> getCategoryWithPagingByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") final Long memberId,
 
@@ -122,7 +122,21 @@ public class CategoryController {
       @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
       @RequestParam(required = false) final Integer pageSize
   ) {
-    return categoryService.getCategoriesByMember(cursorId, pageSize, memberId);
+    return categoryService.getCategoriesWithPagingByMember(cursorId, pageSize, memberId);
+  }
+
+  @Operation(summary = "특정 유저의 카테고리 전체 조회. 페이지네이션 미적용")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = CategoryDTO.class)))
+  })
+  @GetMapping("/categories")
+  public List<CategoryDTO> getCategoryByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") final Long memberId
+  ) {
+    return categoryService.getCategoriesByMember(memberId);
   }
 
   @Operation(summary = "특정 유저의 전체 카테고리 수 조회")
