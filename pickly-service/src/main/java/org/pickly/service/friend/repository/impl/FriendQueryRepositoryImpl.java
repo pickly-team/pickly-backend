@@ -33,7 +33,7 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
 
     return queryFactory
         .select(new QFollowerResDTO(
-            friend.id, friend.followee.id, follower, member
+            friend.followee.id, follower, member
         ))
         .from(friend)
         .leftJoin(follower).on(

@@ -14,8 +14,6 @@ import org.pickly.service.member.entity.Member;
 @AllArgsConstructor
 public class FollowerResDTO {
 
-  private Long friendId;
-
   private Long memberId;
 
   private String loginId;
@@ -23,8 +21,7 @@ public class FollowerResDTO {
   private Boolean isFollowing;
 
   @QueryProjection
-  public FollowerResDTO(Long friendId, Long followeeId, Friend follower, Member followerInfo) {
-    this.friendId = friendId;
+  public FollowerResDTO(Long followeeId, Friend follower, Member followerInfo) {
     this.memberId = followerInfo.getId();
     this.loginId = followerInfo.getUsername();
     this.isFollowing = (follower == null) ? false : followeeId.equals(follower.getFollower().getId());

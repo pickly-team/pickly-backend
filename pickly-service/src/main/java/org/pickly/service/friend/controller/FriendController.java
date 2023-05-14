@@ -2,6 +2,8 @@ package org.pickly.service.friend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -87,9 +89,14 @@ public class FriendController {
     return friendService.countFollowerByMember(memberId);
   }
 
-  @Operation(summary = "특정 유저의 팔로워 정보 조회")
+  @Operation(
+      summary = "특정 유저의 팔로워 정보 조회",
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 loginId"
+  )
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class))),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/followers")
