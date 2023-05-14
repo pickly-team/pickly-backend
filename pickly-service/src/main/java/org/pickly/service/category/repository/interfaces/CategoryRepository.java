@@ -17,7 +17,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   @Query("select c from Category c where c.member.id = :memberId order by c.createdAt desc limit 1")
   Category findLastCategoryByMemberId(@Param("memberId") Long memberId);
 
-  @Query("select c from Category c where c.member.id = :memberId order by c.createdAt desc limit 1")
+  @Query("select c from Category c where c.member.id = :memberId order by c.createdAt desc")
   List<Category> findAllCategoryByMemberId(@Param("memberId") Long memberId);
 
   @Modifying
