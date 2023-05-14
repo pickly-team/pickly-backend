@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.common.error.exception.BusinessException;
 import org.pickly.common.error.exception.ErrorCode;
+import org.pickly.service.block.service.BlockService;
 import org.pickly.service.friend.common.FriendMapper;
 import org.pickly.service.friend.entity.Friend;
 import org.pickly.service.friend.repository.interfaces.FriendQueryRepository;
@@ -27,6 +28,7 @@ import java.util.List;
 public class FriendServiceImpl implements FriendService {
 
   static final boolean FRIEND_NOTIFICATION_ON = true;
+  private final BlockService blockService;
   private final FriendRepository friendRepository;
   private final FriendQueryRepository friendQueryRepository;
   private final MemberService memberService;
@@ -64,7 +66,7 @@ public class FriendServiceImpl implements FriendService {
   @Override
   @Transactional
   public FriendNotificationStatusResDTO setNotification(Long followerId,
-      FriendNotificationStatusReqDTO request) {
+                                                        FriendNotificationStatusReqDTO request) {
     Friend friend = findFollowerById(followerId, request.getMemberId());
     friend.updateNotificationEnabled(request.getIsFollowing());
     return friendMapper.toFriendStatusResDTO(friend.getNotificationMode());
@@ -73,8 +75,16 @@ public class FriendServiceImpl implements FriendService {
   @Override
   public MemberFollowerInfoResDTO findAllFollowerByMember(final Long memberId) {
     memberService.existsById(memberId);
-    List<FollowerResDTO> followerResDtos = friendQueryRepository.findAllFollowerByMember(memberId);
-    int followerCnt = followerResDtos.size();
-    return new MemberFollowerInfoResDTO(followerCnt, followerResDtos);
+    List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId);
+    List<FollowerResDTO> validFollowerResList = removeBlockFollower(memberId, followerResDtoList);
+    int followerCnt = validFollowerResList.size();
+    return new MemberFollowerInfoResDTO(followerCnt, validFollowerResList);
+  }
+
+  private List<FollowerResDTO> removeBlockFollower(final Long memberId, final List<FollowerResDTO> followerResDtoList) {
+    List<Long> blockList = blockService.getBlockeeIdsByBlocker(memberId);
+    return followerResDtoList.stream()
+        .filter(follower -> !blockList.contains(follower.getMemberId()))
+        .toList();
   }
 }

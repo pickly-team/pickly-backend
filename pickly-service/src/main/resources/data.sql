@@ -5,6 +5,10 @@ VALUES ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '�
        ('test3', 'ohmygod', false, 'test3@gmail.com', '테스트3', '테스트3', '🫥', null),
        ('test4', 'ohmygod', false, 'test4@gmail.com', '테스트4', '테스트4', '😪', null);
 
+INSERT INTO block
+(blockee_id, blocker_id, bookmark_id)
+VALUES (3, 1, null);
+
 INSERT INTO category
     (member_id, name, order_num, emoji)
 VALUES (1, '백엔드', 1, '😎'),
