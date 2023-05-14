@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.pickly.common.error.exception.BusinessException;
 import org.pickly.common.error.exception.ErrorCode;
 import org.pickly.service.block.service.BlockService;
+import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.common.FriendMapper;
 import org.pickly.service.friend.entity.Friend;
 import org.pickly.service.friend.repository.interfaces.FriendQueryRepository;
@@ -12,13 +13,13 @@ import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.friend.service.dto.FollowerResDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
-import org.pickly.service.friend.service.dto.MemberFollowerInfoResDTO;
 import org.pickly.service.friend.service.interfaces.FriendService;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -27,6 +28,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class FriendServiceImpl implements FriendService {
 
+  private static final int LAST_ITEM = 1;
   static final boolean FRIEND_NOTIFICATION_ON = true;
   private final BlockService blockService;
   private final FriendRepository friendRepository;
@@ -47,6 +49,16 @@ public class FriendServiceImpl implements FriendService {
   @Transactional
   public void unfollow(final Long followerId, final Long memberId) {
     friendRepository.unfollow(followerId, memberId);
+  }
+
+  @Override
+  public Long countFollowerByMember(Long memberId) {
+    return null;
+  }
+
+  @Override
+  public Long countFolloweeByMember(Long memberId) {
+    return null;
   }
 
   private void checkAlreadyFriend(final Long followerId, final Long memberId) {
@@ -73,12 +85,20 @@ public class FriendServiceImpl implements FriendService {
   }
 
   @Override
-  public MemberFollowerInfoResDTO findAllFollowerByMember(final Long memberId) {
+  public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
     memberService.existsById(memberId);
-    List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId);
-    List<FollowerResDTO> validFollowerResList = removeBlockFollower(memberId, followerResDtoList);
-    int followerCnt = validFollowerResList.size();
-    return new MemberFollowerInfoResDTO(followerCnt, validFollowerResList);
+    List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId, pageRequest);
+    followerResDtoList = removeElement(followerResDtoList, followerResDtoList.size(), pageRequest.getPageSize());
+    return removeBlockFollower(memberId, followerResDtoList);
+  }
+
+  private List<FollowerResDTO> removeElement(final List<FollowerResDTO> itemList, final int size, final int pageSize) {
+    if (size - LAST_ITEM >= pageSize) {
+      List<FollowerResDTO> resultList = new ArrayList<>(itemList);
+      resultList.remove(size - LAST_ITEM);
+      return resultList;
+    }
+    return itemList;
   }
 
   private List<FollowerResDTO> removeBlockFollower(final Long memberId, final List<FollowerResDTO> followerResDtoList) {

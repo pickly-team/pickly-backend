@@ -1,8 +1,11 @@
 package org.pickly.service.friend.service.interfaces;
 
+import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.friend.service.dto.FollowerResDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
-import org.pickly.service.friend.service.dto.MemberFollowerInfoResDTO;
+
+import java.util.List;
 
 public interface FriendService {
 
@@ -10,8 +13,12 @@ public interface FriendService {
 
   void unfollow(Long followerId, Long memberId);
 
+  Long countFollowerByMember(Long memberId);
+
+  Long countFolloweeByMember(Long memberId);
+
   FriendNotificationStatusResDTO setNotification(Long followerId,
       FriendNotificationStatusReqDTO request);
 
-  MemberFollowerInfoResDTO findAllFollowerByMember(Long memberId);
+  List<FollowerResDTO> findAllFollowerByMember(Long memberId, PageRequest pageRequest);
 }

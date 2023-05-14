@@ -7,14 +7,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.friend.common.FriendMapper;
 import org.pickly.service.friend.controller.request.FriendNotificationStatusReq;
+import org.pickly.service.friend.controller.response.FollowerRes;
 import org.pickly.service.friend.controller.response.FriendNotificationStatusRes;
-import org.pickly.service.friend.controller.response.MemberFollowerInfoRes;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
-import org.pickly.service.friend.service.dto.MemberFollowerInfoResDTO;
 import org.pickly.service.friend.service.interfaces.FriendService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,18 +74,39 @@ public class FriendController {
 
   }
 
+  @Operation(summary = "특정 유저의 팔로워 수 조회")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  @GetMapping("/members/{memberId}/followers/count")
+  public long countFollowerByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    return friendService.countFollowerByMember(memberId);
+  }
+
   @Operation(summary = "특정 유저의 팔로워 정보 조회")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/followers")
-  public MemberFollowerInfoRes findAllFollowerByMember(
+  public PageResponse<FollowerRes> findAllFollowerByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "ww0077")
+      @RequestParam(required = false) final String cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
   ) {
-    MemberFollowerInfoResDTO resDto = friendService.findAllFollowerByMember(memberId);
-    return friendMapper.toMemberFollowerInfoRes(resDto);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    List<FollowerRes> resDto = friendService.findAllFollowerByMember(memberId, pageRequest)
+            .stream().map(friendMapper::toFollowerRes).toList();
+    return new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
   }
 
 }

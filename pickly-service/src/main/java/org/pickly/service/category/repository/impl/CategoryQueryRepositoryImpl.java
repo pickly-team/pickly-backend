@@ -1,15 +1,16 @@
 package org.pickly.service.category.repository.impl;
 
-import static org.pickly.service.category.entity.QCategory.category;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import static org.pickly.service.category.entity.QCategory.category;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
   private static final long CHECK_LAST = 1;
   @Override
   public List<Category> findAllByMemberId(PageRequest pageRequest, Long memberId) {
-    Long cursorId = pageRequest.getCursorId();
+    Long cursorId = (Long) pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
 
     return queryFactory
