@@ -8,6 +8,7 @@ import org.pickly.service.friend.entity.Friend;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
+import org.pickly.service.friend.service.dto.MemberFollowerInfoResDTO;
 import org.pickly.service.friend.service.interfaces.FriendService;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -60,5 +61,17 @@ public class FriendServiceImpl implements FriendService {
     Friend friend = findFollowerById(followerId, request.getMemberId());
     friend.updateNotificationEnabled(request.getIsFollowing());
     return friendMapper.toFriendStatusResDTO(friend.getNotificationMode());
+  }
+
+  @Override
+  public MemberFollowerInfoResDTO findAllFollowerByMember(Long memberId) {
+    // 요청 Member가 존재하는지 확인
+
+    // 멤버의 팔로워 전체 조회
+
+    // 팔로워 수 = 전체 조회 List의 size
+
+    // 각 팔로워에 대한 정보 생성
+    return null;
   }
 }

@@ -2,6 +2,7 @@ package org.pickly.service.friend.service.interfaces;
 
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
+import org.pickly.service.friend.service.dto.MemberFollowerInfoResDTO;
 
 public interface FriendService {
 
@@ -11,4 +12,6 @@ public interface FriendService {
 
   FriendNotificationStatusResDTO setNotification(Long followerId,
       FriendNotificationStatusReqDTO request);
+
+  MemberFollowerInfoResDTO findAllFollowerByMember(Long memberId);
 }

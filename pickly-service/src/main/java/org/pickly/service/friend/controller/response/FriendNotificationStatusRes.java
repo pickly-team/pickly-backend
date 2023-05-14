@@ -1,4 +1,4 @@
-package org.pickly.service.friend.controller.request;
+package org.pickly.service.friend.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,21 +2,19 @@ package org.pickly.service.friend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.friend.common.FriendMapper;
 import org.pickly.service.friend.controller.request.FriendNotificationStatusReq;
-import org.pickly.service.friend.controller.request.FriendNotificationStatusRes;
+import org.pickly.service.friend.controller.response.FriendNotificationStatusRes;
+import org.pickly.service.friend.controller.response.MemberFollowerInfoRes;
 import org.pickly.service.friend.service.dto.FriendNotificationStatusResDTO;
+import org.pickly.service.friend.service.dto.MemberFollowerInfoResDTO;
 import org.pickly.service.friend.service.interfaces.FriendService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,4 +70,19 @@ public class FriendController {
         friendStatusResDTO.getNotificationMode(friendStatusResDTO.getIsNotificationAllowed()));
 
   }
+
+  @Operation(summary = "특정 유저의 팔로워 정보 조회")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  @GetMapping("/members/{memberId}/followers")
+  public MemberFollowerInfoRes findAllFollowerByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    MemberFollowerInfoResDTO resDto = friendService.findAllFollowerByMember(memberId);
+    return friendMapper.toMemberFollowerInfoRes(resDto);
+  }
+
 }
