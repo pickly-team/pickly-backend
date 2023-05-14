@@ -112,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public PageResponse<CategoryDTO> getCategoriesByMember(
+  public PageResponse<CategoryDTO> getCategoriesWithPagingByMember(
       final Long cursorId,
       final Integer pageSize, 
       final Long memberId
@@ -120,6 +120,12 @@ public class CategoryServiceImpl implements CategoryService {
     PageRequest pageRequest = makePageRequest(cursorId, pageSize);
     List<Category> categories = categoryQueryRepository.findAllByMemberId(pageRequest, memberId);
     return makeResponse(pageRequest.getPageSize(), categories);
+  }
+
+  @Override
+  public List<CategoryDTO> getCategoriesByMember(Long memberId) {
+    List<Category> categories = categoryRepository.findAllCategoryByMemberId(memberId);
+    return categories.stream().map(CategoryDTO::from).toList();
   }
 
   private <T> List<T> mapToDtoList(
