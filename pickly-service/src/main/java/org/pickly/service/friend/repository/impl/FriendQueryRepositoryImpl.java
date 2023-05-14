@@ -40,12 +40,12 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
         .from(friend)
         .leftJoin(follower).on(
             follower.followee.id.eq(friend.follower.id),
-            follower.follower.id.eq(friend.followee.id),
-            ltFollowerUsername(cursorId)
+            follower.follower.id.eq(friend.followee.id)
         )
         .innerJoin(member).on(friend.follower.id.eq(member.id))
         .where(
-            friend.followee.id.eq(memberId)
+            friend.followee.id.eq(memberId),
+            gtFollowerUsername(cursorId)
         )
         .orderBy(friend.follower.username.asc())
         .limit(size + CHECK_LAST)
@@ -66,30 +66,30 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
         .from(friend)
         .leftJoin(follower).on(
             follower.followee.id.eq(friend.follower.id),
-            follower.follower.id.eq(friend.followee.id),
-            ltFolloweeUsername(cursorId)
+            follower.follower.id.eq(friend.followee.id)
         )
         .innerJoin(member).on(friend.followee.id.eq(member.id))
         .where(
-            friend.follower.id.eq(memberId)
+            friend.follower.id.eq(memberId),
+            gtFolloweeUsername(cursorId)
         )
         .orderBy(friend.followee.username.asc())
         .limit(size + CHECK_LAST)
         .fetch();
   }
 
-  private BooleanExpression ltFollowerUsername(final String cursorId) {
+  private BooleanExpression gtFollowerUsername(final String cursorId) {
     if (cursorId == null) {
       return null;
     }
-    return friend.follower.username.lt(cursorId);
+    return friend.follower.username.gt(cursorId);
   }
 
-  private BooleanExpression ltFolloweeUsername(final String cursorId) {
+  private BooleanExpression gtFolloweeUsername(final String cursorId) {
     if (cursorId == null) {
       return null;
     }
-    return friend.followee.username.lt(cursorId);
+    return friend.followee.username.gt(cursorId);
   }
 
 }
