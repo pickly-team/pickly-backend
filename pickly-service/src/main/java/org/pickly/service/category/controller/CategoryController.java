@@ -131,10 +131,11 @@ public class CategoryController {
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = CategoryDTO.class)))
   })
-  @GetMapping("/categories")
+  @GetMapping("/members/{memberId}/categories")
   public List<CategoryDTO> getCategoryByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") final Long memberId
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long memberId
   ) {
     return categoryService.getCategoriesByMember(memberId);
   }
