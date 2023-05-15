@@ -53,19 +53,19 @@ create trigger update_trigger
 
 create table category
 (
-    id                  bigserial
+    id         bigserial
         constraint category_pk
             primary key,
-    member_id           bigint                  not null
+    member_id  bigint                  not null
         constraint category_member_id_fk
             references member
             on update cascade on delete cascade,
-    name                varchar(100)            not null,
-    emoji               text,
-    order_num           integer                 not null,
-    created_at          timestamp default now() not null,
-    updated_at          timestamp,
-    deleted_at          timestamp
+    name       varchar(100)            not null,
+    emoji      text,
+    order_num  integer                 not null,
+    created_at timestamp default now() not null,
+    updated_at timestamp,
+    deleted_at timestamp
 );
 
 create trigger update_trigger
@@ -252,5 +252,61 @@ create table block
 create trigger update_trigger
     before update
     on block
+    for each row
+    execute procedure updated_at();
+
+create table member_report
+(
+    id          bigserial
+        constraint member_report_pk
+            primary key,
+    reporter_id bigint                  not null
+        constraint member_report_reporter_member_id_fk
+            references member
+            on update cascade on delete cascade,
+    reported_id bigint                  not null
+        constraint member_report_reported_member_id_fk
+            references member
+            on update cascade on delete cascade,
+    content     varchar(150)            not null,
+    created_at  timestamp default now() not null,
+    updated_at  timestamp,
+    deleted_at  timestamp
+);
+
+create unique index member_report_reporter_id_reported_id_uindex
+    on member_report (reporter_id, reported_id);
+
+create trigger update_trigger
+    before update
+    on member_report
+    for each row
+    execute procedure updated_at();
+
+create table bookmark_report
+(
+    id          bigserial
+        constraint bookmark_report_pk
+            primary key,
+    reporter_id bigint                  not null
+        constraint bookmark_report_reporter_member_id_fk
+            references member
+            on update cascade on delete cascade,
+    reported_id bigint                  not null
+        constraint bookmark_report_reported_bookmark_id_fk
+            references bookmark
+            on update cascade on delete cascade,
+    content     varchar(150)            not null,
+    created_at  timestamp default now() not null,
+    updated_at  timestamp,
+    deleted_at  timestamp
+);
+
+create unique index bookmark_report_reporter_id_reported_id_uindex
+    on bookmark_report (reporter_id, reported_id);
+
+create trigger update_trigger
+    before update
+    on bookmark_report
     for each row
     execute procedure updated_at();
