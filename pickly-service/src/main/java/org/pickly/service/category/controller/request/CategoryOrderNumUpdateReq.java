@@ -1,4 +1,4 @@
-package org.pickly.service.category.dto.controller;
+package org.pickly.service.category.controller.request;
 
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
