@@ -1,4 +1,4 @@
-package org.pickly.service.bookmark.controller.request;
+package org.pickly.service.bookmark.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,19 +1,9 @@
 package org.pickly.service.bookmark.service.impl;
 
 
-import jakarta.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
-import org.pickly.service.bookmark.common.BookmarkMapper;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
-import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -33,14 +23,17 @@ import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
-import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.interfaces.MemberService;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -147,7 +140,9 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional
   public BookmarkDeleteResDTO deleteBookmark(Long bookmarkId) {
     BookmarkDeleteResDTO bookmarkDeleteReqDTO = new BookmarkDeleteResDTO();
-    bookmarkDeleteReqDTO.setIsDeleted(bookmarkRepository.deleteBookmarkById(bookmarkId));
+    Bookmark bookmark = findById(bookmarkId);
+    bookmark.delete();
+    bookmarkDeleteReqDTO.setIsDeleted();
     return bookmarkDeleteReqDTO;
   }
 
@@ -156,7 +151,9 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional
   public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
     BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
-    bookmarkListDeleteResDTO.setIsDeleted(bookmarkRepository.deleteBookmarksByIds(bookmarkIds));
+    LocalDateTime now = ZonedDateTime.now(ZoneId.of("UTC")).toLocalDateTime();
+    bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
+    bookmarkListDeleteResDTO.setIsDeleted();
     return bookmarkListDeleteResDTO;
   }
 

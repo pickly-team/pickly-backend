@@ -7,16 +7,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
-import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
-import org.pickly.service.bookmark.controller.request.BookmarkDeleteReq;
-import org.pickly.service.bookmark.controller.request.BookmarkDeleteRes;
-import org.pickly.service.bookmark.controller.request.BookmarkListDeleteReq;
-import org.pickly.service.bookmark.controller.request.BookmarkListDeleteRes;
-import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
+import org.pickly.service.bookmark.controller.request.*;
+import org.pickly.service.bookmark.controller.response.BookmarkDeleteRes;
+import org.pickly.service.bookmark.controller.response.BookmarkListDeleteRes;
 import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
@@ -29,16 +28,9 @@ import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -121,13 +113,12 @@ public class BookmarkController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
   })
-  @PutMapping("/bookmarks")
+  @DeleteMapping("/bookmarks/{bookmarkId}")
   public BookmarkDeleteRes deleteBookmark(
-      @RequestBody
-      BookmarkDeleteReq request
+      @Parameter(name = "bookmarkId", description = "북마크 ID (PK) 값", example = "1", required = true)
+      @Positive(message = "북마크 ID는 양수입니다.") @PathVariable final Long bookmarkId
   ) {
-    BookmarkDeleteResDTO bookmarkDeleteResDTO = bookmarkService.deleteBookmark(
-        request.getBookmarkId());
+    BookmarkDeleteResDTO bookmarkDeleteResDTO = bookmarkService.deleteBookmark(bookmarkId);
     return bookmarkMapper.toBookmarkDelete(bookmarkDeleteResDTO.getIsDeleted());
   }
 
@@ -135,13 +126,13 @@ public class BookmarkController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
   })
-  @PutMapping("/bookmarks/list")
+  @DeleteMapping("/bookmarks/list")
   public BookmarkListDeleteRes deleteBookmarks(
-      @RequestBody
-      BookmarkListDeleteReq request
+      @NotNull(message = "북마크 ID 리스트는 필수입니다.")
+      @Size(min = 1, message = "북마크 ID 리스트는 최소 1개 이상이어야 합니다.")
+      @RequestParam(value = "bookmarkId") List<@Positive(message = "북마크 ID는 양수입니다.") Long> bookmarkIds
   ) {
-    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = bookmarkService.deleteBookmarks(
-        request.getBookmarkIds());
+    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = bookmarkService.deleteBookmarks(bookmarkIds);
     return bookmarkMapper.toBookmarkListDelete(bookmarkListDeleteResDTO.getIsDeleted());
   }
 

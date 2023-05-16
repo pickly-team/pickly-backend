@@ -12,8 +12,8 @@ public class BookmarkListDeleteResDTO {
 
   private Boolean isDeleted;
 
-  public void setIsDeleted(Integer isDeleted) {
-    this.isDeleted = isDeleted != 0;
+  public void setIsDeleted() {
+    this.isDeleted = true;
   }
 
 }
