@@ -1,4 +1,4 @@
-package org.pickly.service.category.dto.service;
+package org.pickly.service.category.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
