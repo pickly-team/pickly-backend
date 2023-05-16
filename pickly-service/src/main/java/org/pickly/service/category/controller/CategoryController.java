@@ -77,7 +77,7 @@ public class CategoryController {
 
   @Operation(summary = "특정 카테고리 삭제")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "204", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
   })
   @DeleteMapping("/categories/{categoryId}")
