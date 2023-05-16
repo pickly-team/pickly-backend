@@ -43,7 +43,7 @@ public class BlockController {
   @PostMapping("/member/{blockerId}/block/{blockeeId}")
   @Operation(summary = "Block Member")
   public void blockMember(
-      @Parameter(name = "blokerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
+      @Parameter(name = "blockerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
       @Parameter(name = "blockeeId", description = "차단 당한 유저 ID 값", example = "2", required = true)
@@ -55,7 +55,7 @@ public class BlockController {
   @DeleteMapping("/member/{blockerId}/block/{blockeeId}")
   @Operation(summary = "Unblock Member")
   public void unBlockMember(
-      @Parameter(name = "blokerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
+      @Parameter(name = "blockerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
       @Parameter(name = "blockeeId", description = "차단 해제를 할 유저 ID 값", example = "2", required = true)
@@ -67,7 +67,7 @@ public class BlockController {
   @GetMapping("/member/blocks/{blockerId}")
   @Operation(summary = "Get Blocked Member")
   public BlockMemberRes getBlockedMembers(
-      @Parameter(name = "blokerId", description = "유저 차단조회를 위한 대상 ID 값", example = "1", required = true)
+      @Parameter(name = "blockerId", description = "유저 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
       @Parameter(name = "cursor", description = "마지막 끝의 Id", example = "1", required = true) final @RequestParam Long cursorId,
@@ -85,7 +85,7 @@ public class BlockController {
   @PostMapping("/bookmark/{blockerId}/block/{bookmarkId}")
   @Operation(summary = "Block Bookmark")
   public void blockBookmark(
-      @Parameter(name = "blokerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
+      @Parameter(name = "blockerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
       @Parameter(name = "bookmarkId", description = "차단 당한 북마크 ID 값", example = "2", required = true)
@@ -97,7 +97,7 @@ public class BlockController {
   @DeleteMapping("/bookmark/{blockerId}/block/{bookmarkId}")
   @Operation(summary = "Unblock Bookmark")
   public void unBlockBookmark(
-      @Parameter(name = "blokerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
+      @Parameter(name = "blockerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
       @Parameter(name = "bookmarkId", description = "차단 해제를 할 북마크 ID 값", example = "2", required = true)
@@ -109,7 +109,7 @@ public class BlockController {
   @GetMapping("/bookmark/blocks/{blockerId}")
   @Operation(summary = "Get Blocked Bookmark")
   public BlockBookmarkRes getBlockedBookmarks(
-      @Parameter(name = "blokerId", description = "북마크 차단조회를 위한 대상 ID 값", example = "1", required = true)
+      @Parameter(name = "blockerId", description = "북마크 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
       @Parameter(name = "page", description = "페이지 번호", example = "1", required = true) final @RequestParam Long cursorId,
