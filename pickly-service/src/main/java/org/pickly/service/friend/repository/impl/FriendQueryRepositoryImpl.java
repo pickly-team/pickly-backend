@@ -26,34 +26,6 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
   private static final long CHECK_LAST = 1;
 
   @Override
-  public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
-    QMember member = new QMember("member");
-    QFriend follower = new QFriend("follower");
-    QFriend friend = new QFriend("friend");
-
-    String cursorId = (String) pageRequest.getCursorId();
-    Integer size = pageRequest.getPageSize();
-
-    return queryFactory
-        .select(new QFollowerResDTO(
-            friend.followee.id, follower, member
-        ))
-        .from(friend)
-        .leftJoin(follower).on(
-            follower.followee.id.eq(friend.follower.id),
-            follower.follower.id.eq(friend.followee.id)
-        )
-        .innerJoin(member).on(friend.follower.id.eq(member.id))
-        .where(
-            friend.followee.id.eq(memberId),
-            gtFollowerUsername(cursorId)
-        )
-        .orderBy(friend.follower.username.asc())
-        .limit(size + CHECK_LAST)
-        .fetch();
-  }
-
-  @Override
   public List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest) {
     QMember member = new QMember("member");
     QFriend follower = new QFriend("follower");

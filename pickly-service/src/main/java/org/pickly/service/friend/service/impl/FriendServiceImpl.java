@@ -20,7 +20,6 @@ import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -90,9 +89,6 @@ public class FriendServiceImpl implements FriendService {
   @Override
   public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
     memberService.existsById(memberId);
-    // List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId, pageRequest);
-//    followerResDtoList = removeElement(followerResDtoList, followerResDtoList.size(), pageRequest.getPageSize());
-//    return removeBlockFollower(memberId, followerResDtoList);
     return friendQueryRepository.findAllFollowerWithOutBlockByMember(memberId, pageRequest);
   }
 
@@ -102,19 +98,4 @@ public class FriendServiceImpl implements FriendService {
     return friendQueryRepository.findAllFollowingByMember(memberId, pageRequest);
   }
 
-  private List<FollowerResDTO> removeElement(final List<FollowerResDTO> itemList, final int size, final int pageSize) {
-    if (size - LAST_ITEM >= pageSize) {
-      List<FollowerResDTO> resultList = new ArrayList<>(itemList);
-      resultList.remove(size - LAST_ITEM);
-      return resultList;
-    }
-    return itemList;
-  }
-
-  private List<FollowerResDTO> removeBlockFollower(final Long memberId, final List<FollowerResDTO> followerResDtoList) {
-    List<Long> blockList = blockService.getBlockeeIdsByBlocker(memberId);
-    return followerResDtoList.stream()
-        .filter(follower -> !blockList.contains(follower.getMemberId()))
-        .toList();
-  }
 }

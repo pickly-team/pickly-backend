@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface FriendQueryRepository {
 
-  List<FollowerResDTO> findAllFollowerByMember(Long memberId, PageRequest pageRequest);
-
   List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest);
 
   List<FollowerResDTO> findAllFollowerWithOutBlockByMember(Long memberId, PageRequest pageRequest);
