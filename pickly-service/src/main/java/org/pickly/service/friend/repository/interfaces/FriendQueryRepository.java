@@ -12,4 +12,6 @@ public interface FriendQueryRepository {
 
   List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest);
 
+  List<FollowerResDTO> findAllFollowerWithOutBlockByMember(Long memberId, PageRequest pageRequest);
+
 }

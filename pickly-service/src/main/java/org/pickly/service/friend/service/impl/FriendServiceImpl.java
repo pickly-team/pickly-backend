@@ -90,9 +90,10 @@ public class FriendServiceImpl implements FriendService {
   @Override
   public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
     memberService.existsById(memberId);
-    List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId, pageRequest);
+    // List<FollowerResDTO> followerResDtoList = friendQueryRepository.findAllFollowerByMember(memberId, pageRequest);
 //    followerResDtoList = removeElement(followerResDtoList, followerResDtoList.size(), pageRequest.getPageSize());
-    return removeBlockFollower(memberId, followerResDtoList);
+//    return removeBlockFollower(memberId, followerResDtoList);
+    return friendQueryRepository.findAllFollowerWithOutBlockByMember(memberId, pageRequest);
   }
 
   @Override

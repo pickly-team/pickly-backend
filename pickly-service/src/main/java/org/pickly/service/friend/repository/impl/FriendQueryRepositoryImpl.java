@@ -3,6 +3,7 @@ package org.pickly.service.friend.repository.impl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.block.entity.QBlock;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.entity.QFriend;
 import org.pickly.service.friend.repository.interfaces.FriendQueryRepository;
@@ -74,6 +75,33 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
             gtFolloweeUsername(cursorId)
         )
         .orderBy(friend.followee.username.asc())
+        .limit(size + CHECK_LAST)
+        .fetch();
+  }
+
+  @Override
+  public List<FollowerResDTO> findAllFollowerWithOutBlockByMember(Long memberId, PageRequest pageRequest) {
+    QMember member = new QMember("member");
+    QFriend follower = new QFriend("follower");
+    QFriend friend = new QFriend("friend");
+    QBlock block = new QBlock("block");
+
+    String cursorId = (String) pageRequest.getCursorId();
+    Integer size = pageRequest.getPageSize();
+
+    return queryFactory
+        .select(new QFollowerResDTO(
+            friend.followee.id, follower, member
+        ))
+        .from(friend)
+        .leftJoin(block).on(block.blocker.id.eq(friend.followee.id))
+        .innerJoin(member).on(friend.follower.id.eq(member.id))
+        .where(
+            friend.followee.id.eq(memberId),
+            block.blockee.id.ne(friend.follower.id),
+            gtFollowerUsername(cursorId)
+        )
+        .orderBy(friend.follower.username.asc())
         .limit(size + CHECK_LAST)
         .fetch();
   }
