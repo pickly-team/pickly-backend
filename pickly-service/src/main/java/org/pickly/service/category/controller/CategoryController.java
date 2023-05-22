@@ -156,7 +156,7 @@ public class CategoryController {
   @GetMapping("/categories/{categoryId}")
   public CategoryRes findById(
       @Parameter(name = "categoryId", description = "카테고리 ID (PK) 값", example = "1", required = true)
-      @Positive(message = "카테고리 ID (PK)는 양수입니다.") final Long categoryId
+      @Positive(message = "카테고리 ID (PK)는 양수입니다.") @PathVariable final Long categoryId
   ) {
     CategoryDTO dto = categoryService.findById(categoryId);
     return categoryMapper.toResponse(dto);
