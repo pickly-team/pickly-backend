@@ -94,6 +94,10 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
             friend.followee.id, follower, member
         ))
         .from(friend)
+        .leftJoin(follower).on(
+            follower.followee.id.eq(friend.follower.id),
+            follower.follower.id.eq(friend.followee.id)
+        )
         .leftJoin(block).on(block.blocker.id.eq(friend.followee.id))
         .innerJoin(member).on(friend.follower.id.eq(member.id))
         .where(
