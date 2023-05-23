@@ -46,13 +46,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
           
-    ## gradle build
+      ## gradle build
     - name: Build with Gradle
-      run: |
-        chmod +x gradlew  
-       ./gradlew clean :pickly-service:build -x test 
+      run: ./gradlew clean :pickly-service:build -x test
+      shell: bash
 
-    ## docker build & push to AWS Registry
+      ## docker build & push to AWS Registry
     - name: Docker build & push to Registry 
       if: contains(github.ref, 'develop')
       run: |
