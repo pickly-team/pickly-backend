@@ -54,5 +54,5 @@ jobs:
     - name: Docker build & push to Registry 
       if: contains(github.ref, 'develop')
       run: |
-        ${{AWS_REGISTRY}}
-        ${{DOCKER_PULL}}      
+        ${{secrets.AWS_REGISTRY}}
+        ${{secrets.DOCKER_PULL}}      
