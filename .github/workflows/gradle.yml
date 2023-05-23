@@ -21,10 +21,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    ## jdk 세팅 
-    # Github-Actions에서 사용될 JDK 세팅을 진행한다. 이떄 프로젝트나 AWS의 Java버전과 달라도 무방하다. 
-    # Java-Version으로 17을 사용하고, distribution으로는 temurin을 사용한다.
-    # 과거 adopt을 사용했지만, 공식문서에 따르면 현재는 termurin을 사용하는것을 강력히 권장하고있다. ( adopt는 더이상 업데이트되지 않는다고 함 ) 
+      - uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v1
         with:
@@ -39,6 +37,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -48,13 +47,15 @@ jobs:
       ## gradle build
       - name: Build with Gradle
         run: ./gradlew clean :pickly-service:build -x test
+        shell: bash
 
       ## docker build & push to AWS Registry
       - name: Docker build & push to Registry
         if: contains(github.ref, 'develop')
         run: |
           ${{secrets.AWS_REGISTRY}} \ 
-          ${{secrets.DOCKER_PULL}}      
+          ${{secrets.DOCKER_PULL}}
+        shell: bash
 
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
