@@ -49,7 +49,7 @@ jobs:
       ## gradle build
     - name: Build with Gradle
       run: |
-          chmod +x gradlew \
+          gradle wrapper \
           ./gradlew clean :pickly-service:build -x test
 
       ## docker build & push to AWS Registry
