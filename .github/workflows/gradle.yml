@@ -48,8 +48,9 @@ jobs:
           
       ## gradle build
     - name: Build with Gradle
-      run: ./gradlew clean :pickly-service:build -x test
-      shell: bash
+      run: |
+          chmod +x gradlew \
+          ./gradlew clean :pickly-service:build -x test
 
       ## docker build & push to AWS Registry
     - name: Docker build & push to Registry 
