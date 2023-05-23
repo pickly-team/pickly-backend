@@ -1,0 +1,58 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+# github repository Actions 페이지에 나타날 이름 
+name: Pickly Backend CI / CD 
+
+# develop 브렌치에 Push되었을 경우 Workflow Trigger을 실행한다. 
+on:
+  push:
+    branches: [ "develop" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    ## jdk 세팅 
+    # Github-Actions에서 사용될 JDK 세팅을 진행한다. 이떄 프로젝트나 AWS의 Java버전과 달라도 무방하다. 
+    # Java-Version으로 11을 사용하고, distribution으로는 temurin을 사용한다. 
+    # 과거 adopt을 사용했지만, 공식문서에 따르면 현재는 termurin을 사용하는것을 강력히 권장하고있다. ( adopt는 더이상 업데이트되지 않는다고 함 ) 
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin' 
+
+      ## gradle caching
+      # 사실 추가하지 않아도 무방하지만, 적용 시 빌드시간 20 ~ 30% 가량 향상을 기대할 수 있다. 
+      # https://github.com/actions/cache
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    ## gradle build
+    - name: Build with Gradle
+      run: ./gradlew clean :pickly-service:build -x test 
+
+    ## docker build & push to AWS Registry
+    - name: Docker build & push to Registry 
+      if: contains(github.ref, 'develop')
+      run: |
+        ${{secrets.AWS_REGISTRY}}
+        ${{secrets.DOCKER_PULL}}      

@@ -42,4 +42,3 @@ logs
 data/
 application.pid
 .env-dev
-application-ej.yml

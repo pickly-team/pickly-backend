@@ -28,7 +28,8 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
         .selectFrom(category)
         .where(
             ltCursorId(cursorId),
-            eqMemberId(memberId)
+            eqMemberId(memberId),
+            notDeleted()
         )
         .orderBy(category.id.desc())
         .limit(pageSize + CHECK_LAST)
@@ -40,6 +41,10 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
       return null;
     }
     return category.member.id.eq(memberId);
+  }
+
+  private BooleanExpression notDeleted() {
+    return category.deletedAt.isNull();
   }
 
   private BooleanExpression ltCursorId(final Long cursorId) {

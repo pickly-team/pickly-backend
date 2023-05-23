@@ -1,10 +1,11 @@
 package org.pickly.service.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.pickly.service.category.dto.controller.CategoryOrderNumUpdateReq;
-import org.pickly.service.category.dto.controller.CategoryRequestDTO;
-import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO;
-import org.pickly.service.category.dto.service.CategoryDTO;
+import org.pickly.service.category.common.CategoryMapper;
+import org.pickly.service.category.controller.request.CategoryOrderNumUpdateReq;
+import org.pickly.service.category.controller.request.CategoryRequestDTO;
+import org.pickly.service.category.controller.request.CategoryUpdateRequestDTO;
+import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.exception.custom.CategoryOrderNumDuplicateException;
 import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
@@ -36,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
   private final CategoryRepository categoryRepository;
   private final CategoryQueryRepository categoryQueryRepository;
   private final CategoryJdbcRepository categoryJdbcRepository;
+  private final CategoryMapper categoryMapper;
 
   private static final int LAST_ITEM = 1;
 
@@ -57,6 +59,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     categoryJdbcRepository.createCategories(categories);
+  }
+
+  @Override
+  public CategoryDTO findById(Long categoryId) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow();
+    return categoryMapper.toDto(category);
   }
 
   @Transactional
@@ -112,7 +121,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public PageResponse<CategoryDTO> getCategoriesByMember(
+  public PageResponse<CategoryDTO> getCategoriesWithPagingByMember(
       final Long cursorId,
       final Integer pageSize, 
       final Long memberId
@@ -120,6 +129,12 @@ public class CategoryServiceImpl implements CategoryService {
     PageRequest pageRequest = makePageRequest(cursorId, pageSize);
     List<Category> categories = categoryQueryRepository.findAllByMemberId(pageRequest, memberId);
     return makeResponse(pageRequest.getPageSize(), categories);
+  }
+
+  @Override
+  public List<CategoryDTO> getCategoriesByMember(Long memberId) {
+    List<Category> categories = categoryRepository.findAllCategoryByMemberId(memberId);
+    return categories.stream().map(CategoryDTO::from).toList();
   }
 
   private <T> List<T> mapToDtoList(

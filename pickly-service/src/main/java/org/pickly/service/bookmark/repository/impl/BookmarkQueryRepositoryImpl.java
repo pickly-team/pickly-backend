@@ -36,7 +36,8 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqCategoryId(categoryId),
             eqIsUserLike(isUserLike),
             eqReadByUser(readByUser),
-            eqVisibility(visibility)
+            eqVisibility(visibility),
+            notDeleted()
         )
         .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
@@ -50,7 +51,8 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
         .from(bookmark)
         .where(
             eqMemberId(memberId),
-            eqIsUserLike(isUserLike)
+            eqIsUserLike(isUserLike),
+            notDeleted()
         )
         .fetchFirst();
   }
@@ -64,7 +66,8 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return queryFactory
         .selectFrom(bookmark)
         .where(
-            eqCategoryId(categoryId)
+            eqCategoryId(categoryId),
+            notDeleted()
         )
         .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
@@ -105,6 +108,10 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
       return null;
     }
     return bookmark.visibility.eq(visibility);
+  }
+
+  private BooleanExpression notDeleted() {
+    return bookmark.deletedAt.isNull();
   }
 
   private BooleanExpression ltCursorId(final Long cursorId) {
