@@ -19,13 +19,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-  deploy:
-    runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:20.10.9-dind
-        options: --privileged
-
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -61,12 +55,6 @@ jobs:
         run: |
           ${{secrets.AWS_REGISTRY}}
         shell: bash
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Docker environment
-        run: docker version
 
       ## docker pull from AWS Registry
       - name: CD to Develop Server
