@@ -54,9 +54,8 @@ jobs:
         if: contains(github.ref, 'develop')
         run: |
           ${{secrets.AWS_REGISTRY}} \ 
-          ${{secrets.DOCKER_PULL}} \ 
-          ${{secrets.DOCKER_PULL}}
-        shell: bash
+          ${{secrets.DOCKER_PULL}}        
+          shell: bash
 
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
