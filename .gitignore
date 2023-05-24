@@ -40,8 +40,5 @@ target
 logs/
 logs
 data/
-<<<<<<< HEAD
 application.pid
-=======
 .env-dev
->>>>>>> 0c34485b6b18f1275bc0a24a85ec1bab90eb2b9a

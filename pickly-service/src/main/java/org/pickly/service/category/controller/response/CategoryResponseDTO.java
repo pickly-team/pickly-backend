@@ -1,4 +1,4 @@
-package org.pickly.service.category.dto.controller;
+package org.pickly.service.category.controller.response;
 
 public record CategoryResponseDTO(
   long categoryId,

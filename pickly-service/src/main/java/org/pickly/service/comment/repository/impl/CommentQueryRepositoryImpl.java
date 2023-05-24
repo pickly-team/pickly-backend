@@ -1,22 +1,23 @@
 package org.pickly.service.comment.repository.impl;
 
-import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
-import static org.pickly.service.category.entity.QCategory.category;
-import static org.pickly.service.comment.entity.QComment.comment;
-import static org.pickly.service.member.entity.QMember.member;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.dto.QCommentDTO;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
+import static org.pickly.service.category.entity.QCategory.category;
+import static org.pickly.service.comment.entity.QComment.comment;
+import static org.pickly.service.member.entity.QMember.member;
 
 @Slf4j
 @Repository
@@ -32,7 +33,10 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
         .from(bookmark)
         .leftJoin(comment).on(comment.bookmark.id.eq(bookmark.id))
         .groupBy(bookmark.id)
-        .where(bookmark.member.id.eq(memberId))
+        .where(
+            bookmark.member.id.eq(memberId),
+            notDeleted()
+        )
         .fetch()
         .stream()
         .collect(Collectors.toMap(
@@ -51,7 +55,8 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
         .leftJoin(bookmark.category, category)
         .where(
             eqMemberId(memberId),
-            eqBookmarkId(bookmarkId)
+            eqBookmarkId(bookmarkId),
+            notDeleted()
         )
         .orderBy(comment.id.desc())
         .fetch();
@@ -69,6 +74,10 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
       return null;
     }
     return comment.bookmark.id.eq(bookmarkId);
+  }
+
+  private BooleanExpression notDeleted() {
+    return comment.deletedAt.isNull();
   }
 
 

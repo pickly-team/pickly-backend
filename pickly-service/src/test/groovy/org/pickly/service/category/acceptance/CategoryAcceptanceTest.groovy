@@ -1,25 +1,10 @@
 package org.pickly.service.category.acceptance
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.pickly.service.category.CategoryFactory
-import org.pickly.service.category.dto.controller.CategoryRequestDTO
-import org.pickly.service.category.dto.controller.CategoryUpdateRequestDTO
-import org.pickly.service.category.entity.Category
-import org.pickly.service.category.repository.interfaces.CategoryRepository
-import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.entity.Member
-import org.pickly.service.member.repository.interfaces.MemberRepository
-import org.springframework.beans.factory.annotation.Autowired
+
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
-
-import static org.springframework.http.MediaType.APPLICATION_JSON
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
