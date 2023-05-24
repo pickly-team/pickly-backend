@@ -19,6 +19,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
     services:
       docker:
         image: docker:20.10.9-dind
