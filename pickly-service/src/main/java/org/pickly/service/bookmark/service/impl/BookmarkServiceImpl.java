@@ -131,6 +131,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmark.like();
   }
 
+  @Transactional
   @Override
   @Transactional
   public void cancelLikeBookmark(Long bookmarkId) {
