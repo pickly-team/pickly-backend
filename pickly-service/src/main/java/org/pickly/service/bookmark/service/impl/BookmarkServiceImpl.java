@@ -123,12 +123,14 @@ public class BookmarkServiceImpl implements BookmarkService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
   }
 
+  @Transactional
   @Override
   public void likeBookmark(Long bookmarkId) {
     Bookmark bookmark = findById(bookmarkId);
     bookmark.like();
   }
 
+  @Transactional
   @Override
   public void cancelLikeBookmark(Long bookmarkId) {
     Bookmark bookmark = findById(bookmarkId);
