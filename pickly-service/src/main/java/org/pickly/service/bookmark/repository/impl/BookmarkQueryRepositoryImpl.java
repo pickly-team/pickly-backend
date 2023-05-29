@@ -26,7 +26,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
       PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike,
       Boolean readByUser, Visibility visibility
   ) {
-    Long cursorId = pageRequest.getCursorId();
+    Long cursorId = (Long) pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
     return queryFactory
         .selectFrom(bookmark)
@@ -60,7 +60,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   @Override
   public List<Bookmark> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId) {
 
-    Long cursorId = pageRequest.getCursorId();
+    Long cursorId = (Long) pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
 
     return queryFactory

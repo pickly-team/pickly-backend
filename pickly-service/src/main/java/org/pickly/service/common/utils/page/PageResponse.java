@@ -1,9 +1,11 @@
 package org.pickly.service.common.utils.page;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -22,6 +24,15 @@ public class PageResponse<T> {
   public PageResponse(final int contentSize, final int pageSize, final List<T> contents) {
     this.hasNext = makeHasNext(contentSize, pageSize);
     this.contents = contents;
+  }
+
+  public void removeElement(final int pageSize) {
+    int size = this.contents.size();
+    if (size - 1 >= pageSize) {
+      List<T> resultList = new ArrayList<>(this.contents);
+      resultList.remove(size - 1);
+      this.contents = resultList;
+    }
   }
 
 }

@@ -1,6 +1,5 @@
 package org.pickly.service.block.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.BusinessException;
 import org.pickly.common.error.exception.ErrorCode;
@@ -16,6 +15,8 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,11 @@ public class BlockServiceImpl implements BlockService {
     Member blockee = memberService.findById(blockeeId);
 
     blockRepository.unBlockMember(blocker.getId(), blockee.getId());
+  }
+
+  @Override
+  public List<Long> getBlockeeIdsByBlocker(final Long blockerId) {
+    return blockRepository.getBlockeeIdsByBlocker(blockerId);
   }
 
   @Override

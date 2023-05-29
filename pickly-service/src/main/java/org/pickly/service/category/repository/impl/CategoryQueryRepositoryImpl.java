@@ -21,7 +21,7 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
   private static final long CHECK_LAST = 1;
   @Override
   public List<Category> findAllByMemberId(PageRequest pageRequest, Long memberId) {
-    Long cursorId = pageRequest.getCursorId();
+    Long cursorId = (Long) pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
 
     return queryFactory

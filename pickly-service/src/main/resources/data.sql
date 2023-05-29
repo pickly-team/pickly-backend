@@ -1,7 +1,13 @@
 INSERT INTO member
 (username, password, is_hard_mode, email, name, nickname, profile_emoji, fcm_token)
 VALUES ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '😎', null),
-       ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳', null);
+       ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳', null),
+       ('test3', 'ohmygod', false, 'test3@gmail.com', '테스트3', '테스트3', '🫥', null),
+       ('test4', 'ohmygod', false, 'test4@gmail.com', '테스트4', '테스트4', '😪', null);
+
+INSERT INTO block
+(blockee_id, blocker_id, bookmark_id)
+VALUES (3, 1, null);
 
 INSERT INTO category
     (member_id, name, order_num, emoji)
@@ -25,7 +31,9 @@ VALUES (1, 1, true, '정말 완벽한 글이에요'),
 INSERT INTO friend
     (followee_id, follower_id, notification_enabled)
 VALUES (1, 2, false),
-       (2, 1, true);
+       (2, 1, true),
+       (1, 3, false),
+       (1, 4, false);
 
 -- notify_daily_at is  time without timezone
 INSERT INTO notification_standard
