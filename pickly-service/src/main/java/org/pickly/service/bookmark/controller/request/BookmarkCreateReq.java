@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.pickly.service.bookmark.entity.Visibility;
+import org.pickly.service.common.utils.validator.UrlCheck;
 
 @Getter
 @Builder
@@ -22,6 +23,7 @@ public class BookmarkCreateReq {
   @Positive
   private Long memberId;
 
+  @UrlCheck
   @NotBlank(message = "URL을 입력해주세요")
   private String url;
 
