@@ -1,6 +1,7 @@
 package org.pickly.service.report.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.report.controller.request.ReportReq;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reports")
 @RequiredArgsConstructor
+@Tag(name = "Report", description = "신고 API")
 public class ReportController {
 
   private final MemberReportService memberReportService;
