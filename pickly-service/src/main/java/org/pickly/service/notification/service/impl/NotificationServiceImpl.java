@@ -25,7 +25,8 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public List<NotificationDTO> findMemberNotifications(final Long memberId) {
     memberService.existsById(memberId);
-    List<Notification> notifications = notificationRepository.findAllByMemberId(memberId);
+    List<Notification> notifications = notificationRepository.findAllByMemberIdAndDeletedAtNull(
+        memberId);
     return notifications.stream().map(notificationMapper::toDto).collect(Collectors.toList());
   }
 
@@ -38,11 +39,11 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public void deleteNotification(final Long notificationId) {
     Notification notification = findById(notificationId);
-    notificationRepository.delete(notification);
+    notification.delete();
   }
 
   public Notification findById(Long id) {
-    return notificationRepository.findById(id)
+    return notificationRepository.findByIdAndDeletedAtNull(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
   }
 
