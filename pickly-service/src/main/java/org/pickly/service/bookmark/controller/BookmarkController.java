@@ -11,10 +11,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
-import org.pickly.service.bookmark.controller.request.*;
+import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
+import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
 import org.pickly.service.bookmark.controller.response.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.response.BookmarkListDeleteRes;
 import org.pickly.service.bookmark.controller.response.BookmarkRes;
@@ -29,9 +31,16 @@ import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -43,12 +52,12 @@ public class BookmarkController {
   private final BookmarkService bookmarkService;
   private final BookmarkMapper bookmarkMapper;
 
-  @Operation(summary = "특정 유저의 좋아요 북마크 수 조회")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   @GetMapping("/members/{memberId}/bookmarks/likes/count")
+  @Operation(summary = "특정 유저의 좋아요 북마크 수를 조회한다.")
   public Long countMemberLikes(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
@@ -57,7 +66,7 @@ public class BookmarkController {
   }
 
   @Operation(
-      summary = "특정 유저가 좋아요한 북마크 전체 조회",
+      summary = "특정 유저가 좋아요한 북마크를 전체 조회한다.",
       description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID"
   )
   @ApiResponses(value = {
@@ -81,7 +90,7 @@ public class BookmarkController {
   }
 
   @Operation(
-      summary = "특정 유저의 북마크 전체 조회",
+      summary = "특정 유저의 북마크 목록을 전체 조회한다.",
       description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID. 필터링이 필요하지 않다면 queryParam null로!"
   )
   @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "성공")})
@@ -111,7 +120,7 @@ public class BookmarkController {
     );
   }
 
-  @Operation(summary = "특정 북마크 삭제")
+  @Operation(summary = "특정 북마크를 삭제한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
   })
@@ -124,7 +133,7 @@ public class BookmarkController {
     return bookmarkMapper.toBookmarkDelete(bookmarkDeleteResDTO.getIsDeleted());
   }
 
-  @Operation(summary = "북마크 리스트 삭제")
+  @Operation(summary = "주어진 북마크 목록을 삭제한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
   })
@@ -134,7 +143,8 @@ public class BookmarkController {
       @Size(min = 1, message = "북마크 ID 리스트는 최소 1개 이상이어야 합니다.")
       @RequestParam(value = "bookmarkId") List<@Positive(message = "북마크 ID는 양수입니다.") Long> bookmarkIds
   ) {
-    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = bookmarkService.deleteBookmarks(bookmarkIds);
+    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = bookmarkService.deleteBookmarks(
+        bookmarkIds);
     return bookmarkMapper.toBookmarkListDelete(bookmarkListDeleteResDTO.getIsDeleted());
   }
 
@@ -142,7 +152,7 @@ public class BookmarkController {
   // 또는 북마크 작업하시는 분이 멤버 아이디를 추가해 주시면 추가할 것
   @PostMapping("/bookmarks/{bookmarkId}/like")
   @ResponseStatus(value = HttpStatus.OK)
-  @Operation(summary = "Like bookmark", description = "Like bookmark")
+  @Operation(summary = "북마크를 좋아요한다.")
   public void likeBookmark(
       @PathVariable
       @Positive(message = "북마크 ID는 양수입니다.")
@@ -154,7 +164,7 @@ public class BookmarkController {
 
   @DeleteMapping("/bookmarks/{bookmarkId}/like")
   @ResponseStatus(value = HttpStatus.OK)
-  @Operation(summary = "CancelLike bookmark", description = "CancelLike bookmark")
+  @Operation(summary = "북마크 좋아요를 취소한다.")
   public void cancelLikeBookmark(
       @PathVariable
       @Positive(message = "북마크 ID는 양수입니다.")
@@ -165,8 +175,11 @@ public class BookmarkController {
   }
 
   @PostMapping("/bookmarks")
+  @Operation(summary = "북마크를 생성한다.")
   public ResponseEntity<BookmarkRes> create(
-      @Valid @RequestBody BookmarkCreateReq dto
+      @RequestBody
+      @Valid
+      BookmarkCreateReq dto
   ) {
     Bookmark entity = bookmarkService.create(dto);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
@@ -177,8 +190,12 @@ public class BookmarkController {
   }
 
   @GetMapping("/bookmarks/{bookmarkId}")
+  @Operation(summary = "특정 북마크를 조회한다.")
   public ResponseEntity<BookmarkRes> getBookmarkById(
-      @PathVariable Long bookmarkId
+      @PathVariable
+      @Positive(message = "북마크 ID는 양수입니다.")
+      @Schema(description = "Bookmark id", example = "1")
+      Long bookmarkId
   ) {
     Bookmark entity = bookmarkService.findById(bookmarkId);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
@@ -186,18 +203,32 @@ public class BookmarkController {
   }
 
   @GetMapping("/categories/{categoryId}/bookmarks")
+  @Operation(summary = "특정 카테고리에 속하는 북마크 목록을 조회한다.")
   public PageResponse<BookmarkItemDTO> getBookmarkByCategoryId(
-      @PathVariable Long categoryId,
-      @Parameter @RequestBody PageRequest pageRequest
+      @PathVariable
+      @Positive(message = "카테고리 ID는 양수입니다.")
+      @Schema(description = "Category id", example = "1")
+      Long categoryId,
+
+      @Parameter
+      @RequestBody
+      PageRequest pageRequest
   ) {
 
     return bookmarkService.findBookmarkByCategoryId(pageRequest, categoryId);
   }
 
   @PutMapping("/bookmarks/{bookmarkId}")
+  @Operation(summary = "특정 북마크를 수정한다.")
   public void updateBookmark(
-      @PathVariable Long bookmarkId,
-      @RequestBody @Valid BookmarkUpdateReq request
+      @PathVariable
+      @Positive(message = "북마크 ID는 양수입니다.")
+      @Schema(description = "Bookmark id", example = "1")
+      Long bookmarkId,
+
+      @Valid
+      @RequestBody
+      BookmarkUpdateReq request
   ) {
     bookmarkService.updateBookmark(bookmarkId,
         bookmarkMapper.toBookmarkUpdateReqDTO(request));

@@ -42,7 +42,7 @@ public class MemberController {
   private final MemberMapper memberMapper;
 
   @PutMapping("/me")
-  @Operation(summary = "Update my profile")
+  @Operation(summary = "유저 프로필을 수정한다.")
   public void updateMyProfile(
       // TODO: Replace with member ID from JWT or that from any other authentication method
       @RequestParam
@@ -59,7 +59,7 @@ public class MemberController {
 
   // TODO: ApiResponse.content 없어도 Swagger Schema 동작하는지 확인 필요
   @GetMapping("/me")
-  @Operation(summary = "Get member profile")
+  @Operation(summary = "내 유저 프로필을 조회한다.")
   public MyProfileRes getMemberProfile(
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
@@ -70,7 +70,7 @@ public class MemberController {
   }
 
   @GetMapping("/{memberId}")
-  @Operation(summary = "Get member profile")
+  @Operation(summary = "유저 프로필을 ID로 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = {
@@ -92,7 +92,7 @@ public class MemberController {
   }
 
   @GetMapping("/{memberId}/mode")
-  @Operation(summary = "Get member mode info")
+  @Operation(summary = "유저의 모드를 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = {
@@ -110,7 +110,7 @@ public class MemberController {
   }
 
   @PutMapping("/status")
-  @Operation(summary = "HardMode Status ON / OFF")
+  @Operation(summary = "하드모드 상태를 켜거나 끈다.")
   public HardModeRes switchToHardMode(
       @RequestParam
       @Positive(message = "유저 ID는 양수입니다.")
@@ -127,7 +127,7 @@ public class MemberController {
 
   @DeleteMapping("/me")
   @ResponseStatus(NO_CONTENT)
-  @Operation(summary = "Delete member")
+  @Operation(summary = "유저를 탈퇴한다.")
   public void deleteMember(
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId

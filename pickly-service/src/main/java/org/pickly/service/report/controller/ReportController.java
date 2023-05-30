@@ -21,8 +21,8 @@ public class ReportController {
   private final MemberReportService memberReportService;
   private final BookmarkReportService bookmarkReportService;
 
-  @Operation(summary = "특정 유저 신고")
   @PostMapping("/members")
+  @Operation(summary = "특정 유저를 신고한다.")
   public void reportMember(@Valid @RequestBody ReportReq request) {
     memberReportService.reportMember(
         request.getReporterId(),
@@ -31,8 +31,8 @@ public class ReportController {
     );
   }
 
-  @Operation(summary = "특정 북마크 신고")
   @PostMapping("/bookmarks")
+  @Operation(summary = "특정 북마크를 신고한다.")
   public void reportBookmark(@Valid @RequestBody ReportReq request) {
     bookmarkReportService.reportBookmark(
         request.getReporterId(),

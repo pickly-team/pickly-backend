@@ -34,7 +34,7 @@ public class FriendController {
 
   // TODO: JWT 개발 후 followerId를 삭제 예정
   @PostMapping("/members/{followerId}/following/{memberId}")
-  @Operation(summary = "특정 멤버 팔로우")
+  @Operation(summary = "특정 유저를 팔로우한다.")
   public void follow(
       @Parameter(name = "followerId", description = "팔로우 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long followerId,
@@ -47,7 +47,7 @@ public class FriendController {
 
   // TODO: JWT 개발 후 followerId를 삭제 예정
   @DeleteMapping("/members/{followerId}/following/{memberId}")
-  @Operation(summary = "특정 멤버 언팔로우")
+  @Operation(summary = "특정 유저를 언팔로우한다.")
   public void unfollow(
       @Parameter(name = "followerId", description = "언팔로우 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long followerId,
@@ -60,7 +60,7 @@ public class FriendController {
 
   // TODO: JWT 개발 후 followerId를 삭제 예정
   @PutMapping("/members/{followerId}/following/{memberId}/notification")
-  @Operation(summary = "특정 멤버 알림 설정 및 해제")
+  @Operation(summary = "특정 유저에 대한 알림을 설정 또는 해제한다.")
   public FriendNotificationStatusRes switchNotification(
       @Parameter(name = "followerId", description = "알림을 받고 싶은 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long followerId,
@@ -79,12 +79,12 @@ public class FriendController {
 
   }
 
-  @Operation(summary = "특정 유저의 팔로워 수 조회")
+  @GetMapping("/members/{memberId}/followers/count")
+  @Operation(summary = "특정 유저의 팔로워 수를 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/followers/count")
   public long countFollowerByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
@@ -92,8 +92,9 @@ public class FriendController {
     return friendService.countFollowerByMember(memberId);
   }
 
+  @GetMapping("/members/{memberId}/followers")
   @Operation(
-      summary = "특정 유저의 팔로워 정보 조회",
+      summary = "특정 유저의 팔로워 정보를 조회한다.",
       description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 loginId"
   )
   @ApiResponses(value = {
@@ -102,7 +103,6 @@ public class FriendController {
               schema = @Schema(implementation = PageResponse.class))),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/followers")
   public PageResponse<FollowerRes> findAllFollowerByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
@@ -115,18 +115,19 @@ public class FriendController {
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     List<FollowerRes> resDto = friendService.findAllFollowerByMember(memberId, pageRequest)
-            .stream().map(friendMapper::toFollowerRes).toList();
-    PageResponse<FollowerRes> response = new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
+        .stream().map(friendMapper::toFollowerRes).toList();
+    PageResponse<FollowerRes> response = new PageResponse<>(resDto.size(),
+        pageRequest.getPageSize(), resDto);
     response.removeElement(pageRequest.getPageSize());
     return response;
   }
 
-  @Operation(summary = "특정 유저의 팔로잉 수 조회")
+  @GetMapping("/members/{memberId}/followees/count")
+  @Operation(summary = "특정 유저의 팔로잉 수를 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/followees/count")
   public long countFollowingByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
@@ -134,8 +135,9 @@ public class FriendController {
     return friendService.countFollowingByMember(memberId);
   }
 
+  @GetMapping("/members/{memberId}/followings")
   @Operation(
-      summary = "특정 유저의 팔로잉 정보 조회",
+      summary = "특정 유저의 팔로잉 정보를 조회한다.",
       description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 loginId"
   )
   @ApiResponses(value = {
@@ -144,7 +146,6 @@ public class FriendController {
               schema = @Schema(implementation = PageResponse.class))),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/followings")
   public PageResponse<FollowingRes> findAllFollowingByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
@@ -158,7 +159,8 @@ public class FriendController {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     List<FollowingRes> resDto = friendService.findAllFollowingByMember(memberId, pageRequest)
         .stream().map(friendMapper::toFollowingRes).toList();
-    PageResponse<FollowingRes> response = new PageResponse<>(resDto.size(), pageRequest.getPageSize(), resDto);
+    PageResponse<FollowingRes> response = new PageResponse<>(resDto.size(),
+        pageRequest.getPageSize(), resDto);
     response.removeElement(pageRequest.getPageSize());
     return response;
   }

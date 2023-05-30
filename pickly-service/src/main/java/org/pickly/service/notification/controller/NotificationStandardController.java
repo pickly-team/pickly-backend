@@ -25,7 +25,7 @@ public class NotificationStandardController {
   private final NotificationStandardMapper notificationStandardMapper;
 
   @GetMapping("/me")
-  @Operation(summary = "내 알림 기준 조회")
+  @Operation(summary = "내 알림 기준을 조회한다.")
   public NotificationStandardRes findMyNotificationStandard(
       @RequestParam
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
@@ -36,7 +36,7 @@ public class NotificationStandardController {
   }
 
   @GetMapping("/unread-bookmark/me")
-  @Operation(summary = "내 '읽지 않은 북마크 알림 기준 일자' 설정 조회")
+  @Operation(summary = "내 '읽지 않은 북마크 알림 기준 일자' 설정을 조회한다.")
   public Integer findMyNotifyStandardDay(
       @RequestParam
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
@@ -46,7 +46,7 @@ public class NotificationStandardController {
   }
 
   @PostMapping
-  @Operation(summary = "알림 기준 생성")
+  @Operation(summary = "내 알림 기준을 생성한다.")
   public void createMyNotificationStandard(
       @RequestParam
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
@@ -63,7 +63,7 @@ public class NotificationStandardController {
   }
 
   @PutMapping("/me")
-  @Operation(summary = "내 알림 기준 수정")
+  @Operation(summary = "내 알림 기준을 수정한다.")
   public void updateMyNotificationStandard(
       @RequestParam
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)
@@ -80,7 +80,7 @@ public class NotificationStandardController {
   }
 
   @PatchMapping("/unread-bookmark/me")
-  @Operation(summary = "내 '읽지 않은 북마크 알림 기준 일자' 설정 수정")
+  @Operation(summary = "내 '읽지 않은 북마크 알림 기준 일자' 설정을 수정한다.")
   public void updateMyNotifyStandardDay(
       @RequestParam
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "3", required = true)

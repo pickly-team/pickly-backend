@@ -41,36 +41,42 @@ public class BlockController {
    * User Block
    */
   @PostMapping("/member/{blockerId}/block/{blockeeId}")
-  @Operation(summary = "Block Member")
+  @Operation(summary = "유저를 차단한다.")
   public void blockMember(
       @Parameter(name = "blockerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long blockerId,
 
       @Parameter(name = "blockeeId", description = "차단 당한 유저 ID 값", example = "2", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockeeId
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long blockeeId
   ) {
     blockService.blockMember(blockerId, blockeeId);
   }
 
   @DeleteMapping("/member/{blockerId}/block/{blockeeId}")
-  @Operation(summary = "Unblock Member")
+  @Operation(summary = "유저 차단을 해제한다.")
   public void unBlockMember(
       @Parameter(name = "blockerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long blockerId,
 
       @Parameter(name = "blockeeId", description = "차단 해제를 할 유저 ID 값", example = "2", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockeeId
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long blockeeId
   ) {
     blockService.unBlockMember(blockerId, blockeeId);
   }
 
   @GetMapping("/member/blocks/{blockerId}")
-  @Operation(summary = "Get Blocked Member")
+  @Operation(summary = "차단한 유저 목록을 조회한다.")
   public BlockMemberRes getBlockedMembers(
       @Parameter(name = "blockerId", description = "유저 차단조회를 위한 대상 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long blockerId,
 
       @Parameter(name = "cursor", description = "마지막 끝의 Id", example = "1", required = true) final @RequestParam Long cursorId,
+
       @Parameter(name = "size", description = "페이지 사이즈", example = "1", required = true) final @RequestParam Integer size
   ) {
     List<BlockMemberDTO> blockedMembers = blockService.getBlockedMembers(blockerId, cursorId, size);
@@ -83,19 +89,21 @@ public class BlockController {
    * Bookmark Block
    */
   @PostMapping("/bookmark/{blockerId}/block/{bookmarkId}")
-  @Operation(summary = "Block Bookmark")
+  @Operation(summary = "북마크를 차단한다.")
   public void blockBookmark(
       @Parameter(name = "blockerId", description = "차단 요청을 보낸 유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
+      @Positive(message = "유저 ID는 양수입니다.")
+      @PathVariable final Long blockerId,
 
       @Parameter(name = "bookmarkId", description = "차단 당한 북마크 ID 값", example = "2", required = true)
-      @Positive(message = "북마크 ID는 양수입니다.") @PathVariable final Long bookmarkId
+      @Positive(message = "북마크 ID는 양수입니다.")
+      @PathVariable final Long bookmarkId
   ) {
     blockService.blockBookmark(blockerId, bookmarkId);
   }
 
   @DeleteMapping("/bookmark/{blockerId}/block/{bookmarkId}")
-  @Operation(summary = "Unblock Bookmark")
+  @Operation(summary = "북마크를 차단 해제한다.")
   public void unBlockBookmark(
       @Parameter(name = "blockerId", description = "차단해제 요청을 보낸 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
@@ -107,7 +115,7 @@ public class BlockController {
   }
 
   @GetMapping("/bookmark/blocks/{blockerId}")
-  @Operation(summary = "Get Blocked Bookmark")
+  @Operation(summary = "차단된 북마크 목록을 조회한다.")
   public BlockBookmarkRes getBlockedBookmarks(
       @Parameter(name = "blockerId", description = "북마크 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
@@ -115,7 +123,8 @@ public class BlockController {
       @Parameter(name = "page", description = "페이지 번호", example = "1", required = true) final @RequestParam Long cursorId,
       @Parameter(name = "size", description = "페이지 사이즈", example = "1", required = true) final @RequestParam Integer size
   ) {
-    List<BlockBookmarkDTO> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, cursorId, size);
+    List<BlockBookmarkDTO> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, cursorId,
+        size);
 
     return BlockMapper.toBookmark(blockedBookmarks);
   }

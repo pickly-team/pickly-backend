@@ -35,30 +35,29 @@ public class CategoryController {
   private final CategoryService categoryService;
   private final CategoryMapper categoryMapper;
 
-  @Operation(summary = "카테고리 생성 (동시에 다수의 카테고리 생성 가능)")
+  @PostMapping("/categories")
+  @Operation(summary = "카테고리들을 생성한다.", description = "동시에 다수의 카테고리를 생성할 수 있다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @PostMapping("/categories")
   public void create(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") final Long memberId,
 
       @RequestBody @Valid
-      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.")
-      final List<CategoryRequestDTO> requests
+      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.") final List<CategoryRequestDTO> requests
   ) {
     categoryService.create(memberId, requests);
   }
 
-  @Operation(summary = "특정 카테고리의 이름, 이모지 수정")
+  @PutMapping("/categories/{categoryId}")
+  @Operation(summary = "카테고리를 수정한다.", description = "특정 카테고리의 이름, 이모지를 수정할 수 있다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = CategoryResponseDTO.class)))
   })
-  @PutMapping("/categories/{categoryId}")
   public ResponseEntity<CategoryResponseDTO> update(
       @PathVariable @Positive Long categoryId,
       @RequestBody @Valid final CategoryUpdateRequestDTO dto
@@ -69,26 +68,25 @@ public class CategoryController {
         .ok(categoryMapper.toResponseDTO(category));
   }
 
-  @Operation(summary = "다수의 카테고리의 순서 수정")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "400", description = "잘못된 순서값 입력"),
   })
   @PatchMapping("/categories/order-num")
+  @Operation(summary = "카테고리들의 순서를 수정한다.", description = "다수의 카테고리의 순서를 수정할 수 있다.")
   public void updateOrderNum(
       @RequestBody @Valid
-      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.")
-      final List<CategoryOrderNumUpdateReq> requests
+      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.") final List<CategoryOrderNumUpdateReq> requests
   ) {
     categoryService.updateOrderNum(requests);
   }
 
-  @Operation(summary = "특정 카테고리 삭제")
+  @DeleteMapping("/categories/{categoryId}")
+  @Operation(summary = "특정 카테고리를 삭제한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
   })
-  @DeleteMapping("/categories/{categoryId}")
   public ResponseEntity<Void> delete(
       @PathVariable Long categoryId
   ) {
@@ -98,12 +96,12 @@ public class CategoryController {
         .build();
   }
 
-  @Operation(summary = "다수의 카테고리 삭제")
+  @DeleteMapping("/categories")
+  @Operation(summary = "다수의 카테고리를 삭제한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리"),
   })
-  @DeleteMapping("/categories")
   public ResponseEntity<Void> deleteAllById(
       @RequestParam(value = "categoryId") List<Long> categoryIds
   ) {
@@ -113,13 +111,13 @@ public class CategoryController {
         .build();
   }
 
-  @Operation(summary = "특정 유저의 카테고리 전체 조회. 페이지네이션 적용")
+  @GetMapping("/categories")
+  @Operation(summary = "특정 유저의 카테고리 목록을 조회한다.", description = "페이지네이션이 적용되어 있다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = PageResponse.class)))
   })
-  @GetMapping("/categories")
   public PageResponse<CategoryDTO> getCategoryWithPagingByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") final Long memberId,
@@ -133,13 +131,13 @@ public class CategoryController {
     return categoryService.getCategoriesWithPagingByMember(cursorId, pageSize, memberId);
   }
 
-  @Operation(summary = "특정 유저의 카테고리 전체 조회. 페이지네이션 미적용")
+  @GetMapping("/members/{memberId}/categories")
+  @Operation(summary = "특정 유저의 카테고리 목록을 전체 조회한다.", description = "페이지네이션이 적용되어 있지 않다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = CategoryDTO.class)))
   })
-  @GetMapping("/members/{memberId}/categories")
   public List<CategoryRes> getCategoryByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.")
@@ -149,13 +147,13 @@ public class CategoryController {
     return dtos.stream().map(categoryMapper::toResponse).toList();
   }
 
-  @Operation(summary = "특정 카테고리 조회")
+  @GetMapping("/categories/{categoryId}")
+  @Operation(summary = "특정 카테고리를 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = CategoryDTO.class)))
   })
-  @GetMapping("/categories/{categoryId}")
   public CategoryRes findById(
       @Parameter(name = "categoryId", description = "카테고리 ID (PK) 값", example = "1", required = true)
       @Positive(message = "카테고리 ID (PK)는 양수입니다.") @PathVariable final Long categoryId
@@ -164,13 +162,13 @@ public class CategoryController {
     return categoryMapper.toResponse(dto);
   }
 
-  @Operation(summary = "특정 유저의 전체 카테고리 수 조회")
+  @GetMapping("/categories/cnt")
+  @Operation(summary = "특정 유저의 전체 카테고리 수를 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = Integer.class)))
   })
-  @GetMapping("/categories/cnt")
   public ResponseEntity<Integer> getCategoryCntByMember(
       @RequestParam(value = "memberId") Long memberId
   ) {
