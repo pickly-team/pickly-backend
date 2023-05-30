@@ -31,12 +31,12 @@ public class NotificationController {
   private final NotificationService notificationService;
   private final NotificationMapper notificationMapper;
 
-  @Operation(summary = "특정 유저의 알림 내역 조회")
+  @GetMapping("/members/{memberId}/notifications")
+  @Operation(summary = "특정 유저의 알림 내역을 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/notifications")
   public List<NotificationRes> findMemberNotifications(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
@@ -45,11 +45,11 @@ public class NotificationController {
     return dtoList.stream().map(notificationMapper::toResponse).collect(Collectors.toList());
   }
 
-  @Operation(summary = "특정 알림 읽기")
+  @PatchMapping("notifications/{notificationId}")
+  @Operation(summary = "특정 알림을 읽기 처리한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공")
   })
-  @PatchMapping("notifications/{notificationId}")
   public void readNotification(
       @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
       @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId
@@ -57,11 +57,11 @@ public class NotificationController {
     notificationService.readNotification(notificationId);
   }
 
-  @Operation(summary = "특정 알림 삭제")
+  @DeleteMapping("notifications/{notificationId}")
+  @Operation(summary = "특정 알림을 삭제한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공")
   })
-  @DeleteMapping("notifications/{notificationId}")
   public void deleteNotification(
       @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
       @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId

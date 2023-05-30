@@ -34,13 +34,12 @@ public class CommentController {
   private final CommentService commentService;
   private final CommentMapper commentMapper;
 
-
-  @Operation(summary = "특정 유저의 댓글 수 조회")
+  @GetMapping("/members/{memberId}/comments/count")
+  @Operation(summary = "특정 유저의 댓글 수를 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/comments/count")
   public Long countMemberComments(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
@@ -48,12 +47,12 @@ public class CommentController {
     return commentService.countMemberComments(memberId);
   }
 
-  @Operation(summary = "특정 유저의 댓글 전체 조회")
+  @GetMapping("/members/{memberId}/comments")
+  @Operation(summary = "특정 유저의 댓글을 전체 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
-  @GetMapping("/members/{memberId}/comments")
   public List<CommentRes> findByMember(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
@@ -65,7 +64,7 @@ public class CommentController {
   }
 
   @PostMapping("/bookmarks/{bookmarkId}/comment")
-  @Operation(summary = "특정 Bookmark에 Comment 추가")
+  @Operation(summary = "특정 북마크에 댓글을 추가한다.")
   public CommentRes create(
       @Parameter(name = "bookmarkId", description = "댓글을 추가할 Bookmark ID 값", example = "1", required = true)
       @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId,
@@ -76,12 +75,13 @@ public class CommentController {
 
       @Valid @RequestBody CommentCreateReq request
   ) {
-    CommentDTO dto = commentService.create(bookmarkId, memberId, commentMapper.toCreateDTO(request));
+    CommentDTO dto = commentService.create(bookmarkId, memberId,
+        commentMapper.toCreateDTO(request));
     return commentMapper.toResponse(dto);
   }
 
   @GetMapping("/bookmarks/{bookmarkId}/comments")
-  @Operation(summary = "특정 Bookmark의 Comment 전체 조회")
+  @Operation(summary = "특정 북마크에 달린 댓글을 전체 조회한다.")
   public List<CommentRes> findByBookmark(
       @Parameter(name = "bookmarkId", description = "Bookmark ID 값", example = "1", required = true)
       @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId
@@ -94,7 +94,7 @@ public class CommentController {
 
   // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
   @DeleteMapping("/comments/{commentId}")
-  @Operation(summary = "특정 Comment 삭제")
+  @Operation(summary = "특정 댓글을 삭제한다.")
   public void delete(
       @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
       @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId
@@ -104,7 +104,7 @@ public class CommentController {
 
   // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
   @PutMapping("/comments/{commentId}")
-  @Operation(summary = "특정 Comment 수정")
+  @Operation(summary = "특정 댓글을 수정한다.")
   public CommentRes updateComment(
       @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
       @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId,
