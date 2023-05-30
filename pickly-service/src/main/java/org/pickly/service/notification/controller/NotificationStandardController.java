@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/notification-standards")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "NotificationStandard", description = "알림 기준 설정 API")
+@Tag(name = "Notification Standard", description = "알림 기준 설정 API")
 public class NotificationStandardController {
 
   private final NotificationStandardService notificationStandardService;
