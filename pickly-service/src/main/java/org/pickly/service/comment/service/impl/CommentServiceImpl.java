@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   public Long countMemberComments(final Long memberId) {
     memberService.existsById(memberId);
-    return commentRepository.countAllByMemberId(memberId);
+    return commentRepository.countAllByMemberIdAndDeletedAtNull(memberId);
   }
 
   @Override
@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
   @Transactional
   public void delete(final Long commentId) {
     Comment comment = findById(commentId);
-    commentRepository.delete(comment);
+    comment.delete();
   }
 
   @Override
@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   public Comment findById(final Long id) {
-    return commentRepository.findById(id)
+    return commentRepository.findByIdAndDeletedAtNull(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
   }
 
