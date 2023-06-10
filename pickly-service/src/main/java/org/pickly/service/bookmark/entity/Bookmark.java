@@ -2,6 +2,7 @@ package org.pickly.service.bookmark.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.pickly.service.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.member.entity.Member;
@@ -42,15 +43,15 @@ public class Bookmark extends BaseEntity {
   private Visibility visibility;
 
   public static Bookmark create(
-      Category category, Member member, String url, String title,
-      String previewImageUrl, Visibility visibility
+      Category category, Member member,
+      BookmarkInfoDTO info, Visibility visibility
   ) {
     return Bookmark.builder()
         .category(category)
         .member(member)
-        .url(url)
-        .title(title)
-        .previewImageUrl(previewImageUrl)
+        .url(info.getUrl())
+        .title(info.getTitle())
+        .previewImageUrl(info.getPreviewImageUrl())
         .isUserLike(false)
         .readByUser(false)
         .visibility(visibility)

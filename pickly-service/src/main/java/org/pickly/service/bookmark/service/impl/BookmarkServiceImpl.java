@@ -2,6 +2,8 @@ package org.pickly.service.bookmark.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
@@ -11,6 +13,7 @@ import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
+import org.pickly.service.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
@@ -27,6 +30,7 @@ import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -41,6 +45,9 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   private static final boolean USER_LIKE = true;
   private static final int LAST_ITEM = 1;
+  private static final String CONTENT_ATTR = "content";
+
+
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
@@ -58,7 +65,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   @Override
   public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(final PageRequest pageRequest,
-      final Long memberId) {
+                                                               final Long memberId) {
     memberService.existsById(memberId);
     List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(pageRequest, memberId, null,
         USER_LIKE, null, null);
@@ -80,7 +87,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 
   private <T> List<T> mapToDtoList(final List<Bookmark> bookmarks,
-      final Function<Bookmark, T> mapper) {
+                                   final Function<Bookmark, T> mapper) {
     return bookmarks.stream().map(mapper).toList();
   }
 
@@ -101,7 +108,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   private List<Bookmark> removeElement(final List<Bookmark> bookmarkList, final int size,
-      final int pageSize) {
+                                       final int pageSize) {
     if (size - LAST_ITEM >= pageSize) {
       List<Bookmark> resultList = new ArrayList<>(bookmarkList);
       resultList.remove(size - LAST_ITEM);
@@ -169,18 +176,31 @@ public class BookmarkServiceImpl implements BookmarkService {
     Member member = memberRepository.findById(dto.getMemberId())
         .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
-    // todo : 요청 url에서 title, 썸네일 조회
-
-    Bookmark entity = Bookmark.create(category, member, dto.getUrl(),
-        dto.getTitle(), dto.getPreviewImageUrl(), dto.getVisibility());
+    BookmarkInfoDTO info = crawlOgTagInfo(dto.getUrl());
+    Bookmark entity = Bookmark.create(category, member, info, dto.getVisibility());
 
     return bookmarkRepository.save(entity);
+  }
+
+  private BookmarkInfoDTO crawlOgTagInfo(final String url) {
+    BookmarkInfoDTO result = new BookmarkInfoDTO(url);
+    try {
+      Document doc = Jsoup.connect(url).get();
+
+      String title = doc.select("meta[property=og:title]").attr(CONTENT_ATTR);
+      String previewImageUrl = doc.select("meta[property=og:image]").attr(CONTENT_ATTR);
+
+      result.updateTitleAndImage(title, previewImageUrl);
+      return result;
+    } catch (IOException e) {
+      return result;
+    }
   }
 
 
   @Override
   public PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(final PageRequest pageRequest,
-      final Long categoryId) {
+                                                                final Long categoryId) {
     List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
         categoryId);
     return makeResponse(pageRequest.getPageSize(), bookmarks);
