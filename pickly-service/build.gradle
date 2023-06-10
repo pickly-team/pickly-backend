@@ -36,6 +36,9 @@ dependencies {
     // p6spy
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
+    // jsoup
+    implementation 'org.jsoup:jsoup:1.16.1'
+
     runtimeOnly 'org.postgresql:postgresql:42.3.0'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
