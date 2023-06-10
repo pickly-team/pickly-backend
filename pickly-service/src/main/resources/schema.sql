@@ -1,3 +1,5 @@
+drop table if exists member_report;
+drop table if exists bookmark_report;
 drop table if exists friend;
 drop table if exists comment;
 drop table if exists block;
