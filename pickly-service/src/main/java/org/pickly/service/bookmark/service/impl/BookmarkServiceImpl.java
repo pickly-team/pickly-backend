@@ -168,9 +168,11 @@ public class BookmarkServiceImpl implements BookmarkService {
         .orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryId()));
     Member member = memberRepository.findById(dto.getMemberId())
         .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
-    Bookmark entity = new Bookmark(category, member, dto.getUrl(),
-        dto.getTitle(), dto.getPreviewImageUrl(), false,
-        false, dto.getVisibility());
+
+    // todo : 요청 url에서 title, 썸네일 조회
+
+    Bookmark entity = Bookmark.create(category, member, dto.getUrl(),
+        dto.getTitle(), dto.getPreviewImageUrl(), dto.getVisibility());
 
     return bookmarkRepository.save(entity);
   }
