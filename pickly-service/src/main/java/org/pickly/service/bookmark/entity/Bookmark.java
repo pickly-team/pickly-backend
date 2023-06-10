@@ -1,18 +1,7 @@
 package org.pickly.service.bookmark.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.member.entity.Member;
@@ -52,6 +41,22 @@ public class Bookmark extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Visibility visibility;
 
+  public static Bookmark create(
+      Category category, Member member, String url, String title,
+      String previewImageUrl, Visibility visibility
+  ) {
+    return Bookmark.builder()
+        .category(category)
+        .member(member)
+        .url(url)
+        .title(title)
+        .previewImageUrl(previewImageUrl)
+        .isUserLike(false)
+        .readByUser(false)
+        .visibility(visibility)
+        .build();
+  }
+
   public void like() {
     this.isUserLike = true;
   }
@@ -59,7 +64,6 @@ public class Bookmark extends BaseEntity {
   public void deleteLike() {
     this.isUserLike = false;
   }
-
 
   public void updateBookmark(Category category, String title,
       Boolean readByUser, Visibility visibility) {
