@@ -18,7 +18,7 @@ public class BookmarkInfoDTO {
   }
 
   public void updateTitleAndImage(String title, String previewImageUrl) {
-    this.title = title;
+    this.title = (title == null) ? "제목 입력이 필요합니다." : title;
     this.previewImageUrl = previewImageUrl;
   }
 
