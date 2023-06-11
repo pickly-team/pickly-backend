@@ -6,19 +6,21 @@ import org.pickly.service.member.controller.request.MemberStatusReq;
 import org.pickly.service.member.controller.response.HardModeRes;
 import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
-import org.pickly.service.member.controller.response.MyProfileRes;
 import org.pickly.service.member.controller.response.MemberRegisterRes;
+import org.pickly.service.member.controller.response.MyProfileRes;
+import org.pickly.service.member.controller.response.SearchMemberResultRes;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.entity.MemberMode;
+import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.service.dto.HardModeDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
-import org.pickly.service.member.entity.Password;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.dto.MemberStatusDTO;
 import org.pickly.service.member.service.dto.MyProfileDTO;
+import org.pickly.service.member.service.dto.SearchMemberResultResDTO;
 import org.pickly.service.notification.entity.NotificationStandard;
-import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -113,7 +115,7 @@ public class MemberMapper {
   public Member tokenToMember(FirebaseToken token) {
     //TODO: password nullable한 값으로 변경?
     Password password = new Password("test123");
-  
+
     return Member.builder()
         .username(token.getUid())
         .email(token.getEmail())
@@ -128,4 +130,10 @@ public class MemberMapper {
     return new MemberRegisterRes(dto.getUsername(), dto.getIsHardMode(), dto.getEmail(),
         dto.getName(), dto.getNickname());
   }
+
+  public SearchMemberResultRes toSearchMemberResultRes(SearchMemberResultResDTO dto) {
+    return new SearchMemberResultRes(dto.getMemberId(), dto.getNickname(), dto.getProfileImageUrl(),
+        dto.getIsFollowing());
+  }
+
 }
