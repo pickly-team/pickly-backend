@@ -176,13 +176,13 @@ public class BookmarkServiceImpl implements BookmarkService {
     Member member = memberRepository.findById(dto.getMemberId())
         .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
-    BookmarkInfoDTO info = crawlOgTagInfo(dto.getUrl());
+    BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl());
     Bookmark entity = Bookmark.create(category, member, info, dto.getVisibility());
 
     return bookmarkRepository.save(entity);
   }
 
-  private BookmarkInfoDTO crawlOgTagInfo(final String url) {
+  private BookmarkInfoDTO scrapOgTagInfo(final String url) {
     BookmarkInfoDTO result = new BookmarkInfoDTO(url);
     try {
       Document doc = Jsoup.connect(url).get();
