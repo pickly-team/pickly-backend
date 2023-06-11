@@ -1,7 +1,7 @@
 package org.pickly.service.category.controller.request;
 
 import jakarta.validation.constraints.NotEmpty;
-import org.pickly.service.common.utils.validator.EmojiCheck;
+import org.pickly.service.common.utils.validator.emoji.EmojiCheck;
 
 public record CategoryRequestDTO(
     @NotEmpty(message = "카테고리 이름을 입력해주세요.")
