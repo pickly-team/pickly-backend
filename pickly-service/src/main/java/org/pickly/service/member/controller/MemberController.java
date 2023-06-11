@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.common.utils.base.RequestUtil;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.request.MemberStatusReq;
@@ -19,13 +20,18 @@ import org.pickly.service.member.controller.response.HardModeRes;
 import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MyProfileRes;
+import org.pickly.service.member.controller.response.MemberRegisterRes;
+import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -133,5 +139,13 @@ public class MemberController {
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
   ) {
     memberService.deleteMember(loginId);
+  }
+  @PostMapping("/register")
+  public ResponseEntity<MemberRegisterRes> register(
+      @RequestHeader("Authorization") String authorization) {
+    String token = RequestUtil.getAuthorizationToken(authorization);
+    MemberRegisterDto memberRegisterDto = memberService.register(token);
+    MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
+    return ResponseEntity.ok(response);
   }
 }

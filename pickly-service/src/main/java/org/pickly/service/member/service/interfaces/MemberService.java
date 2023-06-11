@@ -8,6 +8,7 @@ import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.dto.MemberStatusDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.service.dto.MyProfileDTO;
+import org.pickly.service.member.service.dto.MemberRegisterDto;
 
 public interface MemberService {
 
@@ -26,4 +27,5 @@ public interface MemberService {
   void deleteMember(Long memberId);
 
   HardModeDTO setHardMode(Long memberId, MemberStatusDTO request);
+  MemberRegisterDto register(String token);
 }

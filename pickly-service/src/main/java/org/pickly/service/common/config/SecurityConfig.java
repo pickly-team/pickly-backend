@@ -2,11 +2,13 @@ package org.pickly.service.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.filter.CorsWebFilter;
+import org.pickly.service.common.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -14,6 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   private final CorsWebFilter corsFilter;
+
+  private final JwtFilter jwtFilter;
 
   private static final String[] AUTH_WHITELIST = {
       "/api/**", "/graphiql", "/graphql",
@@ -31,6 +35,8 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest()
                 .authenticated()
+                .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         )
         .httpBasic().disable()
         .formLogin().disable()
