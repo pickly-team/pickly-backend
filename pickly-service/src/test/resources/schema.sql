@@ -190,6 +190,8 @@ create table notification
     title             varchar(255)            not null,
     content           varchar(255)            not null,
     is_checked        boolean                 not null,
+    is_send           boolean                 not null,
+    send_date_time    timestamp               not null,
     notification_type integer                 not null,
     created_at        timestamp default now() not null,
     updated_at        timestamp,
