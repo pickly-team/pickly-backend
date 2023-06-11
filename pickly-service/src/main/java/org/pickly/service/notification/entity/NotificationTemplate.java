@@ -20,9 +20,6 @@ public class NotificationTemplate extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @Column(nullable = false)
-  private String content;
-
   @Column(name = "notification_type", nullable = false)
   @Convert(converter = NotificationTypeConverter.class)
   private NotificationType notificationType;

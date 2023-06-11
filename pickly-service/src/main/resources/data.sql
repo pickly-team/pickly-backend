@@ -45,3 +45,10 @@ INSERT INTO notification
     (member_id, bookmark_id, title, content, is_checked, is_send, send_date_time, notification_type)
 VALUES (1, 1, '테스트 알림', '테스트입니다', false, true, '2023-06-07 11:30:00', 1),
        (1, 1, '테스트 알림2', '이것도 테스트에요', true, true, '2023-06-07 11:30:00', 1);
+
+INSERT INTO notification_template
+(title, notification_type)
+VALUES ('앗! 북마크가 잊혀지고 있어요!', 1),
+       ('읽지 않은 북마크가 있어요!', 1),
+       ('아껴둔 북마크, 오늘은 읽어보는게 어떨까요?', 1),
+       ('묵혀둔 북마크, 오늘은 꼭 읽어봐요!', 1);

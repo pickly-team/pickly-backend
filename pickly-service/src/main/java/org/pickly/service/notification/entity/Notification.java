@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.notification.enums.NotificationType;
 import org.pickly.service.notification.enums.NotificationTypeConverter;
@@ -50,6 +51,21 @@ public class Notification extends BaseEntity {
 
   public void check() {
     this.isChecked = true;
+  }
+
+  public static Notification makeNormalNotification(
+      Long memberId, Bookmark bookmark, String title, LocalDateTime sendDateTime
+  ) {
+    return Notification.builder()
+        .memberId(memberId)
+        .bookmarkId(bookmark.getId())
+        .title(title)
+        .content(bookmark.getTitle())
+        .isChecked(false)
+        .isSend(false)
+        .sendDateTime(sendDateTime)
+        .notificationType(NotificationType.NORMAL)
+        .build();
   }
 
 }

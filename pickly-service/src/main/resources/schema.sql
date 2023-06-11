@@ -211,7 +211,6 @@ create table notification_template
         constraint notification_template_pk
             primary key,
     title             varchar(255)            NOT NULL,
-    content           varchar(255)            NOT NULL,
     notification_type integer                 not null,
     created_at        timestamp default now() not null,
     updated_at        timestamp,

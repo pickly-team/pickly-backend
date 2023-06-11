@@ -1,9 +1,6 @@
 package org.pickly.service.notification.entity;
 
 import jakarta.persistence.*;
-
-import java.time.LocalTime;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +10,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.member.entity.Member;
+
+import java.time.LocalTime;
 
 @Entity
 @Getter
