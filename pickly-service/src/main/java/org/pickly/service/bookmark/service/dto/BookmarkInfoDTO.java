@@ -3,6 +3,10 @@ package org.pickly.service.bookmark.service.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @AllArgsConstructor
 public class BookmarkInfoDTO {
@@ -18,8 +22,14 @@ public class BookmarkInfoDTO {
   }
 
   public void updateTitleAndImage(String title, String previewImageUrl) {
-    this.title = (title == null) ? "제목 입력이 필요합니다." : title;
+    this.title = (title == null) ? makeTitle() : title;
     this.previewImageUrl = previewImageUrl;
+  }
+
+  private String makeTitle() {
+    LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분의 북마크");
+    return now.format(formatter);
   }
 
 }
