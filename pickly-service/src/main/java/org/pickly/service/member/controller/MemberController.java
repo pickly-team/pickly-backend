@@ -11,16 +11,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.base.RequestUtil;
+import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.request.MemberStatusReq;
 import org.pickly.service.member.controller.response.HardModeRes;
 import org.pickly.service.member.controller.response.MemberModeRes;
 import org.pickly.service.member.controller.response.MemberProfileRes;
-import org.pickly.service.member.controller.response.MyProfileRes;
 import org.pickly.service.member.controller.response.MemberRegisterRes;
+import org.pickly.service.member.controller.response.MyProfileRes;
+import org.pickly.service.member.controller.response.SearchMemberResultRes;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.http.ResponseEntity;
@@ -140,6 +144,7 @@ public class MemberController {
   ) {
     memberService.deleteMember(loginId);
   }
+
   @PostMapping("/register")
   public ResponseEntity<MemberRegisterRes> register(
       @RequestHeader("Authorization") String authorization) {
@@ -147,5 +152,40 @@ public class MemberController {
     MemberRegisterDto memberRegisterDto = memberService.register(token);
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/{memberId}/search/{keyword}")
+  @Operation(
+      summary = "검색어를 통해 특정 유저를 검색한다.",
+      description = "검색의 연관된 초성, 혹은 일치하는 항목들에 대해 유저 검색결과 프로필 리스트를 반환한다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  public PageResponse<SearchMemberResultRes> searchMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @Parameter(name = "searchName", description = "검색어", example = "ww0077", required = true)
+      @PathVariable final String keyword,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "ww0077")
+      @RequestParam(required = false) final String cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
+  ) {
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    List<SearchMemberResultRes> resDto = memberService.searchMemberByKeywords(keyword, memberId,
+            pageRequest)
+        .stream().map(memberMapper::toSearchMemberResultRes).toList();
+
+    PageResponse<SearchMemberResultRes> response = new PageResponse<>(resDto.size(),
+        pageRequest.getPageSize(), resDto);
+    response.removeElement(pageRequest.getPageSize());
+
+    return response;
   }
 }
