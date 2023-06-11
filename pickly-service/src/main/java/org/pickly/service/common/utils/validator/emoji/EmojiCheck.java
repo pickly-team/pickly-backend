@@ -1,4 +1,4 @@
-package org.pickly.service.common.utils.validator;
+package org.pickly.service.common.utils.validator.emoji;
 
 import jakarta.validation.Constraint;
 
@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UrlValidator.class)
-public @interface UrlCheck {
+@Constraint(validatedBy = EmojiValidator.class)
+public @interface EmojiCheck {
 
-  String message() default "유효하지 않은 url 입니다.";
+  String message() default "이모지가 아닙니다.";
 
   Class[] groups() default {};
 
