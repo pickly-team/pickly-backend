@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum Visibility {
 
   SCOPE_PRIVATE("나만 보기"),
+  SCOPE_FRIEND("친구 공개"),
   SCOPE_PUBLIC("전체 공개");
 
   private String description;
