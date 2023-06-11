@@ -20,7 +20,7 @@ public class CorsWebFilter {
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
-    return new org.springframework.web.filter.CorsFilter(source);
+    return new CorsFilter(source);
   }
 
 }

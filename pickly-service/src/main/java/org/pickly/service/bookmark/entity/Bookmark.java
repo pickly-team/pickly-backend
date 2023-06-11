@@ -59,4 +59,13 @@ public class Bookmark extends BaseEntity {
   public void deleteLike() {
     this.isUserLike = false;
   }
+
+
+  public void updateBookmark(Category category, String title,
+      Boolean readByUser, Visibility visibility) {
+    this.category = category;
+    this.title = title;
+    this.readByUser = readByUser;
+    this.visibility = visibility;
+  }
 }

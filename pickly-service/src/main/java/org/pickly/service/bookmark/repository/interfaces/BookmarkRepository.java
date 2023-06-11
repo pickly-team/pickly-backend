@@ -1,11 +1,35 @@
 package org.pickly.service.bookmark.repository.interfaces;
 
-import java.util.Optional;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
-  Optional<Bookmark> findOneById(Long id);
+  @Query("select b from Bookmark b join fetch b.member m where b.id = :id and b.deletedAt is null")
+  Optional<Bookmark> findOneById(@Param("id") Long id);
+
+  @Query("select b from Bookmark b join fetch b.category c where b.id = :id and b.deletedAt is null")
+  Optional<Bookmark> findByIdWithCategory(@Param("id") Long id);
+
+  Long countByMemberId(Long memberId);
+
+  @Modifying(clearAutomatically = true)
+  @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.id IN :bookmarkIds")
+  void deleteBookmarksByIds(
+      @Param("bookmarkIds") List<Long> bookmarkIds, @Param("deletedAt") LocalDateTime deletedAt
+  );
+
+  @Transactional
+  @Modifying
+  @Query("UPDATE Bookmark b SET b.readByUser=True WHERE b.id=:bookmarkId")
+  void readByUser(@Param("bookmarkId") Long id);
 
 }

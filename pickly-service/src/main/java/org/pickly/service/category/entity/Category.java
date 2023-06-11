@@ -26,13 +26,19 @@ public class Category extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @Column(name = "is_auto_delete_mode", nullable = false)
-  private Boolean isAutoDeleteMode;
-
   @Column(length = 100, nullable = false)
   private String name;
 
   @Column(columnDefinition = "text")
   private String emoji;
 
+  @Column(name = "order_num", nullable = false)
+  private Integer orderNum;
+
+  public Category update(String name, String emoji) {
+    this.name = name;
+    this.emoji = emoji;
+
+    return this;
+  }
 }

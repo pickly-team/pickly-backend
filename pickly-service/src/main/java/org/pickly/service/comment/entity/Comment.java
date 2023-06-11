@@ -37,4 +37,13 @@ public class Comment extends BaseEntity {
   @Column(length = 150, nullable = false)
   private String content;
 
+  public static Comment create(Member member, Bookmark bookmark, String content) {
+    Boolean isOwnerComment = member.equals(bookmark.getMember());
+    return new Comment(member, bookmark, isOwnerComment, content);
+  }
+
+  public void updateContent(final String content) {
+    this.content = content;
+  }
+
 }

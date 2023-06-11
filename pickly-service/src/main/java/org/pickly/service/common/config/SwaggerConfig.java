@@ -1,5 +1,8 @@
 package org.pickly.service.common.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -18,6 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class SwaggerConfig {
 
   // 추후 인증 & 권한 전역 관리 설정 추가 예정
-
+  @Bean
+  public OpenAPI openApi() {
+    return new OpenAPI()
+        .addServersItem(new Server().url("/"));
+  }
 
 }

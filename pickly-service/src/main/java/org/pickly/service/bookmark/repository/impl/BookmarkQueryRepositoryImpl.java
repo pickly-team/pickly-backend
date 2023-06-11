@@ -1,16 +1,17 @@
 package org.pickly.service.bookmark.repository.impl;
 
-import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
       PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike,
       Boolean readByUser, Visibility visibility
   ) {
-    Long cursorId = pageRequest.getCursorId();
+    Long cursorId = (Long) pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
     return queryFactory
         .selectFrom(bookmark)
@@ -35,7 +36,8 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqCategoryId(categoryId),
             eqIsUserLike(isUserLike),
             eqReadByUser(readByUser),
-            eqVisibility(visibility)
+            eqVisibility(visibility),
+            notDeleted()
         )
         .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
@@ -49,9 +51,27 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
         .from(bookmark)
         .where(
             eqMemberId(memberId),
-            eqIsUserLike(isUserLike)
+            eqIsUserLike(isUserLike),
+            notDeleted()
         )
         .fetchFirst();
+  }
+
+  @Override
+  public List<Bookmark> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId) {
+
+    Long cursorId = (Long) pageRequest.getCursorId();
+    Integer pageSize = pageRequest.getPageSize();
+
+    return queryFactory
+        .selectFrom(bookmark)
+        .where(
+            eqCategoryId(categoryId),
+            notDeleted()
+        )
+        .orderBy(bookmark.id.desc())
+        .limit(pageSize + CHECK_LAST)
+        .fetch();
   }
 
   private BooleanExpression eqMemberId(final Long memberId) {
@@ -88,6 +108,10 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
       return null;
     }
     return bookmark.visibility.eq(visibility);
+  }
+
+  private BooleanExpression notDeleted() {
+    return bookmark.deletedAt.isNull();
   }
 
   private BooleanExpression ltCursorId(final Long cursorId) {

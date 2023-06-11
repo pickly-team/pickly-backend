@@ -1,6 +1,7 @@
 package org.pickly.service.common.config;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.common.filter.CorsWebFilter;
 import org.pickly.service.common.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+  private final CorsWebFilter corsFilter;
 
   private final JwtFilter jwtFilter;
 
@@ -37,8 +40,8 @@ public class SecurityConfig {
         )
         .httpBasic().disable()
         .formLogin().disable()
-        .cors().disable()
         .csrf().disable()
+        .addFilter(corsFilter.corsFilter())
         .build();
   }
 

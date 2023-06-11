@@ -25,5 +25,4 @@ public class MemberProfileRes {
 
   @Schema(description = "is login member's followee?", example = "true")
   private Boolean isFollowing;
-
 }

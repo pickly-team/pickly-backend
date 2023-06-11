@@ -40,4 +40,6 @@ target
 logs/
 logs
 data/
+application.pid
+.env-dev
 firebase.json
