@@ -1,4 +1,4 @@
-package org.pickly.service.common.utils.validator;
+package org.pickly.service.common.utils.validator.url;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
