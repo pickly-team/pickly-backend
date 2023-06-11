@@ -55,19 +55,19 @@ create trigger update_trigger
 
 create table category
 (
-    id                  bigserial
+    id         bigserial
         constraint category_pk
             primary key,
-    member_id           bigint                  not null
+    member_id  bigint                  not null
         constraint category_member_id_fk
             references member
             on update cascade on delete cascade,
-    name                varchar(100)            not null,
-    emoji               text,
-    order_num           integer                 not null,
-    created_at          timestamp default now() not null,
-    updated_at          timestamp,
-    deleted_at          timestamp
+    name       varchar(100)            not null,
+    emoji      text,
+    order_num  integer                 not null,
+    created_at timestamp default now() not null,
+    updated_at timestamp,
+    deleted_at timestamp
 );
 
 create trigger update_trigger
@@ -190,6 +190,8 @@ create table notification
     title             varchar(255)            not null,
     content           varchar(255)            not null,
     is_checked        boolean                 not null,
+    is_send           boolean                 not null,
+    send_date_time    timestamp               not null,
     notification_type integer                 not null,
     created_at        timestamp default now() not null,
     updated_at        timestamp,

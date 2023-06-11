@@ -13,6 +13,8 @@ import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.notification.enums.NotificationType;
 import org.pickly.service.notification.enums.NotificationTypeConverter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -35,6 +37,12 @@ public class Notification extends BaseEntity {
 
   @Column(name = "is_checked", nullable = false)
   private boolean isChecked;
+
+  @Column(name = "is_send", nullable = false)
+  private boolean isSend;
+
+  @Column(name = "send_date_time", nullable = false)
+  private LocalDateTime sendDateTime;
 
   @Column(name = "notification_type", nullable = false)
   @Convert(converter = NotificationTypeConverter.class)
