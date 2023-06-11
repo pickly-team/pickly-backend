@@ -13,7 +13,6 @@ import org.pickly.service.member.entity.MemberMode;
 import org.pickly.service.member.service.dto.HardModeDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
 import org.pickly.service.member.entity.Password;
-import org.pickly.service.member.service.dto.MemberInfoDTO;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
 import org.pickly.service.member.service.dto.MemberStatusDTO;
