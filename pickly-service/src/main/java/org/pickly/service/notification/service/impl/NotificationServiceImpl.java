@@ -77,6 +77,11 @@ public class NotificationServiceImpl implements NotificationService {
     return notifications;
   }
 
+  @Override
+  public List<Notification> getNotificationsToSend(LocalDateTime now) {
+    return notificationRepository.getNotificationsToSend(now);
+  }
+
   private LocalDateTime getDueDateTime(Bookmark bookmark, NotificationStandard standard) {
     LocalDateTime createdAt = bookmark.getCreatedAt();
     return createdAt.plusDays(standard.getNotifyStandardDay());

@@ -10,6 +10,8 @@ import org.pickly.service.notification.service.interfaces.NotificationService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ public class NotificationScheduler {
 
   private final NotificationService notificationService;
   private final BookmarkService bookmarkService;
+
+  private static final String KST = "Asia/Seoul";
 
   @Scheduled(cron = "0 0,30 * * * *")
   public void makeNormalNotification() {
@@ -33,9 +37,8 @@ public class NotificationScheduler {
   @Scheduled(cron = "0 0,30 * * * *")
   public void sendNormalNotification() {
 
-    // 알림 DB 조회, is_send = false 인 친구들만
-
-    // 현재 시간 = Notification.sendTime 인 친구들만 List에 담기
+    LocalDateTime now = LocalDateTime.now(ZoneId.of(KST));
+    List<Notification> notifications = notificationService.getNotificationsToSend(now);
 
     // FCM을 이용해 송신
 
