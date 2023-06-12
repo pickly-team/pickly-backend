@@ -26,7 +26,7 @@ jobs:
 
       - name: Create firebase config
         run: |
-          cd ./pickly-service/src/main/resources
+          cd ../pickly-service/src/main/resources
           echo "${{ secrets.FIREBASE_CONFIG }}" > ./firebase.json
 
       - name: Cache Gradle
