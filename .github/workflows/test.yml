@@ -24,7 +24,7 @@ jobs:
         with:
           java-version: 17
 
-      - name: Create firebase config
+      - name: Create firebase config key
         run: |
           cd ./pickly-service/src/main/resources
           echo "${{ secrets.FIREBASE_CONFIG }}" > ./firebase.json
