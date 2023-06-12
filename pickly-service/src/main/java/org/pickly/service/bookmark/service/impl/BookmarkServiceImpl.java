@@ -35,9 +35,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -224,6 +226,11 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   @Override
   public Map<Member, List<Bookmark>> findAllUnreadBookmark() {
-    return null;
+    List<Bookmark> unreadBookmarks = bookmarkRepository.findAllUnreadBookmark();
+    return unreadBookmarks.stream().collect(
+        Collectors.groupingBy(
+            Bookmark::getMember, LinkedHashMap::new, Collectors.toList()
+        )
+    );
   }
 }
