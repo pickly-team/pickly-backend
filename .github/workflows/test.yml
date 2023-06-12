@@ -26,6 +26,7 @@ jobs:
 
       - name: Create firebase config
         run: |
+          echo $PWD
           cd ../pickly-service/src/main/resources
           echo "${{ secrets.FIREBASE_CONFIG }}" > ./firebase.json
 
