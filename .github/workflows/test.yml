@@ -28,6 +28,10 @@ jobs:
         run: |
           cd ./pickly-service/src/main/resources
           echo "${{ secrets.FIREBASE_CONFIG }}" > ./firebase.json
+          
+
+      - name: Create firebase config on test directory
+        run: |
           cd ./pickly-service/src/test/resources
           echo "${{ secrets.FIREBASE_CONFIG }}" > ./firebase.json
 
