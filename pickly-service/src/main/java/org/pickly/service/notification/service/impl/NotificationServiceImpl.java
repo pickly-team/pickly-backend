@@ -118,6 +118,12 @@ public class NotificationServiceImpl implements NotificationService {
     notificationJdbcRepository.saveAll(notifications);
   }
 
+  @Override
+  public void updateAllToSend(List<Notification> notifications) {
+    List<Long> ids = notifications.stream().map(Notification::getId).toList();
+    notificationRepository.updateAllToSend(ids);
+  }
+
 
   public Notification findById(Long id) {
     return notificationRepository.findByIdAndDeletedAtNull(id)

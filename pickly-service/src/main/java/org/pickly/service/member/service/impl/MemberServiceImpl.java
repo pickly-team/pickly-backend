@@ -8,6 +8,7 @@ import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.repository.interfaces.MemberQueryRepository;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.HardModeDTO;
 import org.pickly.service.member.service.dto.MemberModeDTO;
@@ -22,12 +23,16 @@ import org.pickly.service.notification.repository.interfaces.NotificationStandar
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
+  private final MemberQueryRepository memberQueryRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
   private final BookmarkRepository bookmarkRepository;
@@ -66,6 +71,11 @@ public class MemberServiceImpl implements MemberService {
     Member member = memberMapper.tokenToMember(decodedToken);
     memberRepository.save(member);
     return memberMapper.toMemberRegisterDTO(member);
+  }
+
+  @Override
+  public Map<Long, String> findTokenByIds(List<Long> memberIds) {
+    return memberQueryRepository.findTokenByIds(memberIds);
   }
 
   @Override

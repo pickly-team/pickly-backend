@@ -23,4 +23,6 @@ public interface NotificationService {
 
   void saveAll(List<Notification> notifications);
 
+  void updateAllToSend(List<Notification> notifications);
+
 }

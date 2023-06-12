@@ -1,14 +1,10 @@
 package org.pickly.service.member.service.interfaces;
 
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.service.dto.HardModeDTO;
-import org.pickly.service.member.service.dto.MemberModeDTO;
-import org.pickly.service.member.service.dto.MemberProfileDTO;
-import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.member.service.dto.MemberStatusDTO;
-import org.pickly.service.member.service.dto.MemberModeDTO;
-import org.pickly.service.member.service.dto.MyProfileDTO;
-import org.pickly.service.member.service.dto.MemberRegisterDto;
+import org.pickly.service.member.service.dto.*;
+
+import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
 
@@ -27,5 +23,9 @@ public interface MemberService {
   void deleteMember(Long memberId);
 
   HardModeDTO setHardMode(Long memberId, MemberStatusDTO request);
+
   MemberRegisterDto register(String token);
+
+  Map<Long, String> findTokenByIds(List<Long> memberIds);
+
 }

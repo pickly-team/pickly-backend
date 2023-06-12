@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.notification.common.NotificationSender;
 import org.pickly.service.notification.entity.Notification;
 import org.pickly.service.notification.service.interfaces.NotificationService;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class NotificationScheduler {
 
   private final NotificationService notificationService;
+  private final NotificationSender notificationSender;
   private final BookmarkService bookmarkService;
 
   private static final String KST = "Asia/Seoul";
@@ -39,8 +41,7 @@ public class NotificationScheduler {
 
     LocalDateTime now = LocalDateTime.now(ZoneId.of(KST));
     List<Notification> notifications = notificationService.getNotificationsToSend(now);
-
-    // FCM을 이용해 송신
+    notificationSender.sendMessage(notifications);
 
   }
 
