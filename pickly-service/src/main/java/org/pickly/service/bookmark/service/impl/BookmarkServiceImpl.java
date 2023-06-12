@@ -221,4 +221,9 @@ public class BookmarkServiceImpl implements BookmarkService {
         request.getVisibility()
     );
   }
+
+  @Override
+  public Map<Member, List<Bookmark>> findAllUnreadBookmark() {
+    return null;
+  }
 }

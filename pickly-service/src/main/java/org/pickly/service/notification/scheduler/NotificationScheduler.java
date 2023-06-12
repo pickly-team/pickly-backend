@@ -27,7 +27,7 @@ public class NotificationScheduler {
 
   private static final String KST = "Asia/Seoul";
 
-  @Scheduled(cron = "0 0,30 * * * *")
+  @Scheduled(cron = "0 0/15 * * * *")
   public void makeNormalNotification() {
 
     Map<Member, List<Bookmark>> unreadBookmarks = bookmarkService.findAllUnreadBookmark();
@@ -36,7 +36,7 @@ public class NotificationScheduler {
 
   }
 
-  @Scheduled(cron = "0 0,30 * * * *")
+  @Scheduled(cron = "0 0/30 * * * *")
   public void sendNormalNotification() {
 
     LocalDateTime now = LocalDateTime.now(ZoneId.of(KST));
