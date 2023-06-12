@@ -46,7 +46,7 @@ jobs:
         run: gradle wrap
 
       - name: Build with Gradle
-        run: ./gradlew clean build test
+        run: ./gradlew clean build
         shell: bash
 
       - name: Publish Unit Test Results
