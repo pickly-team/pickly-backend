@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.common.utils.validator.url.UrlCheck;
-import org.pickly.service.common.utils.validator.visibility.VisibilityCheck;
+import org.pickly.service.common.utils.validator.enums.EnumCheck;
 
 @Getter
 @Builder
@@ -32,7 +32,7 @@ public class BookmarkCreateReq {
   @NotBlank(message = "북마크의 제목을 입력해주세요")
   private String title;
 
-  @VisibilityCheck
+  @EnumCheck
   @NotNull(message = "공개 범위 표시 정보는 필수입니다. ")
   private Visibility visibility;
 
