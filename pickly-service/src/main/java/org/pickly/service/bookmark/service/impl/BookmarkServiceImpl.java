@@ -130,6 +130,12 @@ public class BookmarkServiceImpl implements BookmarkService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
   }
 
+  @Override
+  public String getTitleFromUrl(String url) {
+    BookmarkInfoDTO info = scrapOgTagInfo(url);
+    return info.getTitle();
+  }
+
 
   @Override
   @Transactional

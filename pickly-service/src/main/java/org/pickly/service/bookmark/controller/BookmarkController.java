@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
@@ -31,16 +31,9 @@ import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -200,6 +193,15 @@ public class BookmarkController {
     Bookmark entity = bookmarkService.findById(bookmarkId);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/bookmark/title")
+  @Operation(summary = "특정 북마크의 제목을 url로부터 받아온다.")
+  public String getTitleFromUrl(
+      @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
+      @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
+  ) {
+    return bookmarkService.getTitleFromUrl(url);
   }
 
   @GetMapping("/categories/{categoryId}/bookmarks")
