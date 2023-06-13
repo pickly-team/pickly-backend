@@ -22,8 +22,8 @@ public class BookmarkInfoDTO {
   }
 
   public void updateTitleAndImage(String title, String previewImageUrl) {
-    this.title = (title == null) ? makeTitle() : title;
-    this.previewImageUrl = previewImageUrl;
+    this.title = title.isBlank() ? makeTitle() : title;
+    this.previewImageUrl = title.isBlank() ? null : previewImageUrl;
   }
 
   private String makeTitle() {
