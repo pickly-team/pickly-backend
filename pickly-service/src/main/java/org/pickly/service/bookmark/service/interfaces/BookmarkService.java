@@ -1,6 +1,5 @@
 package org.pickly.service.bookmark.service.interfaces;
 
-import java.util.List;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
@@ -12,11 +11,15 @@ import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 
+import java.util.List;
+
 public interface BookmarkService {
 
   Bookmark findById(Long id);
 
   Bookmark findByIdWithCategory(Long id);
+
+  String getTitleFromUrl(String url);
 
   void likeBookmark(Long bookmarkId);
 
