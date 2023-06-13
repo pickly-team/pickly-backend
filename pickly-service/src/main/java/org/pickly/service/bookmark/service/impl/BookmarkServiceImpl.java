@@ -183,7 +183,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
     BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl());
-    Bookmark entity = Bookmark.create(category, member, info, dto.getVisibility());
+    Bookmark entity = Bookmark.create(category, member, dto.getTitle(), info, dto.getVisibility());
 
     return bookmarkRepository.save(entity);
   }
