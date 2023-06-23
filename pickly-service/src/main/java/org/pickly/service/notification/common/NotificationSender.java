@@ -25,12 +25,16 @@ public class NotificationSender {
   private final MemberService memberService;
   private final NotificationService notificationService;
 
+  // FCM 메세지 송신 메서드
   public void sendMessage(List<Notification> notifications) {
+    // 메세지를 받을 유저를 파악합니다 (= 유저의 fcm token 값 조회)
     Map<Long, String> memberTokens = createMemberFcmTokenMap(notifications);
+    // 유저에게 송신할 메세지를 생성합니다 (FCM 양식인 Message에 맞춰서 생성)
     List<Message> messages = createMessage(notifications, memberTokens);
 
-    // partition messages
+    // 메세지 수가 많은 경우를 대비, 200개 단위로 파티션을 끊습니다.
     List<List<Message>> messagePartition = Lists.partition(messages, 200);
+    // 200개 단위로 FCM 메세지를 송신합니다. 만약 송신에 실패할 경우 로그를 남깁니다.
     for (List<Message> messageList : messagePartition) {
       try {
         FirebaseMessaging.getInstance().sendAll(messageList);
@@ -39,7 +43,7 @@ public class NotificationSender {
       }
     }
 
-    // all messages update -> is_send = true
+    // 송신한 메세지의 is_send 값을 true로 업데이트해줍니다.
     notificationService.updateAllToSend(notifications);
   }
 
