@@ -2,11 +2,17 @@ package org.pickly.service.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.filter.CorsWebFilter;
+import org.pickly.service.common.filter.JwtFilter;
+import org.pickly.service.common.utils.base.AuthTokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -15,12 +21,13 @@ public class SecurityConfig {
 
   private final CorsWebFilter corsFilter;
 
-//  private final JwtFilter jwtFilter;
+  private final UserDetailsService userDetailsService;
+  private final AuthTokenUtil authTokenUtil;
 
   private static final String[] AUTH_WHITELIST = {
       "/api/**", "/graphiql", "/graphql",
       "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
-      "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
+      "/v3/api-docs/**", "/api-docs/**",
   };
 
   @Bean
@@ -33,8 +40,11 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest()
                 .authenticated()
-//                .and()
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .and()
+                .addFilterBefore(new JwtFilter(
+                    userDetailsService,
+                    authTokenUtil
+                ), UsernamePasswordAuthenticationFilter.class)
         )
         .httpBasic().disable()
         .formLogin().disable()
@@ -43,4 +53,8 @@ public class SecurityConfig {
         .build();
   }
 
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return (web) -> web.ignoring().requestMatchers(AUTH_WHITELIST);
+  }
 }
