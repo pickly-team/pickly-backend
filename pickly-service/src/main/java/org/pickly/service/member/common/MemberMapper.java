@@ -108,7 +108,8 @@ public class MemberMapper {
         member.getEmail(),
         member.getName(),
         member.getNickname(),
-        member.getPassword()
+        member.getPassword(),
+        member.getId()
     );
   }
 
@@ -128,7 +129,7 @@ public class MemberMapper {
 
   public MemberRegisterRes toMemberRegisterResponse(MemberRegisterDto dto) {
     return new MemberRegisterRes(dto.getUsername(), dto.getIsHardMode(), dto.getEmail(),
-        dto.getName(), dto.getNickname());
+        dto.getName(), dto.getNickname(), dto.getMemberId());
   }
 
   public SearchMemberResultRes toSearchMemberResultRes(SearchMemberResultResDTO dto) {

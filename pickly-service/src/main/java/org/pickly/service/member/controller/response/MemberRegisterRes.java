@@ -15,4 +15,5 @@ public class MemberRegisterRes {
   private String email;
   private String name;
   private String nickname;
+  private Long memberId;
 }

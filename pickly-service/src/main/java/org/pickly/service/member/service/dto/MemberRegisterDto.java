@@ -14,4 +14,5 @@ public class MemberRegisterDto {
   private String name;
   private String nickname;
   private Password password;
+  private Long memberId;
 }
