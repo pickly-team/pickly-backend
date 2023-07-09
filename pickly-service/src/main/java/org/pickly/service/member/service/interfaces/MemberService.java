@@ -34,4 +34,6 @@ public interface MemberService {
 
   List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
       PageRequest pageRequest);
+
+  MemberProfileDTO getMemberIdByToken(String token);
 }
