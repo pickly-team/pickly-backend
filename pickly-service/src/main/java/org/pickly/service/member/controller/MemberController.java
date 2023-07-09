@@ -146,6 +146,7 @@ public class MemberController {
   }
 
   @PostMapping("/register")
+  @Operation(summary = "회원가입")
   public ResponseEntity<MemberRegisterRes> register(
       @RequestHeader("Authorization") String authorization) {
     String token = RequestUtil.getAuthorizationToken(authorization);
