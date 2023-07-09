@@ -119,7 +119,7 @@ public class MemberMapper {
     return Member.builder()
         .username(token.getUid())
         .email(token.getEmail())
-        .name(token.getName())
+        .name(token.getName() == null ? "" : token.getName())
         .nickname("")
         .isHardMode(false)
         .password(password)
