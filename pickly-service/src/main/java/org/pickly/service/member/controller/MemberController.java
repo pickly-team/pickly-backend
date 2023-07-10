@@ -157,7 +157,7 @@ public class MemberController {
   }
 
   @GetMapping("/id")
-  @Operation(summary = "Refresh token으로 유저 ID를 조회한다.")
+  @Operation(summary = "Access token으로 유저 ID를 조회한다.")
   public ResponseEntity<Long> getMemberId(
       @RequestHeader("Authorization") String authorization) {
     String token = RequestUtil.getAuthorizationToken(authorization);
