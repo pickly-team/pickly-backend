@@ -75,6 +75,14 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public MemberProfileDTO getMemberIdByToken(String token) {
+    FirebaseToken decodedToken = authTokenUtil.validateToken(token);
+    Member member = memberRepository.findByEmail(decodedToken.getEmail())
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저입니다."));
+    return memberMapper.toMemberProfileDTO(member, false);
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
       PageRequest pageRequest) {

@@ -25,6 +25,7 @@ import org.pickly.service.member.controller.response.MemberProfileRes;
 import org.pickly.service.member.controller.response.MemberRegisterRes;
 import org.pickly.service.member.controller.response.MyProfileRes;
 import org.pickly.service.member.controller.response.SearchMemberResultRes;
+import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.http.ResponseEntity;
@@ -146,12 +147,22 @@ public class MemberController {
   }
 
   @PostMapping("/register")
+  @Operation(summary = "회원가입")
   public ResponseEntity<MemberRegisterRes> register(
       @RequestHeader("Authorization") String authorization) {
     String token = RequestUtil.getAuthorizationToken(authorization);
     MemberRegisterDto memberRegisterDto = memberService.register(token);
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/id")
+  @Operation(summary = "Access token으로 유저 ID를 조회한다.")
+  public ResponseEntity<Long> getMemberId(
+      @RequestHeader("Authorization") String authorization) {
+    String token = RequestUtil.getAuthorizationToken(authorization);
+    MemberProfileDTO memberProfileDto = memberService.getMemberIdByToken(token);
+    return ResponseEntity.ok(memberProfileDto.getId());
   }
 
   @GetMapping("/{memberId}/search/{keyword}")
