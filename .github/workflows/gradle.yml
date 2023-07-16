@@ -50,18 +50,27 @@ jobs:
         shell: bash
 
       ## docker build & push to AWS Registry
-      - name: Docker build & push to Registry
-        if: contains(github.ref, 'develop')
-        run: |
-          ${{secrets.AWS_REGISTRY}}
-        shell: bash
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      ## docker pull from AWS Registry
-      - name: CD to Develop Server
-        if: contains(github.ref, 'develop')
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: pickly-service
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          ${{secrets.DOCKER_PULL}}
-        shell: bash
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
