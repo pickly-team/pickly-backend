@@ -87,7 +87,9 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
 
-    deploy:
+  deploy:
+      needs: build
+      name: Deploy to EC2
       runs-on: ubuntu-latest
       steps:
         - name: Configure AWS credentials
