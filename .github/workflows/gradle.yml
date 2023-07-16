@@ -109,7 +109,7 @@ jobs:
           run: |
             echo "${{ secrets.AWS_PRIVATE_KEY }}" > pickly.pem
             chmod 600 pickly.pem
-            ssh -tt -o StrictHostKeyChecking=no -i "pickly.pem" ec2-user@${{ secrets.EC2_PUBLIC_IP }}.ap-northeast-2.compute.amazonaws.com << EOF
+            ssh -tt -o StrictHostKeyChecking=no -i "pickly.pem" ${{ secrets.AWS_PUBLIC_IP_V4 }} << EOF
             export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=${{ secrets.AWS_REGION }}
