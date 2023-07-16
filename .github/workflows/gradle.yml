@@ -38,17 +38,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build Gradle wrapper
-        run: gradle wrap
-          
-      ## gradle build
-      - name: Build with Gradle
-        run: ./gradlew clean :pickly-service:build -x test
-        shell: bash
-
       ## docker build & push to AWS Registry
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
