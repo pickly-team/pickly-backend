@@ -31,12 +31,14 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
+  @Transactional
   public void readNotification(final Long notificationId) {
     Notification notification = findById(notificationId);
     notification.check();
   }
 
   @Override
+  @Transactional
   public void deleteNotification(final Long notificationId) {
     Notification notification = findById(notificationId);
     notification.delete();
