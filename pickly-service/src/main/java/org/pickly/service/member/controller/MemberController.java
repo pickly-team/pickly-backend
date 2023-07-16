@@ -179,11 +179,11 @@ public class MemberController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
 
-      @Parameter(name = "searchName", description = "검색어", example = "ww0077", required = true)
+      @Parameter(name = "keyword", description = "검색어", example = "ww0077", required = true)
       @PathVariable final String keyword,
 
-      @Parameter(description = "커서 ID 값 :: default value = null", example = "ww0077")
-      @RequestParam(required = false) final String cursorId,
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "3")
+      @RequestParam(required = false) final Long cursorId,
 
       @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
       @RequestParam(required = false) final Integer pageSize
