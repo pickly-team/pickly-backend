@@ -104,7 +104,7 @@ public class MemberServiceImpl implements MemberService {
     Member member = findById(memberId);
     Long followersCount = friendRepository.countByFolloweeId(memberId);
     Long followeesCount = friendRepository.countByFollowerId(memberId);
-    Long bookmarksCount = bookmarkRepository.countByMemberId(memberId);
+    Long bookmarksCount = bookmarkRepository.countByMemberIdAndDeletedAtNull(memberId);
     return memberMapper.toMyProfileDTO(member, followersCount, followeesCount, bookmarksCount);
   }
 

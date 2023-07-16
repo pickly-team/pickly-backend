@@ -22,31 +22,31 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
   @Override
   public List<SearchMemberResultResDTO> findAllMembersByKeyword(String keyword, Long memberId,
       PageRequest pageRequest) {
-    String cursorId = (String) pageRequest.getCursorId();
+    Long cursorId = (Long) pageRequest.getCursorId();
     Integer size = pageRequest.getPageSize();
 
     return queryFactory.select(
             Projections.constructor(SearchMemberResultResDTO.class,
                 member.id,
-                member.username,
+                member.nickname,
                 member.profileEmoji
             )
         ).from(member)
         .where(
-            member.username.contains(keyword),
+            member.nickname.contains(keyword),
             member.id.ne(memberId),
-            gtMemberUsername(cursorId)
+            ltMemberId(cursorId)
         )
-        .orderBy(member.username.asc())
+        .orderBy(member.nickname.asc())
         .limit(size + CHECK_LAST)
         .fetch();
   }
 
-  private BooleanExpression gtMemberUsername(final String cursorId) {
+  private BooleanExpression ltMemberId(final Long cursorId) {
     if (cursorId == null) {
       return null;
     }
-    return member.username.gt(cursorId);
+    return member.id.lt(cursorId);
   }
 
 }
