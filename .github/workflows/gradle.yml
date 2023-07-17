@@ -100,7 +100,7 @@ jobs:
         - name: Setup SSH
           run: |
             mkdir -p ~/.ssh
-            echo "${{ AWS_PRIVATE_KEY }}" > ~/.ssh/pickly.pem
+            echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/pickly.pem
             chmod 600 ~/.ssh/pickly.pem
 
         - name: SSH and deploy to EC2
