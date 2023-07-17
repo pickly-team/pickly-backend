@@ -97,24 +97,27 @@ jobs:
           id: login-ecr
           uses: aws-actions/amazon-ecr-login@v1
 
+        - name: Setup SSH
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ AWS_PRIVATE_KEY }}" > ~/.ssh/pickly.pem
+            chmod 600 ~/.ssh/pickly.pem
+
         - name: SSH and deploy to EC2
           env:
             ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
             AWS_PUBLIC_IP_V4: ${{ secrets.AWS_PUBLIC_IP_V4 }}
           run: |
-            echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ec2-server-key.pem
-            "${{ secrets.AWS_PRIVATE_KEY }}" > pickly.pem
-            chmod 600 pickly.pem
-            ssh -tt -o StrictHostKeyChecking=no -i "pickly.pem" ${AWS_PUBLIC_IP_V4} << 'EOF'
+            ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/pickly.pem $AWS_PUBLIC_IP_V4 << 'EOF'
             export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=${{ secrets.AWS_REGION }}
             export ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
-            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
             docker stop pickly-service
             docker rm pickly-service
             echo "docker pull"
-            docker pull ${ECR_REGISTRY}/pickly-service:${{ github.sha }}
+            docker pull $ECR_REGISTRY/pickly-service:${{ github.sha }}
             echo "docker ps"
             docker ps -q --filter name=pickly-service | grep -q . && docker rm -f $(docker ps -aq --filter name=pickly-service)
             echo "docker run"
