@@ -1,6 +1,5 @@
 package org.pickly.service.notification.service.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,5 +12,6 @@ public class NotificationDTO {
   private String content;
   private Long bookmarkId;
   private Boolean isChecked;
+  private long createdAt;
 
 }
