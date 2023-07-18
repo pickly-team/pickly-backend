@@ -1,9 +1,6 @@
 package org.pickly.service.notification.entity;
 
 import jakarta.persistence.*;
-
-import java.time.LocalTime;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +10,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.member.entity.Member;
+
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -42,6 +41,11 @@ public class NotificationStandard extends BaseEntity {
     if (this.notifyStandardDay == null) {
       this.notifyStandardDay = 7;
     }
+  }
+
+  public static NotificationStandard createDafaultStandard(Member member) {
+    LocalTime defaultNotifyDailyAt = LocalTime.of(9, 0);
+    return new NotificationStandard(member, true, 7, defaultNotifyDailyAt);
   }
 
   public void update(Boolean isActive, LocalTime notifyDailyAt) {
