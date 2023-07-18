@@ -134,7 +134,7 @@ public class MemberMapper {
 
   public SearchMemberResultRes toSearchMemberResultRes(SearchMemberResultResDTO dto) {
     return new SearchMemberResultRes(
-        dto.getMemberId(), dto.getNickname(), dto.getProfileImageUrl(),
+        dto.getMemberId(), dto.getNickname(),
         dto.getIsFollowing(), dto.getEmoji());
   }
 
