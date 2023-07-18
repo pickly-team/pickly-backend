@@ -9,14 +9,12 @@ public class SearchMemberResultResDTO {
 
   private Long memberId;
   private String nickname;
-  private String profileImageUrl;
   private Boolean isFollowing;
   private String emoji;
 
-  public SearchMemberResultResDTO(Long memberId, String nickname, String profileImageUrl, String emoji) {
+  public SearchMemberResultResDTO(Long memberId, String nickname, String emoji) {
     this.memberId = memberId;
     this.nickname = nickname;
-    this.profileImageUrl = profileImageUrl;
     this.emoji = emoji;
   }
 
