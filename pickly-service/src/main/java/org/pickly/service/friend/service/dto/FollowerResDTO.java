@@ -20,11 +20,14 @@ public class FollowerResDTO {
 
   private Boolean isFollowing;
 
+  private String emoji;
+
   @QueryProjection
   public FollowerResDTO(Long followeeId, Friend follower, Member followerInfo) {
     this.memberId = followerInfo.getId();
     this.loginId = followerInfo.getUsername();
     this.isFollowing = (follower == null) ? false : followeeId.equals(follower.getFollower().getId());
+    this.emoji = followerInfo.getProfileEmoji();
   }
 
 }

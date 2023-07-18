@@ -11,4 +11,6 @@ public class FollowingRes {
 
   private String loginId;
 
+  private String emoji;
+
 }
