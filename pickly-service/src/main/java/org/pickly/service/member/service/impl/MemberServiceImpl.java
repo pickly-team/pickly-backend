@@ -1,7 +1,6 @@
 package org.pickly.service.member.service.impl;
 
 import com.google.firebase.auth.FirebaseToken;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
@@ -12,19 +11,14 @@ import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberQueryRepository;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
-import org.pickly.service.member.service.dto.HardModeDTO;
-import org.pickly.service.member.service.dto.MemberModeDTO;
-import org.pickly.service.member.service.dto.MemberProfileDTO;
-import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.member.service.dto.MemberRegisterDto;
-import org.pickly.service.member.service.dto.MemberStatusDTO;
-import org.pickly.service.member.service.dto.MyProfileDTO;
-import org.pickly.service.member.service.dto.SearchMemberResultResDTO;
+import org.pickly.service.member.service.dto.*;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -71,7 +65,14 @@ public class MemberServiceImpl implements MemberService {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberMapper.tokenToMember(decodedToken);
     memberRepository.save(member);
+    createNotificationStandard(member);
     return memberMapper.toMemberRegisterDTO(member);
+  }
+
+  private void createNotificationStandard(Member member) {
+    notificationStandardRepository.save(
+        NotificationStandard.createDafaultStandard(member)
+    );
   }
 
   @Override

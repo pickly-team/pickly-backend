@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.BusinessException;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.common.error.exception.ErrorCode;
-import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
-import org.pickly.service.notification.mapper.NotificationStandardMapper;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
 import org.pickly.service.notification.service.dto.NotificationStandardDTO;
 import org.pickly.service.notification.service.dto.NotifyStandardDayUpdateDTO;
@@ -45,7 +43,7 @@ public class NotificationStandardServiceImpl implements NotificationStandardServ
 
     notificationStandardRepository.save(
         new NotificationStandard(
-            memberService.findById(memberId), dto.isActive(), null, dto.getNotifyDailyAt()
+            memberService.findById(memberId), dto.isActive(), 7, dto.getNotifyDailyAt()
         )
     );
   }
