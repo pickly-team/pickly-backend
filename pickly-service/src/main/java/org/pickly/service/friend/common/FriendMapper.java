@@ -31,11 +31,12 @@ public class FriendMapper {
         .memberId(dto.getMemberId())
         .loginId(dto.getLoginId())
         .isFollowing(dto.getIsFollowing())
+        .emoji(dto.getEmoji())
         .build();
   }
 
   public FollowingRes toFollowingRes(FollowingResDTO dto) {
-    return new FollowingRes(dto.getMemberId(), dto.getLoginId());
+    return new FollowingRes(dto.getMemberId(), dto.getLoginId(), dto.getEmoji());
   }
 
 }

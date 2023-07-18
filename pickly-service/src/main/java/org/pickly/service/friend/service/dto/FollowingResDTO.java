@@ -17,10 +17,13 @@ public class FollowingResDTO {
 
   private String loginId;
 
+  private String emoji;
+
   @QueryProjection
   public FollowingResDTO(Member followerInfo) {
     this.memberId = followerInfo.getId();
     this.loginId = followerInfo.getUsername();
+    this.emoji = followerInfo.getProfileEmoji();
   }
 
 }

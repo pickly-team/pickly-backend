@@ -13,4 +13,6 @@ public class FollowerRes {
 
   private Boolean isFollowing;
 
+  private String emoji;
+
 }

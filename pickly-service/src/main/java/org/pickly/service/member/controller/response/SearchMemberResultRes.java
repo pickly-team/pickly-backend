@@ -13,4 +13,6 @@ public class SearchMemberResultRes {
   private String nickname;
   private String profileImageUrl;
   private Boolean isFollowing;
+  private String emoji;
+
 }
