@@ -1,7 +1,5 @@
 package org.pickly.service.notification.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.member.service.interfaces.MemberService;
@@ -12,6 +10,8 @@ import org.pickly.service.notification.service.dto.NotificationDTO;
 import org.pickly.service.notification.service.interfaces.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class NotificationServiceImpl implements NotificationService {
     memberService.existsById(memberId);
     List<Notification> notifications = notificationRepository.findAllByMemberIdAndDeletedAtNull(
         memberId);
-    return notifications.stream().map(notificationMapper::toDto).collect(Collectors.toList());
+    return notifications.stream().map(notificationMapper::toDto).toList();
   }
 
   @Override
