@@ -6,6 +6,7 @@ import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
 import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
+import org.pickly.service.category.entity.Category;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,11 +21,12 @@ public class BookmarkMapper {
   }
 
   public BookmarkRes entityToResponseDto(Bookmark bookmark) {
-
+    Category category = bookmark.getCategory();
     return BookmarkRes
         .builder()
         .id(bookmark.getId())
-        .categoryId(bookmark.getCategory().getId())
+        .categoryId(category.getId())
+        .categoryName(category.getName())
         .memberId(bookmark.getMember().getId())
         .url(bookmark.getUrl())
         .title(bookmark.getTitle())
@@ -32,6 +34,7 @@ public class BookmarkMapper {
         .isUserLike(bookmark.getIsUserLike())
         .readByUser(bookmark.getReadByUser())
         .visibility(bookmark.getVisibility().getDescription())
+        .createdAt(bookmark.getCreatedAt())
         .build();
   }
 

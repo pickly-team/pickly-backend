@@ -3,20 +3,20 @@ package org.pickly.service.bookmark.controller.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @AllArgsConstructor
 public class BookmarkRes {
 
-  @NonNull
   private Long id;
 
-  @NonNull
   private Long categoryId;
 
-  @NonNull
+  private String categoryName;
+
   private Long memberId;
 
   private String url;
@@ -30,5 +30,8 @@ public class BookmarkRes {
   private Boolean readByUser;
 
   private String visibility;
+
+  private LocalDateTime createdAt;
+
 }
 
