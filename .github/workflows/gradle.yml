@@ -133,5 +133,6 @@ jobs:
             fi
             
             echo "docker run"
-            ${{ secrets.DOCKER_RUN }}
+            ${{ secrets.DOCKER_RUN }} $ECR_REGISTRY:${{ github.sha }}
+            
             EOF
