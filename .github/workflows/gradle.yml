@@ -70,6 +70,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: pickly-service
         run: |
+          cd pickly-service/src/main/resources
+          echo "${{ secrets.SERVICE_FIREBASE_CONFIG }}" > ./firebase.json
           cd pickly-service
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -135,6 +137,6 @@ jobs:
             fi
             
             echo "docker run"
-            docker run -d --name pickly-service -p 8080:8080 -e DB_DBNAME=${{ secrets.DB_DBNAME }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} -v firebase.json:/pickly-service/resources/firebase.json $ECR_REGISTRY:${{ github.sha }}
+            docker run -d --name pickly-service -p 8080:8080 -e DB_DBNAME=${{ secrets.DB_DBNAME }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} $ECR_REGISTRY:${{ github.sha }}
             
             EOF
