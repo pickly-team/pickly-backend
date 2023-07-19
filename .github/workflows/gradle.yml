@@ -114,12 +114,24 @@ jobs:
             export AWS_REGION=${{ secrets.AWS_REGION }}
             export ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+            
+            if docker ps -a --format '{{.Names}}' | grep -q pickly-service; then
             docker stop pickly-service
             docker rm pickly-service
+            else
+            echo "pickly-service container does not exist. Skipping container stop and removal."
+            fi
+            
             echo "docker pull"
             docker pull $ECR_REGISTRY/pickly-service:${{ github.sha }}
+            
             echo "docker ps"
-            docker ps -q --filter name=pickly-service | grep -q . && docker rm -f $(docker ps -aq --filter name=pickly-service)
+            if docker ps -a --format '{{.Names}}' | grep -q pickly-service; then
+            docker rm -f $(docker ps -aq --filter name=pickly-service)
+            else
+            echo "pickly-service container does not exist. Skipping container removal."
+            fi
+            
             echo "docker run"
             ${{ secrets.DOCKER_RUN }}
             docker ps -a
