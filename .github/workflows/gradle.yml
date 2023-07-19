@@ -134,6 +134,5 @@ jobs:
             
             echo "docker run"
             ${{ secrets.DOCKER_RUN }}
-            docker ps -a
-            exit
+            $ECR_REGISTRY:${{ github.sha }}
             EOF
