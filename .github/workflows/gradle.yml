@@ -134,5 +134,4 @@ jobs:
             
             echo "docker run"
             ${{ secrets.DOCKER_RUN }}
-            $ECR_REGISTRY:latest
             EOF
