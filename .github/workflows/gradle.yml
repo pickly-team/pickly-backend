@@ -48,7 +48,7 @@ jobs:
       - name: Create firebase config key
         run: |
           cd ./pickly-service/src/main/resources
-          echo "${{ secrets.FIREBASE_CONFIG }}" > ./firebase.json
+          echo "${{ secrets.SERVICE_FIREBASE_CONFIG }}" > ./firebase.json
         shell: bash
 
       - name: Build Gradle wrapper
