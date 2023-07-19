@@ -135,6 +135,6 @@ jobs:
             fi
             
             echo "docker run"
-            docker run -d --name pickly-service -p 8080:8080 -e DB_DBNAME=${{ secrets.DB_DBNAME }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} -v /path/to/firebase.json:/path/in/container/firebase.json $ECR_REGISTRY:${{ github.sha }}
+            docker run -d --name pickly-service -p 8080:8080 -e DB_DBNAME=${{ secrets.DB_DBNAME }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} -v ./firebase.json:./firebase.json $ECR_REGISTRY:${{ github.sha }}
             
             EOF
