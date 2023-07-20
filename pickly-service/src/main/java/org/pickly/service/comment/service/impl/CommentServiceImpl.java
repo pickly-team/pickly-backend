@@ -1,6 +1,5 @@
 package org.pickly.service.comment.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -17,6 +16,8 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +65,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
+  @Transactional
   public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
     Comment comment = findById(commentId);
     comment.updateContent(request.getContent());
