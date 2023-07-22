@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -25,16 +23,25 @@ public abstract class BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @CreatedDate
   @Column(updatable = false, name = "created_at")
   private LocalDateTime createdAt;
 
-  @LastModifiedBy
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
+
+  @PrePersist
+  public void prePersist() {
+    this.createdAt = TimezoneHandler.getNowByZone();
+    this.updatedAt = TimezoneHandler.getNowByZone();
+  }
+
+  @PreUpdate
+  public void preUpdate() {
+    this.updatedAt = TimezoneHandler.getNowByZone();
+  }
 
   public boolean isDeleted() {
     return null != this.deletedAt;
