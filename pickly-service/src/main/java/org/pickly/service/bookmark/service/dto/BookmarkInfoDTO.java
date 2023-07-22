@@ -2,9 +2,9 @@ package org.pickly.service.bookmark.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Getter
@@ -27,7 +27,7 @@ public class BookmarkInfoDTO {
   }
 
   private String makeTitle() {
-    LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    LocalDateTime now = TimezoneHandler.getNowByZone();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분의 북마크");
     return now.format(formatter);
   }
