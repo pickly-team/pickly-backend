@@ -167,7 +167,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional
   public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
     BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
-    LocalDateTime now = ZonedDateTime.now(ZoneId.of("UTC")).toLocalDateTime();
+    LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
     bookmarkListDeleteResDTO.setIsDeleted();
     return bookmarkListDeleteResDTO;

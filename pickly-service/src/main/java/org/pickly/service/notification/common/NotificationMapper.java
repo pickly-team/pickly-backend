@@ -23,8 +23,8 @@ public class NotificationMapper {
   }
 
   public NotificationDTO toDto(Notification entity) {
-    ZonedDateTime utcDateTime = entity.getCreatedAt().atZone(ZoneOffset.UTC);
-    long unixTimestamp = utcDateTime.toEpochSecond();
+    ZonedDateTime kstDateTime = entity.getCreatedAt().atZone(ZoneOffset.of("+09:00"));
+    long unixTimestamp = kstDateTime.toEpochSecond();
     return NotificationDTO.builder()
         .id(entity.getId())
         .title(entity.getTitle())

@@ -1,10 +1,11 @@
 package org.pickly.service.comment.service.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import lombok.Getter;
 import org.pickly.service.comment.entity.Comment;
+
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @Getter
 public class CommentDTO {
@@ -18,8 +19,8 @@ public class CommentDTO {
   private Long createdTimestamp;
 
   public CommentDTO(Comment comment) {
-    ZonedDateTime utcDateTime = comment.getCreatedAt().atZone(ZoneOffset.UTC);
-    long unixTimestamp = utcDateTime.toEpochSecond();
+    ZonedDateTime kstDateTime = comment.getCreatedAt().atZone(ZoneOffset.of("+09:00"));
+    long unixTimestamp = kstDateTime.toEpochSecond();
 
     this.id = comment.getId();
     this.member = comment.getMember().getNickname();
@@ -32,8 +33,8 @@ public class CommentDTO {
 
   @QueryProjection
   public CommentDTO(Comment comment, String member, String bookmark, String category) {
-    ZonedDateTime utcDateTime = comment.getCreatedAt().atZone(ZoneOffset.UTC);
-    long unixTimestamp = utcDateTime.toEpochSecond();
+    ZonedDateTime kstDateTime = comment.getCreatedAt().atZone(ZoneOffset.of("+09:00"));
+    long unixTimestamp = kstDateTime.toEpochSecond();
 
     this.id = comment.getId();
     this.member = member;
