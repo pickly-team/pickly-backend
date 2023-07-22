@@ -17,7 +17,7 @@ spring:
       mode: always
   # postgreSQL local 설정
   datasource:
-    url: jdbc:postgresql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DB_DBNAME}
+    url: jdbc:postgresql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DB_DBNAME}?setTimezone=Asia/Seoul
     username: ${DB_USERNAME}
     password: ${DEV_DB_PASSWORD}
 
