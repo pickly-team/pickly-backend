@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.block.repository.interfaces.BlockQueryRepository;
 import org.pickly.service.block.service.dto.BlockBookmarkDTO;
 import org.pickly.service.block.service.dto.BlockMemberDTO;
+import org.pickly.service.common.utils.page.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,10 @@ public class BlockQueryRepositoryImpl implements BlockQueryRepository {
 
   @Override
   @Transactional(readOnly = true)
-  public List<BlockMemberDTO> getBlockedMembers(Long blockerId, Long cursorId, Integer size) {
+  public List<BlockMemberDTO> getBlockedMembers(Long blockerId, PageRequest pageRequest) {
+    String cursor = (String) pageRequest.getCursorId();
+    Integer size = pageRequest.getPageSize();
+
     return queryFactory.select(Projections.fields(BlockMemberDTO.class,
             block.blockee.id,
             block.blockee.nickname,
@@ -35,16 +39,20 @@ public class BlockQueryRepositoryImpl implements BlockQueryRepository {
         .leftJoin(member).on(member.id.eq(block.blockee.id))
         .where(
             block.blocker.id.eq(blockerId),
-            ltblockee(cursorId)
-        .and(block.bookmark.isNull()))
-        .orderBy(block.createdAt.desc())
+            gtblockeeNickname(cursor),
+            block.bookmark.isNull()
+        )
+        .orderBy(block.blockee.id.asc())
         .limit(size + CHECK_LAST)
         .fetch();
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Long cursorId, Integer size) {
+  public List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, PageRequest pageRequest) {
+    String cursor = (String) pageRequest.getCursorId();
+    Integer size = pageRequest.getPageSize();
+
     return queryFactory.select(Projections.fields(BlockBookmarkDTO.class,
             block.bookmark.id,
             block.bookmark.title,
@@ -54,24 +62,25 @@ public class BlockQueryRepositoryImpl implements BlockQueryRepository {
         .leftJoin(bookmark).on(bookmark.id.eq(block.bookmark.id))
         .where(
             block.blocker.id.eq(blockerId),
-            ltbookmark(cursorId)
-        .and(block.blockee.isNull()))
-        .orderBy(block.createdAt.desc())
+            gtbookmark(cursor),
+            block.blockee.isNull()
+        )
+        .orderBy(block.bookmark.id.asc())
         .limit(size + CHECK_LAST)
         .fetch();
   }
 
-  private BooleanExpression ltblockee(final Long cursorId) {
+  private BooleanExpression gtblockeeNickname(final String cursorId) {
     if (cursorId == null) {
       return null;
     }
-    return block.blockee.id.lt(cursorId);
+    return block.blockee.nickname.gt(cursorId);
   }
 
-  private BooleanExpression ltbookmark(final Long cursorId) {
+  private BooleanExpression gtbookmark(final String cursorId) {
     if (cursorId == null) {
       return null;
     }
-    return block.bookmark.id.lt(cursorId);
+    return block.bookmark.id.gt(Long.valueOf(cursorId));
   }
 }
