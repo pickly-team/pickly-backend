@@ -1,6 +1,8 @@
 package org.pickly.service.common.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +26,14 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI openApi() {
     return new OpenAPI()
+        .components(
+            new Components().addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
         .addServersItem(new Server().url("/"));
   }
 
+  private SecurityScheme createAPIKeyScheme() {
+    return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+        .bearerFormat("JWT")
+        .scheme("bearer");
+  }
 }
