@@ -15,7 +15,7 @@ public class BlockMapper {
 
   public static BlockMemberRes toMember(List<BlockMemberDTO> blockMemberDTO) {
     List<BlockMember> blockMemberList = blockMemberDTO.stream().map(blockMember ->
-            BlockMember.of(blockMember.getId(), blockMember.getName(),
+            BlockMember.of(blockMember.getId(), blockMember.getNickname(),
                 blockMember.getProfileEmoji()))
         .collect(Collectors.toList());
 

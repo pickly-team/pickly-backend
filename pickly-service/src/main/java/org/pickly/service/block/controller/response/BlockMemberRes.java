@@ -22,7 +22,7 @@ public class BlockMemberRes {
   public static class BlockMember {
 
     private Long id;
-    private String name;
+    private String nickname;
     private String profileEmoji;
 
     public static BlockMember of(Long id, String name, String profileEmoji) {
