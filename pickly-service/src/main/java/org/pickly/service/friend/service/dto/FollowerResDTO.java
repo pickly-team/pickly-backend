@@ -16,7 +16,7 @@ public class FollowerResDTO {
 
   private Long memberId;
 
-  private String loginId;
+  private String nickname;
 
   private Boolean isFollowing;
 
@@ -25,7 +25,7 @@ public class FollowerResDTO {
   @QueryProjection
   public FollowerResDTO(Long followeeId, Friend follower, Member followerInfo) {
     this.memberId = followerInfo.getId();
-    this.loginId = followerInfo.getUsername();
+    this.nickname = followerInfo.getNickname();
     this.isFollowing = (follower == null) ? false : followeeId.equals(follower.getFollower().getId());
     this.emoji = followerInfo.getProfileEmoji();
   }
