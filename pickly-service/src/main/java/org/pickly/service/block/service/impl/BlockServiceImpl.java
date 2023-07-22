@@ -11,6 +11,7 @@ import org.pickly.service.block.service.dto.BlockBookmarkDTO;
 import org.pickly.service.block.service.dto.BlockMemberDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
+import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,8 @@ public class BlockServiceImpl implements BlockService {
   }
 
   @Override
-  public List<BlockMemberDTO> getBlockedMembers(Long blockerId, Long cursorId, Integer size) {
-    return blockQueryRepository.getBlockedMembers(blockerId, cursorId, size);
+  public List<BlockMemberDTO> getBlockedMembers(Long blockerId, PageRequest pageRequest) {
+    return blockQueryRepository.getBlockedMembers(blockerId, pageRequest);
   }
 
 
@@ -80,8 +81,8 @@ public class BlockServiceImpl implements BlockService {
   }
 
   @Override
-  public List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, Long cursorId, Integer size) {
-    return blockQueryRepository.getBlockedBookmarks(blockerId, cursorId, size);
+  public List<BlockBookmarkDTO> getBlockedBookmarks(Long blockerId, PageRequest pageRequest) {
+    return blockQueryRepository.getBlockedBookmarks(blockerId, pageRequest);
   }
 
   private void checkAlreadyBlock(Long blockerId, Long blockeeId) {
