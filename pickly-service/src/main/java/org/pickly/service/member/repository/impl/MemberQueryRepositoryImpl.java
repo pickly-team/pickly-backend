@@ -10,6 +10,9 @@ import org.pickly.service.member.service.dto.SearchMemberResultResDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.pickly.service.member.entity.QMember.member;
 
@@ -19,6 +22,20 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
 
   private static final long CHECK_LAST = 1;
   private final JPAQueryFactory queryFactory;
+
+  @Override
+  public Map<Long, String> findTokenByIds(List<Long> memberIds) {
+    return queryFactory
+        .select(member.id, member.fcmToken)
+        .from(member)
+        .where(member.id.in(memberIds))
+        .fetch()
+        .stream()
+        .collect(Collectors.toMap(
+            tuple -> tuple.get(member.id),
+            tuple -> Optional.ofNullable(tuple.get(member.fcmToken)).orElse("")
+        ));
+  }
 
   @Override
   public List<SearchMemberResultResDTO> findAllMembersByKeyword(String keyword, Long memberId,

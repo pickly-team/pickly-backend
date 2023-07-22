@@ -1,16 +1,11 @@
 package org.pickly.service.member.service.interfaces;
 
-import java.util.List;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.service.dto.HardModeDTO;
-import org.pickly.service.member.service.dto.MemberModeDTO;
-import org.pickly.service.member.service.dto.MemberProfileDTO;
-import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.member.service.dto.MemberRegisterDto;
-import org.pickly.service.member.service.dto.MemberStatusDTO;
-import org.pickly.service.member.service.dto.MyProfileDTO;
-import org.pickly.service.member.service.dto.SearchMemberResultResDTO;
+import org.pickly.service.member.service.dto.*;
+
+import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
 
@@ -32,8 +27,11 @@ public interface MemberService {
 
   MemberRegisterDto register(String token);
 
+  Map<Long, String> findTokenByIds(List<Long> memberIds);
+
   List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
       PageRequest pageRequest);
 
   MemberProfileDTO getMemberIdByToken(String token);
+
 }

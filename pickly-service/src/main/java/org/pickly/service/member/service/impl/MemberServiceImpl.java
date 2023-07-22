@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -26,7 +27,6 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
-
   private final MemberQueryRepository memberQueryRepository;
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
@@ -97,6 +97,11 @@ public class MemberServiceImpl implements MemberService {
           searchMemberResult.getMemberId());
       searchMemberResult.setFollowingFlag(isFollowing);
     }).toList();
+  }
+
+  @Override
+  public Map<Long, String> findTokenByIds(List<Long> memberIds) {
+    return memberQueryRepository.findTokenByIds(memberIds);
   }
 
   @Override

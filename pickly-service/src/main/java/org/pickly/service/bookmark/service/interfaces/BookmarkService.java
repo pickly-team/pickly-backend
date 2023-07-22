@@ -10,6 +10,10 @@ import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.member.entity.Member;
+
+import java.util.List;
+import java.util.Map;
 
 import java.util.List;
 
@@ -41,4 +45,7 @@ public interface BookmarkService {
   PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId);
 
   void updateBookmark(Long bookmarkId, BookmarkUpdateReqDTO request);
+
+  Map<Member, List<Bookmark>> findAllUnreadBookmark();
+
 }

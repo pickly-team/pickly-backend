@@ -40,6 +40,7 @@ public class SecurityConfig {
         .formLogin().disable()
         .csrf().disable()
         .addFilter(corsFilter.corsFilter())
+//        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
 

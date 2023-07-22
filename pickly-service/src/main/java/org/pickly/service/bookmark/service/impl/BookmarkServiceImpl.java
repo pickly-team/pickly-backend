@@ -34,9 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -224,6 +226,16 @@ public class BookmarkServiceImpl implements BookmarkService {
         request.getTitle(),
         request.getReadByUser(),
         request.getVisibility()
+    );
+  }
+
+  @Override
+  public Map<Member, List<Bookmark>> findAllUnreadBookmark() {
+    List<Bookmark> unreadBookmarks = bookmarkRepository.findAllUnreadBookmark();
+    return unreadBookmarks.stream().collect(
+        Collectors.groupingBy(
+            Bookmark::getMember, LinkedHashMap::new, Collectors.toList()
+        )
     );
   }
 }
