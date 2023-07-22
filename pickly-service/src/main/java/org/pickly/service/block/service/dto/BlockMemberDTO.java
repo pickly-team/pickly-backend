@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class BlockMemberDTO {
 
   private Long id;
-  private String name;
+  private String nickname;
   private String profileEmoji;
 
 }
