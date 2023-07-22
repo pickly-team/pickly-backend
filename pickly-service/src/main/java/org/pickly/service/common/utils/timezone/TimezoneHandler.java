@@ -3,17 +3,16 @@ package org.pickly.service.common.utils.timezone;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 
 public class TimezoneHandler {
 
-  private static final ZoneOffset OFFSET = ZoneOffset.of("+09:00");
+  // DB에 KST로 저장되고 화면에도 KST 기준으로 줘야 함
+  private static final ZoneOffset OFFSET = ZoneOffset.of("+00:00");
   private static final ZoneId ZONE_ID = ZoneId.of("Asia/Seoul");
 
 
   public static long convertToUnix(LocalDateTime dateTime) {
-    ZonedDateTime kstDateTime = dateTime.atZone(OFFSET);
-    return kstDateTime.toEpochSecond();
+    return dateTime.atZone(OFFSET).toEpochSecond();
   }
 
   public static LocalDateTime getNowByZone() {
