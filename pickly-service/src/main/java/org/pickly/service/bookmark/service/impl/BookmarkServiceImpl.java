@@ -23,6 +23,7 @@ import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
@@ -32,8 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +166,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional
   public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
     BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
-    LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+    LocalDateTime now = TimezoneHandler.getNowByZone();
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
     bookmarkListDeleteResDTO.setIsDeleted();
     return bookmarkListDeleteResDTO;

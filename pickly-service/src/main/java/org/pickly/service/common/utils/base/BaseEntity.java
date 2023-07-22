@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 @Getter
 @SuperBuilder
@@ -42,7 +41,7 @@ public abstract class BaseEntity {
   }
 
   public void delete() {
-    this.deletedAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+    this.deletedAt = TimezoneHandler.getNowByZone();
   }
 
   public void undoDelete() {
