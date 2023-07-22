@@ -43,14 +43,14 @@ public class Bookmark extends BaseEntity {
   private Visibility visibility;
 
   public static Bookmark create(
-      Category category, Member member,
+      Category category, Member member, String title,
       BookmarkInfoDTO info, Visibility visibility
   ) {
     return Bookmark.builder()
         .category(category)
         .member(member)
         .url(info.getUrl())
-        .title(info.getTitle())
+        .title(title)
         .previewImageUrl(info.getPreviewImageUrl())
         .isUserLike(false)
         .readByUser(false)

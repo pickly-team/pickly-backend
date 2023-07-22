@@ -23,6 +23,7 @@ import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
@@ -32,8 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -132,6 +131,12 @@ public class BookmarkServiceImpl implements BookmarkService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
   }
 
+  @Override
+  public String getTitleFromUrl(String url) {
+    BookmarkInfoDTO info = scrapOgTagInfo(url);
+    return info.getTitle();
+  }
+
 
   @Override
   @Transactional
@@ -163,7 +168,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional
   public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
     BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
-    LocalDateTime now = ZonedDateTime.now(ZoneId.of("UTC")).toLocalDateTime();
+    LocalDateTime now = TimezoneHandler.getNowByZone();
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
     bookmarkListDeleteResDTO.setIsDeleted();
     return bookmarkListDeleteResDTO;
@@ -179,7 +184,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
     BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl());
-    Bookmark entity = Bookmark.create(category, member, info, dto.getVisibility());
+    Bookmark entity = Bookmark.create(category, member, dto.getTitle(), info, dto.getVisibility());
 
     return bookmarkRepository.save(entity);
   }

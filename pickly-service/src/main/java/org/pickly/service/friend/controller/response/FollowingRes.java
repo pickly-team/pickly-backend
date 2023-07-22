@@ -9,6 +9,8 @@ public class FollowingRes {
 
   private Long memberId;
 
-  private String loginId;
+  private String nickname;
+
+  private String emoji;
 
 }

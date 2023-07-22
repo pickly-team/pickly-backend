@@ -5,18 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.common.utils.base.AuthTokenUtil;
+import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.repository.interfaces.MemberQueryRepository;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
-import org.pickly.service.member.service.dto.HardModeDTO;
-import org.pickly.service.member.service.dto.MemberModeDTO;
-import org.pickly.service.member.service.dto.MemberProfileDTO;
-import org.pickly.service.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.member.service.dto.MemberStatusDTO;
-import org.pickly.service.member.service.dto.MyProfileDTO;
-import org.pickly.service.member.service.dto.MemberRegisterDto;
+import org.pickly.service.member.service.dto.*;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
@@ -70,7 +65,38 @@ public class MemberServiceImpl implements MemberService {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberMapper.tokenToMember(decodedToken);
     memberRepository.save(member);
+    createNotificationStandard(member);
     return memberMapper.toMemberRegisterDTO(member);
+  }
+
+  private void createNotificationStandard(Member member) {
+    notificationStandardRepository.save(
+        NotificationStandard.createDafaultStandard(member)
+    );
+  }
+
+  @Override
+  public MemberProfileDTO getMemberIdByToken(String token) {
+    FirebaseToken decodedToken = authTokenUtil.validateToken(token);
+    Member member = memberRepository.findByEmail(decodedToken.getEmail())
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저입니다."));
+    return memberMapper.toMemberProfileDTO(member, false);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
+      PageRequest pageRequest) {
+    existsById(memberId);
+
+    List<SearchMemberResultResDTO> searchMemberResults = memberQueryRepository.findAllMembersByKeyword(
+        keyword, memberId, pageRequest);
+
+    return searchMemberResults.stream().peek(searchMemberResult -> {
+      boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(memberId,
+          searchMemberResult.getMemberId());
+      searchMemberResult.setFollowingFlag(isFollowing);
+    }).toList();
   }
 
   @Override
@@ -84,7 +110,7 @@ public class MemberServiceImpl implements MemberService {
     Member member = findById(memberId);
     Long followersCount = friendRepository.countByFolloweeId(memberId);
     Long followeesCount = friendRepository.countByFollowerId(memberId);
-    Long bookmarksCount = bookmarkRepository.countByMemberId(memberId);
+    Long bookmarksCount = bookmarkRepository.countByMemberIdAndDeletedAtNull(memberId);
     return memberMapper.toMyProfileDTO(member, followersCount, followeesCount, bookmarksCount);
   }
 

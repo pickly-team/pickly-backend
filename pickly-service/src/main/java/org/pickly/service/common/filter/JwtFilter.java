@@ -1,6 +1,5 @@
 package org.pickly.service.common.filter;
 
-
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -15,11 +15,15 @@ import org.pickly.service.member.entity.Member;
 import java.util.List;
 import java.util.Map;
 
+import java.util.List;
+
 public interface BookmarkService {
 
   Bookmark findById(Long id);
 
   Bookmark findByIdWithCategory(Long id);
+
+  String getTitleFromUrl(String url);
 
   void likeBookmark(Long bookmarkId);
 

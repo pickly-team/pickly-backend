@@ -1,5 +1,6 @@
 package org.pickly.service.member.service.interfaces;
 
+import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.dto.*;
 
@@ -27,5 +28,10 @@ public interface MemberService {
   MemberRegisterDto register(String token);
 
   Map<Long, String> findTokenByIds(List<Long> memberIds);
+
+  List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
+      PageRequest pageRequest);
+
+  MemberProfileDTO getMemberIdByToken(String token);
 
 }

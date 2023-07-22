@@ -43,6 +43,11 @@ public class NotificationStandard extends BaseEntity {
     }
   }
 
+  public static NotificationStandard createDafaultStandard(Member member) {
+    LocalTime defaultNotifyDailyAt = LocalTime.of(9, 0);
+    return new NotificationStandard(member, true, 7, defaultNotifyDailyAt);
+  }
+
   public void update(Boolean isActive, LocalTime notifyDailyAt) {
     this.isActive = isActive;
     this.notifyDailyAt = notifyDailyAt;

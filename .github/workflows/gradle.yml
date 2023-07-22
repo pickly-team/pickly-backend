@@ -12,9 +12,13 @@ name: Pickly Backend CI / CD
 on:
   push:
     branches: [ "develop" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  IMAGE_TAG : ${{ github.sha }}
 
 jobs:
   build:
@@ -41,27 +45,41 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Create firebase config key
+        run: |
+          cd ./pickly-service/src/main/resources
+          echo "${{ secrets.SERVICE_FIREBASE_CONFIG }}" > ./firebase.json
+        shell: bash
+
       - name: Build Gradle wrapper
         run: gradle wrap
-          
-      ## gradle build
+
       - name: Build with Gradle
         run: ./gradlew clean :pickly-service:build -x test
         shell: bash
 
       ## docker build & push to AWS Registry
-      - name: Docker build & push to Registry
-        if: contains(github.ref, 'develop')
-        run: |
-          ${{secrets.AWS_REGISTRY}}
-        shell: bash
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      ## docker pull from AWS Registry
-      - name: CD to Develop Server
-        if: contains(github.ref, 'develop')
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: pickly-service
         run: |
-          ${{secrets.DOCKER_PULL}}
-        shell: bash
+          cd pickly-service
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
@@ -70,3 +88,61 @@ jobs:
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
+
+  deploy:
+      needs: build
+      name: Deploy to EC2
+      runs-on: ubuntu-latest
+      steps:
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }}
+
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+
+        - name: Setup SSH
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/pickly.pem
+            chmod 600 ~/.ssh/pickly.pem
+
+        - name: SSH and deploy to EC2
+          env:
+            ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
+            AWS_PUBLIC_IP_V4: ${{ secrets.AWS_PUBLIC_IP_V4 }}
+          run: |
+            ssh -tt -o StrictHostKeyChecking=no -i ~/.ssh/pickly.pem $AWS_PUBLIC_IP_V4 << 'EOF'
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export ECR_REGISTRY=${{ secrets.AWS_ECR_REGISTRY }}
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+            
+            if docker ps -a --format '{{.Names}}' | grep -q pickly-service; then
+            docker stop pickly-service
+            docker rm pickly-service
+            else
+            echo "pickly-service container does not exist. Skipping container stop and removal."
+            fi
+            
+            echo "docker pull"
+            docker pull $ECR_REGISTRY:${{ github.sha }}
+            
+            echo "docker ps"
+            if docker ps -a --format '{{.Names}}' | grep -q pickly-service; then
+            docker rm -f $(docker ps -aq --filter name=pickly-service)
+            else
+            echo "pickly-service container does not exist. Skipping container removal."
+            fi
+            
+            echo "docker run"
+            docker run -d --name pickly-service -p 8080:8080 -e DB_DBNAME=${{ secrets.DB_DBNAME }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DEV_DB_HOST=${{ secrets.DEV_DB_HOST }} -e DEV_DB_PORT=${{ secrets.DEV_DB_PORT }} -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} $ECR_REGISTRY:${{ github.sha }}
+            docker ps -a 
+            exit
+            EOF
+            

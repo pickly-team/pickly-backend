@@ -15,12 +15,15 @@ public class FollowingResDTO {
 
   private Long memberId;
 
-  private String loginId;
+  private String nickname;
+
+  private String emoji;
 
   @QueryProjection
   public FollowingResDTO(Member followerInfo) {
     this.memberId = followerInfo.getId();
-    this.loginId = followerInfo.getUsername();
+    this.nickname = followerInfo.getNickname();
+    this.emoji = followerInfo.getProfileEmoji();
   }
 
 }

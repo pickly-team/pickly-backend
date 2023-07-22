@@ -19,7 +19,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
   @Query("select b from Bookmark b join fetch b.category c where b.id = :id and b.deletedAt is null")
   Optional<Bookmark> findByIdWithCategory(@Param("id") Long id);
 
-  Long countByMemberId(Long memberId);
+  Long countByMemberIdAndDeletedAtNull(Long memberId);
 
   @Modifying(clearAutomatically = true)
   @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.id IN :bookmarkIds")

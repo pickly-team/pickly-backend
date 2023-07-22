@@ -9,8 +9,10 @@ public class FollowerRes {
 
   private Long memberId;
 
-  private String loginId;
+  private String nickname;
 
   private Boolean isFollowing;
+
+  private String emoji;
 
 }
