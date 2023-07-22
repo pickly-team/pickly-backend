@@ -29,14 +29,14 @@ public class FriendMapper {
   public FollowerRes toFollowerRes(FollowerResDTO dto) {
     return FollowerRes.builder()
         .memberId(dto.getMemberId())
-        .loginId(dto.getLoginId())
+        .nickname(dto.getNickname())
         .isFollowing(dto.getIsFollowing())
         .emoji(dto.getEmoji())
         .build();
   }
 
   public FollowingRes toFollowingRes(FollowingResDTO dto) {
-    return new FollowingRes(dto.getMemberId(), dto.getLoginId(), dto.getEmoji());
+    return new FollowingRes(dto.getMemberId(), dto.getNickname(), dto.getEmoji());
   }
 
 }
