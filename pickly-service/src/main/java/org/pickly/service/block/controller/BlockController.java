@@ -80,9 +80,9 @@ public class BlockController {
 
       @Parameter(name = "cursorId", description = "마지막 끝의 Id", example = "1") final @RequestParam(required = false) String cursorId,
 
-      @Parameter(name = "size", description = "페이지 사이즈", example = "1") final @RequestParam(defaultValue = "15") Integer size
+      @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1") final @RequestParam(defaultValue = "15") Integer pageSize
   ) {
-    PageRequest pageRequest = new PageRequest(cursorId, size);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
     List<BlockMemberRes> blockedMembers = blockService.getBlockedMembers(blockerId, pageRequest)
         .stream()
         .map(BlockMapper::toMember)
