@@ -113,7 +113,7 @@ public class MemberMapper {
     );
   }
 
-  public Member tokenToMember(FirebaseToken token) {
+  public Member tokenToMember(FirebaseToken token, String fcmToken) {
     //TODO: password nullable한 값으로 변경?
     Password password = new Password("test123");
 
@@ -124,6 +124,7 @@ public class MemberMapper {
         .nickname("")
         .isHardMode(false)
         .password(password)
+        .fcmToken(fcmToken)
         .build();
   }
 

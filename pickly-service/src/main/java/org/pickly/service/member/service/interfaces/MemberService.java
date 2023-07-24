@@ -25,7 +25,7 @@ public interface MemberService {
 
   HardModeDTO setHardMode(Long memberId, MemberStatusDTO request);
 
-  MemberRegisterDto register(String token);
+  MemberRegisterDto register(String token, String fcmToken);
 
   Map<Long, String> findTokenByIds(List<Long> memberIds);
 
