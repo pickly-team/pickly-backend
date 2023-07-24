@@ -14,7 +14,7 @@ spring:
   # schema.sql, data.sql 사용 여부
   sql:
     init:
-      mode: always
+      mode: never
   # postgreSQL local 설정
   datasource:
     url: jdbc:postgresql://${DEV_DB_HOST}:${DEV_DB_PORT}/${DB_DBNAME}?setTimezone=Asia/Seoul

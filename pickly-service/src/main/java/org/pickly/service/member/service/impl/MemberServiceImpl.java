@@ -47,6 +47,18 @@ public class MemberServiceImpl implements MemberService {
     }
   }
 
+  public boolean existsByEmail(String email) {
+    return memberRepository.existsByEmailAndDeletedAtIsNull(email);
+  }
+
+  public boolean existsByNickname(String nickname) {
+    return memberRepository.existsByNicknameAndDeletedAtIsNull(nickname);
+  }
+
+  public boolean existsByUsername(String username) {
+    return memberRepository.existsByUsernameAndDeletedAtIsNull(username);
+  }
+
   @Override
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
@@ -61,9 +73,25 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional
-  public MemberRegisterDto register(String token) {
+  public MemberRegisterDto register(String token, String fcmToken) {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
-    Member member = memberMapper.tokenToMember(decodedToken);
+    Member member = memberMapper.tokenToMember(decodedToken, fcmToken);
+    if (existsByEmail(member.getEmail())) {
+      return updateTokenExistMember(fcmToken, member.getEmail());
+    } else {
+      return saveNewMember(member);
+    }
+  }
+
+  private MemberRegisterDto updateTokenExistMember(String email, String fcmToken) {
+    Member savedMember = findByEmail(email);
+    if (!savedMember.getFcmToken().equals(fcmToken)) {
+      savedMember.updateToken(fcmToken);
+    }
+    return memberMapper.toMemberRegisterDTO(savedMember);
+  }
+
+  private MemberRegisterDto saveNewMember(Member member) {
     memberRepository.save(member);
     createNotificationStandard(member);
     return memberMapper.toMemberRegisterDTO(member);
@@ -140,6 +168,11 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public Member findById(Long id) {
     return memberRepository.findByIdAndDeletedAtIsNull(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
+  }
+
+  public Member findByEmail(String email) {
+    return memberRepository.findByEmailAndDeletedAtIsNull(email)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
   }
 
