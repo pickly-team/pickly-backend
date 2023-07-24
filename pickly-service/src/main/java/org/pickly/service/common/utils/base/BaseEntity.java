@@ -34,13 +34,13 @@ public abstract class BaseEntity {
 
   @PrePersist
   public void prePersist() {
-    this.createdAt = TimezoneHandler.getNowByZone();
-    this.updatedAt = TimezoneHandler.getNowByZone();
+    this.createdAt = TimezoneHandler.getUTCnow();
+    this.updatedAt = TimezoneHandler.getUTCnow();
   }
 
   @PreUpdate
   public void preUpdate() {
-    this.updatedAt = TimezoneHandler.getNowByZone();
+    this.updatedAt = TimezoneHandler.getUTCnow();
   }
 
   public boolean isDeleted() {
@@ -48,7 +48,7 @@ public abstract class BaseEntity {
   }
 
   public void delete() {
-    this.deletedAt = TimezoneHandler.getNowByZone();
+    this.deletedAt = TimezoneHandler.getUTCnow();
   }
 
   public void undoDelete() {

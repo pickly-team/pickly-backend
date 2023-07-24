@@ -27,7 +27,7 @@ public class BookmarkInfoDTO {
   }
 
   private String makeTitle() {
-    LocalDateTime now = TimezoneHandler.getNowByZone();
+    LocalDateTime now = TimezoneHandler.getKSTnow();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분의 북마크");
     return now.format(formatter);
   }

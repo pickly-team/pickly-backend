@@ -3,6 +3,7 @@ package org.pickly.service.notification.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.entity.Bookmark;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.common.NotificationMapper;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +40,6 @@ public class NotificationServiceImpl implements NotificationService {
   private final NotificationTemplateService notificationTemplateService;
   private final NotificationMapper notificationMapper;
 
-  private static final String KST = "Asia/Seoul";
-
   @Override
   public List<NotificationDTO> findMemberNotifications(final Long memberId) {
     memberService.existsById(memberId);
@@ -55,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
     List<Notification> notifications = new ArrayList<>();
 
     List<NotificationTemplate> templates = notificationTemplateService.findAllByNotificationType(NotificationType.NORMAL);
-    LocalDateTime now = LocalDateTime.now(ZoneId.of(KST));
+    LocalDateTime now = TimezoneHandler.getUTCnow();
     for (Map.Entry<Member, List<Bookmark>> entry : unreadBookmarks.entrySet()) {
       Long memberId = entry.getKey().getId();
       NotificationStandard standard = notificationStandardService.findByMemberId(memberId);
