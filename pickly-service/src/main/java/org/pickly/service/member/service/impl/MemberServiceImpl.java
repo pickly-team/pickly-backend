@@ -47,6 +47,18 @@ public class MemberServiceImpl implements MemberService {
     }
   }
 
+  public boolean existsByEmail(String email) {
+    return memberRepository.existsByEmailAndDeletedAtIsNull(email);
+  }
+
+  public boolean existsByNickname(String nickname) {
+    return memberRepository.existsByNicknameAndDeletedAtIsNull(nickname);
+  }
+
+  public boolean existsByUsername(String username) {
+    return memberRepository.existsByUsernameAndDeletedAtIsNull(username);
+  }
+
   @Override
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
@@ -64,6 +76,15 @@ public class MemberServiceImpl implements MemberService {
   public MemberRegisterDto register(String token) {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberMapper.tokenToMember(decodedToken);
+    // username, nickname, email에 대해서 중복체크
+    if (
+        existsByEmail(member.getEmail()) ||
+        existsByNickname(member.getNickname()) ||
+        existsByUsername(member.getUsername())
+    ) {
+      Member savedMember = findByEmail(member.getEmail());
+      return memberMapper.toMemberRegisterDTO(savedMember);
+    }
     memberRepository.save(member);
     createNotificationStandard(member);
     return memberMapper.toMemberRegisterDTO(member);
@@ -140,6 +161,11 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public Member findById(Long id) {
     return memberRepository.findByIdAndDeletedAtIsNull(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
+  }
+
+  public Member findByEmail(String email) {
+    return memberRepository.findByEmailAndDeletedAtIsNull(email)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
   }
 
