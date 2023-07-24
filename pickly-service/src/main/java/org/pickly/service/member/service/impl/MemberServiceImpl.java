@@ -156,6 +156,7 @@ public class MemberServiceImpl implements MemberService {
     return memberMapper.toMemberStatusDTO(member.isHardMode(member.getIsHardMode()));
   }
 
+  @Transactional(readOnly = true)
   public MemberModeDTO findModeByMemberId(final Long memberId) {
     Member member = findById(memberId);
     NotificationStandard standard = findNotificationStandardByMemberId(memberId);
@@ -163,11 +164,13 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Member findById(Long id) {
     return memberRepository.findByIdAndDeletedAtIsNull(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
   }
 
+  @Transactional(readOnly = true)
   public Member findByEmail(String email) {
     return memberRepository.findByEmailAndDeletedAtIsNull(email)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
@@ -180,7 +183,7 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public void updateNotificationSettings(Long memberId, String fcmToken, String timezone) {
+  public void updateNotificationSettings(Long memberId, String timezone, String fcmToken) {
     Member member = findById(memberId);
     member.updateNotificationSettings(fcmToken, timezone);
   }

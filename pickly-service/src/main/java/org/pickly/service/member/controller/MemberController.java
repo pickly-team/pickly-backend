@@ -124,20 +124,21 @@ public class MemberController {
   }
 
 
-  @PutMapping("/notification-settings")
+  @PutMapping("/{memberId}/notification-settings")
   @Operation(summary = "특정 유저의 알림 설정을 변경한다.")
   public void updateNotificationSettings(
-      @RequestHeader("Authorization")
-      String authorization,
+      @RequestParam
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId,
 
       @RequestBody
       @Valid
       NotificationSettingsUpdateReq request
   ) {
-    String token = RequestUtil.getAuthorizationToken(authorization);
-    Long memberId = memberService.getMemberIdByToken(token).getId();
-
-    memberService.updateNotificationSettings(memberId, token, request.getTimezone());
+    memberService.updateNotificationSettings(
+        memberId, request.getTimezone(), request.getFcmToken()
+    );
   }
 
   @DeleteMapping("/me")

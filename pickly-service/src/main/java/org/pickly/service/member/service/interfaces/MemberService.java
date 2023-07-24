@@ -34,5 +34,5 @@ public interface MemberService {
 
   MemberProfileDTO getMemberIdByToken(String token);
 
-  void updateNotificationSettings(Long memberId, String fcmToken, String timezone);
+  void updateNotificationSettings(Long memberId, String timezone, String fcmToken);
 }
