@@ -17,7 +17,7 @@ public class MemberProfileUpdateReq {
   private String name;
 
   @NotBlank(message = "사용자 닉네임을 입력해주세요.")
-  @Length(max = 20, message = "사용자 닉네임은 20글자 이하로 입력해야 합니다.")
+  @Length(max = 7, message = "사용자 닉네임은 7글자 이하로 입력해야 합니다.")
   @Schema(description = "member nickname", example = "johndoe")
   private String nickname;
 
