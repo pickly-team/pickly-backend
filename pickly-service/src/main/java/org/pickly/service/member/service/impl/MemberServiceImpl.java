@@ -73,18 +73,25 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional
-  public MemberRegisterDto register(String token) {
+  public MemberRegisterDto register(String token, String fcmToken) {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
-    Member member = memberMapper.tokenToMember(decodedToken);
-    // username, nickname, email에 대해서 중복체크
-    if (
-        existsByEmail(member.getEmail()) ||
-        existsByNickname(member.getNickname()) ||
-        existsByUsername(member.getUsername())
-    ) {
-      Member savedMember = findByEmail(member.getEmail());
-      return memberMapper.toMemberRegisterDTO(savedMember);
+    Member member = memberMapper.tokenToMember(decodedToken, fcmToken);
+    if (existsByEmail(member.getEmail())) {
+      return updateTokenExistMember(fcmToken, member.getEmail());
+    } else {
+      return saveNewMember(member);
     }
+  }
+
+  private MemberRegisterDto updateTokenExistMember(String email, String fcmToken) {
+    Member savedMember = findByEmail(email);
+    if (!savedMember.getFcmToken().equals(fcmToken)) {
+      savedMember.updateToken(fcmToken);
+    }
+    return memberMapper.toMemberRegisterDTO(savedMember);
+  }
+
+  private MemberRegisterDto saveNewMember(Member member) {
     memberRepository.save(member);
     createNotificationStandard(member);
     return memberMapper.toMemberRegisterDTO(member);
