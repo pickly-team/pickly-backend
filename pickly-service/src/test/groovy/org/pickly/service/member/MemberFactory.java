@@ -16,6 +16,7 @@ public class MemberFactory {
         .nickname(nickname)
         .profileEmoji(profileEmoji)
         .fcmToken("test1234566")
+        .timezone("UTC")
         .build();
   }
 

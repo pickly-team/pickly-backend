@@ -73,21 +73,18 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   @Transactional
-  public MemberRegisterDto register(String token, String fcmToken) {
+  public MemberRegisterDto register(String token) {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
-    Member member = memberMapper.tokenToMember(decodedToken, fcmToken);
+    Member member = memberMapper.tokenToMember(decodedToken);
     if (existsByEmail(member.getEmail())) {
-      return updateTokenExistMember(fcmToken, member.getEmail());
+      return updateTokenExistMember(member.getEmail());
     } else {
       return saveNewMember(member);
     }
   }
 
-  private MemberRegisterDto updateTokenExistMember(String email, String fcmToken) {
+  private MemberRegisterDto updateTokenExistMember(String email) {
     Member savedMember = findByEmail(email);
-    if (!savedMember.getFcmToken().equals(fcmToken)) {
-      savedMember.updateToken(fcmToken);
-    }
     return memberMapper.toMemberRegisterDTO(savedMember);
   }
 
@@ -180,5 +177,11 @@ public class MemberServiceImpl implements MemberService {
   public void deleteMember(Long memberId) {
     Member member = findById(memberId);
     member.delete();
+  }
+
+  @Override
+  public void updateNotificationSettings(Long memberId, String fcmToken, String timezone) {
+    Member member = findById(memberId);
+    member.updateNotificationSettings(fcmToken, timezone);
   }
 }
