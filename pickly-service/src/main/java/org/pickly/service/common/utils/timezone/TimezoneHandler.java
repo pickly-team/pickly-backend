@@ -6,9 +6,9 @@ import java.time.ZoneOffset;
 
 public class TimezoneHandler {
 
-  // DB에 KST로 저장되고 화면에도 KST 기준으로 줘야 함
-  private static final ZoneOffset OFFSET = ZoneOffset.of("+00:00");
-  private static final ZoneId ZONE_ID = ZoneId.of("Asia/Seoul");
+  // DB에 UTC로 저장되고 화면에는 KST 기준으로 줘야 함
+  private static final ZoneOffset OFFSET = ZoneOffset.of("+09:00");
+  private static final ZoneId ZONE_ID = ZoneId.of("UTC");
 
 
   public static long convertToUnix(LocalDateTime dateTime) {
