@@ -33,6 +33,7 @@ create table member
     nickname      varchar(20)             not null,
     profile_emoji text,
     fcm_token     varchar(200),
+    timezone      varchar(20),
     created_at    timestamp default now() not null,
     updated_at    timestamp,
     deleted_at    timestamp

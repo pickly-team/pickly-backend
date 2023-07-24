@@ -119,4 +119,21 @@ class MemberServiceSpec extends Specification {
 
         found != null
     }
+
+    def "사용자 알림 설정"() {
+        given:
+        var fcmToken = "FCM_TOKEN"
+        var timezone = "Asia/Seoul"
+        var member = memberRepository.save(memberFactory.testMember())
+
+        when:
+        memberService.updateNotificationSettings(member.id, fcmToken, timezone);
+
+        then:
+        var found = memberRepository.findById(member.id).orElse(null)
+
+        found != null
+        member.fcmToken == fcmToken
+        member.timezone == timezone
+    }
 }
