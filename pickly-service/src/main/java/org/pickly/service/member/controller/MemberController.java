@@ -17,6 +17,7 @@ import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.FcmTokenReq;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.request.MemberStatusReq;
+import org.pickly.service.member.controller.request.NotificationSettingsUpdateReq;
 import org.pickly.service.member.controller.response.*;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
@@ -123,6 +124,23 @@ public class MemberController {
         memberService.setHardMode(memberId, memberMapper.toStatusDTO(request)));
   }
 
+
+  @PutMapping("/notification-settings")
+  @Operation(summary = "특정 유저의 알림 설정을 변경한다.")
+  public void updateNotificationSettings(
+      @RequestHeader("Authorization")
+      String authorization,
+
+      @RequestBody
+      @Valid
+      NotificationSettingsUpdateReq request
+  ) {
+    String token = RequestUtil.getAuthorizationToken(authorization);
+    Long memberId = memberService.getMemberIdByToken(token).getId();
+
+    memberService.updateNotificationSettings(memberId, token, request.getTimezone());
+  }
+
   @DeleteMapping("/me")
   @ResponseStatus(NO_CONTENT)
   @Operation(summary = "유저를 탈퇴한다.")
@@ -140,7 +158,7 @@ public class MemberController {
       @RequestBody @Valid FcmTokenReq tokenReq
   ) {
     String token = RequestUtil.getAuthorizationToken(authorization);
-    MemberRegisterDto memberRegisterDto = memberService.register(token, tokenReq.getFcmToken());
+    MemberRegisterDto memberRegisterDto = memberService.register(tokenReq.getFcmToken());
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
     return ResponseEntity.ok(response);
   }

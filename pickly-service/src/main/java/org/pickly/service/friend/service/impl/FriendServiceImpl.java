@@ -30,7 +30,6 @@ public class FriendServiceImpl implements FriendService {
 
   private static final int LAST_ITEM = 1;
   static final boolean FRIEND_NOTIFICATION_ON = true;
-  private final BlockService blockService;
   private final FriendRepository friendRepository;
   private final FriendQueryRepository friendQueryRepository;
   private final MemberService memberService;

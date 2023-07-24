@@ -1,9 +1,9 @@
 INSERT INTO member
-(username, password, is_hard_mode, email, name, nickname, profile_emoji, fcm_token)
-VALUES ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '😎', null),
-       ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳', null),
-       ('test3', 'ohmygod', false, 'test3@gmail.com', '테스트3', '테스트3', '🫥', null),
-       ('test4', 'ohmygod', false, 'test4@gmail.com', '테스트4', '테스트4', '😪', null);
+(username, password, is_hard_mode, email, name, nickname, profile_emoji, fcm_token, timezone)
+VALUES ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '😎', null, 'UTC'),
+       ('test2', 'ohmygod', false, 'test2@gmail.com', '테스트2', '테스트2', '😳', null, 'UTC'),
+       ('test3', 'ohmygod', false, 'test3@gmail.com', '테스트3', '테스트3', '🫥', null, 'UTC'),
+       ('test4', 'ohmygod', false, 'test4@gmail.com', '테스트4', '테스트4', '😪', null, 'UTC');
 
 INSERT INTO block
 (blockee_id, blocker_id, bookmark_id)

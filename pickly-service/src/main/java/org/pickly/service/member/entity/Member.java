@@ -43,6 +43,9 @@ public class Member extends BaseEntity {
   @Column(name = "fcm_token", length = 200)
   private String fcmToken;
 
+  @Column(name = "timezone", length = 20)
+  private String timezone;
+
   public void updateToken(final String newToken) {
     this.fcmToken = newToken;
   }
@@ -59,5 +62,10 @@ public class Member extends BaseEntity {
 
   public MemberMode isHardMode(Boolean isHardMode) {
     return isHardMode ? MemberMode.HARD : MemberMode.NORMAL;
+  }
+
+  public void updateNotificationSettings(String fcmToken, String timezone) {
+    this.fcmToken = fcmToken;
+    this.timezone = timezone;
   }
 }
