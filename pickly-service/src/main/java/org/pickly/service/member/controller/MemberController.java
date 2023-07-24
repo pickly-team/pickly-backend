@@ -14,7 +14,6 @@ import org.pickly.service.common.utils.base.RequestUtil;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.common.MemberMapper;
-import org.pickly.service.member.controller.request.FcmTokenReq;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.request.MemberStatusReq;
 import org.pickly.service.member.controller.request.NotificationSettingsUpdateReq;
@@ -154,11 +153,10 @@ public class MemberController {
   @PostMapping("/register")
   @Operation(summary = "회원가입")
   public ResponseEntity<MemberRegisterRes> register(
-      @RequestHeader("Authorization") String authorization,
-      @RequestBody @Valid FcmTokenReq tokenReq
+      @RequestHeader("Authorization") String authorization
   ) {
     String token = RequestUtil.getAuthorizationToken(authorization);
-    MemberRegisterDto memberRegisterDto = memberService.register(tokenReq.getFcmToken());
+    MemberRegisterDto memberRegisterDto = memberService.register(token);
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
     return ResponseEntity.ok(response);
   }
