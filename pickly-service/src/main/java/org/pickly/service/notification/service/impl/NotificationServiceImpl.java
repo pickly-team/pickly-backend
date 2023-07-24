@@ -1,6 +1,7 @@
 package org.pickly.service.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.member.entity.Member;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -54,7 +56,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     List<NotificationTemplate> templates = notificationTemplateService.findAllByNotificationType(NotificationType.NORMAL);
     LocalDateTime now = LocalDateTime.now(ZoneId.of(KST));
-
     for (Map.Entry<Member, List<Bookmark>> entry : unreadBookmarks.entrySet()) {
       Long memberId = entry.getKey().getId();
       NotificationStandard standard = notificationStandardService.findByMemberId(memberId);
@@ -115,11 +116,13 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
+  @Transactional
   public void saveAll(List<Notification> notifications) {
     notificationJdbcRepository.saveAll(notifications);
   }
 
   @Override
+  @Transactional
   public void updateAllToSend(List<Notification> notifications) {
     List<Long> ids = notifications.stream().map(Notification::getId).toList();
     notificationRepository.updateAllToSend(ids);
