@@ -1,5 +1,6 @@
 package org.pickly.service.block.service.impl;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.BusinessException;
 import org.pickly.common.error.exception.ErrorCode;
@@ -12,12 +13,11 @@ import org.pickly.service.block.service.dto.BlockMemberDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.friend.service.interfaces.FriendService;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +27,8 @@ public class BlockServiceImpl implements BlockService {
   private final MemberService memberService;
 
   private final BookmarkService bookmarkService;
+
+  private final FriendService friendService;
 
   private final BlockRepository blockRepository;
 
@@ -41,6 +43,9 @@ public class BlockServiceImpl implements BlockService {
     Member blockee = memberService.findById(blockeeId);
 
     blockRepository.save(new Block(blocker, blockee));
+
+    friendService.unfollow(blockerId, blockeeId);
+    friendService.unfollow(blockeeId, blockerId);
   }
 
   @Override
@@ -72,6 +77,7 @@ public class BlockServiceImpl implements BlockService {
     Bookmark bookmark = bookmarkService.findById(bookmarkId);
 
     blockRepository.save(new Block(blocker, bookmark));
+    bookmarkService.cancelLikeBookmark(bookmarkId);
   }
 
   @Override
