@@ -27,7 +27,7 @@ public class CommentMapper {
         .build();
   }
 
-  public BookmarkCommentRes toBookmarkCommentsResponse(CommentDTO dto) {
+  public BookmarkCommentRes toBookmarkCommentsResponse(CommentDTO dto, Long memberId) {
     return BookmarkCommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
@@ -35,7 +35,7 @@ public class CommentMapper {
         .profileEmoji(dto.getProfileEmoji())
         .bookmark(dto.getBookmark())
         .category(dto.getCategory())
-        .isOwnerComment(dto.getIsOwnerComment())
+        .isOwnerComment(dto.getMemberId().equals(memberId))
         .content(dto.getContent())
         .createdTimestamp(dto.getCreatedTimestamp())
         .build();
