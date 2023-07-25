@@ -8,8 +8,8 @@ import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
+import org.pickly.service.comment.service.dto.BookmarkCommentDTO;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
-import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.member.entity.Member;
@@ -32,17 +32,17 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentDTO create(final Long bookmarkId, final Long memberId,
+  public BookmarkCommentDTO create(final Long bookmarkId, final Long memberId,
       final CommentCreateDTO request) {
     Bookmark bookmark = bookmarkService.findByIdWithCategory(bookmarkId);
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);
-    return commentMapper.toDTO(comment);
+    return commentMapper.toBookmarkCommentDTO(comment);
   }
 
   @Override
-  public List<CommentDTO> findByBookmark(final Long bookmarkId) {
+  public List<BookmarkCommentDTO> findByBookmark(final Long bookmarkId) {
     return commentQueryRepository.findComments(null, bookmarkId);
   }
 
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<CommentDTO> findByMember(final Long memberId) {
+  public List<BookmarkCommentDTO> findByMember(Long memberId) {
     return commentQueryRepository.findComments(memberId, null);
   }
 
@@ -66,10 +66,10 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
+  public BookmarkCommentDTO update(final Long commentId, final CommentUpdateDTO request) {
     Comment comment = findById(commentId);
     comment.updateContent(request.getContent());
-    return commentMapper.toDTO(comment);
+    return commentMapper.toBookmarkCommentDTO(comment);
   }
 
   public Comment findById(final Long id) {

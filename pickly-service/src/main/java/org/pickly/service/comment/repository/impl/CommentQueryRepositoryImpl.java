@@ -5,8 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
-import org.pickly.service.comment.service.dto.CommentDTO;
-import org.pickly.service.comment.service.dto.QCommentDTO;
+import org.pickly.service.comment.service.dto.BookmarkCommentDTO;
+import org.pickly.service.comment.service.dto.QBookmarkCommentDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -46,9 +46,9 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
   }
 
   @Override
-  public List<CommentDTO> findComments(Long memberId, Long bookmarkId) {
+  public List<BookmarkCommentDTO> findComments(Long memberId, Long bookmarkId) {
     return queryFactory
-        .select(new QCommentDTO(comment, member.nickname, bookmark.title, category.name, member.profileEmoji, member.id
+        .select(new QBookmarkCommentDTO(comment, member.nickname, bookmark.title, category.name, member.profileEmoji, member.id
         ))
         .from(comment)
         .leftJoin(comment.member, member)
