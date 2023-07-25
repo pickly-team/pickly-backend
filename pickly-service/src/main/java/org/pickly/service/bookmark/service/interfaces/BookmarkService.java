@@ -21,6 +21,8 @@ public interface BookmarkService {
 
   Bookmark findById(Long id);
 
+  Bookmark findByIdAndRead(Long id, Long memberId);
+
   Bookmark findByIdWithCategory(Long id);
 
   String getTitleFromUrl(String url);
