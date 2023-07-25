@@ -78,18 +78,21 @@ public class CommentController {
   ) {
     CommentDTO dto = commentService.create(bookmarkId, memberId,
         commentMapper.toCreateDTO(request));
-    return commentMapper.toBookmarkCommentsResponse(dto);
+    return commentMapper.toBookmarkCommentsResponse(dto, memberId);
   }
 
   @GetMapping("/bookmarks/{bookmarkId}/comments")
   @Operation(summary = "특정 북마크에 달린 댓글을 전체 조회한다.")
   public List<BookmarkCommentRes> findByBookmark(
       @Parameter(name = "bookmarkId", description = "Bookmark ID 값", example = "1", required = true)
-      @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId
+      @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId,
+
+      @Parameter(name = "memberId", description = "댓글을 조회하는 Member ID 값", example = "1", required = true)
+      @Positive(message = "Member ID는 양수입니다.") @RequestParam final Long memberId
   ) {
     List<CommentDTO> dtoList = commentService.findByBookmark(bookmarkId);
     return dtoList.stream()
-        .map(commentMapper::toBookmarkCommentsResponse)
+        .map(dto -> commentMapper.toBookmarkCommentsResponse(dto, memberId))
         .toList();
   }
 
