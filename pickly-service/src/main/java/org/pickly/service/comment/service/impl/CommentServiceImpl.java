@@ -66,8 +66,15 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
+  public CommentDTO update(final Long commentId, final Long memberId, final CommentUpdateDTO request) {
     Comment comment = findById(commentId);
+
+    Member member = comment.getMember();
+
+    if (!member.getId().equals(memberId)) {
+      throw new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
+    }
+
     comment.updateContent(request.getContent());
     return commentMapper.toBookmarkCommentDTO(comment);
   }
