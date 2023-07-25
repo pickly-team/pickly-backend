@@ -56,7 +56,6 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
     QMember member = new QMember("member");
     QFriend follower = new QFriend("follower");
     QFriend friend = new QFriend("friend");
-    QBlock block = new QBlock("block");
 
     String cursorId = (String) pageRequest.getCursorId();
     Integer size = pageRequest.getPageSize();
@@ -70,11 +69,9 @@ public class FriendQueryRepositoryImpl implements FriendQueryRepository {
             follower.followee.id.eq(friend.follower.id),
             follower.follower.id.eq(friend.followee.id)
         )
-        .leftJoin(block).on(block.blocker.id.eq(friend.followee.id))
         .innerJoin(member).on(friend.follower.id.eq(member.id))
         .where(
             friend.followee.id.eq(memberId),
-            block.blockee.id.ne(friend.follower.id),
             gtFollowerUsername(cursorId)
         )
         .orderBy(friend.follower.username.asc())
