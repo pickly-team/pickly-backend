@@ -48,7 +48,7 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
   @Override
   public List<CommentDTO> findComments(Long memberId, Long bookmarkId) {
     return queryFactory
-        .select(new QCommentDTO(comment, member.nickname, bookmark.id, bookmark.title, category.name, member.profileEmoji, member.id
+        .select(new QCommentDTO(comment, member.nickname, bookmark.title, category.name, member.profileEmoji, member.id, bookmark.id
         ))
         .from(comment)
         .leftJoin(comment.member, member)

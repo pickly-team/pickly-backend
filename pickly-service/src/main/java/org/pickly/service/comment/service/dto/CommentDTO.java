@@ -33,12 +33,12 @@ public class CommentDTO {
   }
 
   @QueryProjection
-  public CommentDTO(Comment comment, String member, Long bookmarkId, String bookmark, String category, String profileEmoji, Long memberId) {
+  public CommentDTO(Comment comment, String member, String bookmark, String category, String profileEmoji, Long memberId, Long bookmarkId) {
     this.id = comment.getId();
     this.member = member;
     this.profileEmoji = profileEmoji;
-    this.memberId = memberId;
     this.bookmarkId = bookmarkId;
+    this.memberId = memberId;
     this.bookmark = bookmark;
     this.category = category;
     this.isOwnerComment = comment.getIsOwnerComment();

@@ -58,7 +58,7 @@ public class CommentController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    List<CommentDTO> dtoList = commentService.findByBookmark(memberId);
+    List<CommentDTO> dtoList = commentService.findByMember(memberId);
     return dtoList.stream()
         .map(commentMapper::toMemberCommentsResponse)
         .toList();
