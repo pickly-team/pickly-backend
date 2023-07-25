@@ -127,7 +127,7 @@ class MemberServiceSpec extends Specification {
         var member = memberRepository.save(memberFactory.testMember())
 
         when:
-        memberService.updateNotificationSettings(member.id, fcmToken, timezone);
+        memberService.updateNotificationSettings(member.id, timezone, fcmToken);
 
         then:
         var found = memberRepository.findById(member.id).orElse(null)
