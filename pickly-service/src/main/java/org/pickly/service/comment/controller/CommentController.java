@@ -113,10 +113,13 @@ public class CommentController {
       @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
       @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId,
 
+      @Parameter(name = "memberId", description = "댓글을 수정하는 Member ID 값", example = "1", required = true)
+      @Positive(message = "Member ID는 양수입니다.") @RequestParam final Long memberId,
+
       @Valid @RequestBody CommentUpdateReq request
   ) {
-    CommentDTO dto = commentService.update(commentId, commentMapper.toUpdateDTO(request));
-    return commentMapper.toBookmarkCommentsResponse(dto);
+    CommentDTO dto = commentService.update(commentId, memberId, commentMapper.toUpdateDTO(request));
+    return commentMapper.toBookmarkCommentsResponse(dto, memberId);
   }
 
 }
