@@ -6,14 +6,14 @@ import org.pickly.service.comment.controller.response.BookmarkCommentRes;
 import org.pickly.service.comment.controller.response.MemberCommentRes;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
+import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.dto.CommentUpdateDTO;
-import org.pickly.service.comment.service.dto.BookmarkCommentDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CommentMapper {
 
-  public MemberCommentRes toMemberCommentsResponse(BookmarkCommentDTO dto) {
+  public MemberCommentRes toMemberCommentsResponse(CommentDTO dto) {
     return MemberCommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
@@ -26,7 +26,7 @@ public class CommentMapper {
         .build();
   }
 
-  public BookmarkCommentRes toBookmarkCommentsResponse(BookmarkCommentDTO dto) {
+  public BookmarkCommentRes toBookmarkCommentsResponse(CommentDTO dto) {
     return BookmarkCommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
@@ -40,8 +40,8 @@ public class CommentMapper {
         .build();
   }
 
-  public BookmarkCommentDTO toBookmarkCommentDTO(Comment comment) {
-    return new BookmarkCommentDTO(comment);
+  public CommentDTO toBookmarkCommentDTO(Comment comment) {
+    return new CommentDTO(comment);
   }
 
   public CommentCreateDTO toCreateDTO(CommentCreateReq req) {

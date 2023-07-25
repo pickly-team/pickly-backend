@@ -14,7 +14,7 @@ import org.pickly.service.comment.controller.request.CommentCreateReq;
 import org.pickly.service.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.comment.controller.response.BookmarkCommentRes;
 import org.pickly.service.comment.controller.response.MemberCommentRes;
-import org.pickly.service.comment.service.dto.BookmarkCommentDTO;
+import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +58,7 @@ public class CommentController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    List<BookmarkCommentDTO> dtoList = commentService.findByBookmark(memberId);
+    List<CommentDTO> dtoList = commentService.findByBookmark(memberId);
     return dtoList.stream()
         .map(commentMapper::toMemberCommentsResponse)
         .toList();
@@ -76,7 +76,7 @@ public class CommentController {
 
       @Valid @RequestBody CommentCreateReq request
   ) {
-    BookmarkCommentDTO dto = commentService.create(bookmarkId, memberId,
+    CommentDTO dto = commentService.create(bookmarkId, memberId,
         commentMapper.toCreateDTO(request));
     return commentMapper.toBookmarkCommentsResponse(dto);
   }
@@ -87,7 +87,7 @@ public class CommentController {
       @Parameter(name = "bookmarkId", description = "Bookmark ID 값", example = "1", required = true)
       @Positive(message = "Bookmark ID는 양수입니다.") @PathVariable final Long bookmarkId
   ) {
-    List<BookmarkCommentDTO> dtoList = commentService.findByBookmark(bookmarkId);
+    List<CommentDTO> dtoList = commentService.findByBookmark(bookmarkId);
     return dtoList.stream()
         .map(commentMapper::toBookmarkCommentsResponse)
         .toList();
@@ -112,7 +112,7 @@ public class CommentController {
 
       @Valid @RequestBody CommentUpdateReq request
   ) {
-    BookmarkCommentDTO dto = commentService.update(commentId, commentMapper.toUpdateDTO(request));
+    CommentDTO dto = commentService.update(commentId, commentMapper.toUpdateDTO(request));
     return commentMapper.toBookmarkCommentsResponse(dto);
   }
 

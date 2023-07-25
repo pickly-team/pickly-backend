@@ -6,7 +6,7 @@ import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 
 @Getter
-public class BookmarkCommentDTO {
+public class CommentDTO {
 
   private Long id;
   private String member;
@@ -18,7 +18,7 @@ public class BookmarkCommentDTO {
   private String content;
   private Long createdTimestamp;
 
-  public BookmarkCommentDTO(Comment comment) {
+  public CommentDTO(Comment comment) {
     this.id = comment.getId();
     this.member = comment.getMember().getNickname();
     this.profileEmoji = comment.getMember().getProfileEmoji();
@@ -31,7 +31,7 @@ public class BookmarkCommentDTO {
   }
 
   @QueryProjection
-  public BookmarkCommentDTO(Comment comment, String member, String bookmark, String category, String profileEmoji, Long memberId) {
+  public CommentDTO(Comment comment, String member, String bookmark, String category, String profileEmoji, Long memberId) {
     this.id = comment.getId();
     this.member = member;
     this.profileEmoji = profileEmoji;
