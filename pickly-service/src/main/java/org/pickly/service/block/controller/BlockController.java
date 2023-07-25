@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.block.common.BlockMapper;
@@ -14,6 +15,7 @@ import org.pickly.service.block.service.BlockService;
 import org.pickly.service.block.service.dto.BlockBookmarkDTO;
 import org.pickly.service.block.service.dto.BlockMemberDTO;
 import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,19 +73,28 @@ public class BlockController {
 
   @GetMapping("/member/blocks/{blockerId}")
   @Operation(summary = "차단한 유저 목록을 조회한다.")
-  public BlockMemberRes getBlockedMembers(
+  public PageResponse<BlockMemberRes> getBlockedMembers(
       @Parameter(name = "blockerId", description = "유저 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.")
       @PathVariable final Long blockerId,
 
-      @Parameter(name = "cursorId", description = "마지막 끝의 Id", example = "1", required = true) final @RequestParam(required = false) String cursorId,
+      @Parameter(name = "cursorId", description = "마지막 끝의 Id", example = "1") final @RequestParam(required = false) String cursorId,
 
-      @Parameter(name = "size", description = "페이지 사이즈", example = "1", required = true) final @RequestParam(defaultValue = "15") Integer size
+      @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1") final @RequestParam(defaultValue = "15") Integer pageSize
   ) {
-    PageRequest pageRequest = new PageRequest(cursorId, size);
-    List<BlockMemberDTO> blockedMembers = blockService.getBlockedMembers(blockerId, pageRequest);
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    List<BlockMemberRes> blockedMembers = blockService.getBlockedMembers(blockerId, pageRequest)
+        .stream()
+        .map(BlockMapper::toMember)
+        .collect(Collectors.toList());
 
-    return BlockMapper.toMember(blockedMembers);
+    PageResponse<BlockMemberRes> response = new PageResponse<>(
+        blockedMembers.size(),
+        pageRequest.getPageSize(), blockedMembers);
+
+    response.removeElement(pageRequest.getPageSize());
+
+    return response;
   }
 
 
@@ -118,16 +129,26 @@ public class BlockController {
 
   @GetMapping("/bookmark/blocks/{blockerId}")
   @Operation(summary = "차단된 북마크 목록을 조회한다.")
-  public BlockBookmarkRes getBlockedBookmarks(
+  public PageResponse<BlockBookmarkRes> getBlockedBookmarks(
       @Parameter(name = "blockerId", description = "북마크 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
-      @Parameter(name = "cursorId", description = "페이지 번호", example = "1", required = true) final @RequestParam(required = false) String cursorId,
-      @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1", required = true) final @RequestParam(defaultValue = "15") Integer pageSize
+      @Parameter(name = "cursorId", description = "마지막 member의 Id", example = "1") final @RequestParam(required = false) String cursorId,
+      @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1") final @RequestParam(defaultValue = "15") Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    List<BlockBookmarkDTO> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, pageRequest);
 
-    return BlockMapper.toBookmark(blockedBookmarks);
+    List<BlockBookmarkRes> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, pageRequest)
+        .stream()
+        .map(BlockMapper::toBookmark)
+        .collect(Collectors.toList());
+
+    PageResponse<BlockBookmarkRes> response = new PageResponse<>(
+        blockedBookmarks.size(),
+        pageRequest.getPageSize(), blockedBookmarks);
+
+    response.removeElement(pageRequest.getPageSize());
+
+    return response;
   }
 }

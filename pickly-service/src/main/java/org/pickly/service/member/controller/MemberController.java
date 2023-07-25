@@ -1,7 +1,5 @@
 package org.pickly.service.member.controller;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.base.RequestUtil;
 import org.pickly.service.common.utils.page.PageRequest;
@@ -19,28 +16,18 @@ import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.member.controller.request.MemberStatusReq;
-import org.pickly.service.member.controller.response.HardModeRes;
-import org.pickly.service.member.controller.response.MemberModeRes;
-import org.pickly.service.member.controller.response.MemberProfileRes;
-import org.pickly.service.member.controller.response.MemberRegisterRes;
-import org.pickly.service.member.controller.response.MyProfileRes;
-import org.pickly.service.member.controller.response.SearchMemberResultRes;
+import org.pickly.service.member.controller.request.NotificationSettingsUpdateReq;
+import org.pickly.service.member.controller.response.*;
 import org.pickly.service.member.service.dto.MemberProfileDTO;
 import org.pickly.service.member.service.dto.MemberRegisterDto;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
@@ -136,6 +123,24 @@ public class MemberController {
         memberService.setHardMode(memberId, memberMapper.toStatusDTO(request)));
   }
 
+
+  @PutMapping("/{memberId}/notification-settings")
+  @Operation(summary = "특정 유저의 알림 설정을 변경한다.")
+  public void updateNotificationSettings(
+      @RequestParam
+      @Positive(message = "유저 ID는 양수입니다.")
+      @Schema(description = "Member ID", example = "1")
+      Long memberId,
+
+      @RequestBody
+      @Valid
+      NotificationSettingsUpdateReq request
+  ) {
+    memberService.updateNotificationSettings(
+        memberId, request.getTimezone(), request.getFcmToken()
+    );
+  }
+
   @DeleteMapping("/me")
   @ResponseStatus(NO_CONTENT)
   @Operation(summary = "유저를 탈퇴한다.")
@@ -149,7 +154,8 @@ public class MemberController {
   @PostMapping("/register")
   @Operation(summary = "회원가입")
   public ResponseEntity<MemberRegisterRes> register(
-      @RequestHeader("Authorization") String authorization) {
+      @RequestHeader("Authorization") String authorization
+  ) {
     String token = RequestUtil.getAuthorizationToken(authorization);
     MemberRegisterDto memberRegisterDto = memberService.register(token);
     MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);

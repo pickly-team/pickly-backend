@@ -29,20 +29,16 @@ public class NotificationScheduler {
 
   @Scheduled(cron = "0 0/15 * * * *")
   public void makeNormalNotification() {
-
     Map<Member, List<Bookmark>> unreadBookmarks = bookmarkService.findAllUnreadBookmark();
     List<Notification> notifications = notificationService.makeNormals(unreadBookmarks);
     notificationService.saveAll(notifications);
-
   }
 
   @Scheduled(cron = "0 0/30 * * * *")
   public void sendNormalNotification() {
-
     LocalDateTime now = LocalDateTime.now(ZoneId.of(KST));
     List<Notification> notifications = notificationService.getNotificationsToSend(now);
     notificationSender.sendMessage(notifications);
-
   }
 
 }

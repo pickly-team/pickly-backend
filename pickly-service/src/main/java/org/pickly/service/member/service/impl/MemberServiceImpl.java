@@ -47,6 +47,18 @@ public class MemberServiceImpl implements MemberService {
     }
   }
 
+  public boolean existsByEmail(String email) {
+    return memberRepository.existsByEmailAndDeletedAtIsNull(email);
+  }
+
+  public boolean existsByNickname(String nickname) {
+    return memberRepository.existsByNicknameAndDeletedAtIsNull(nickname);
+  }
+
+  public boolean existsByUsername(String username) {
+    return memberRepository.existsByUsernameAndDeletedAtIsNull(username);
+  }
+
   @Override
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
@@ -64,6 +76,19 @@ public class MemberServiceImpl implements MemberService {
   public MemberRegisterDto register(String token) {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberMapper.tokenToMember(decodedToken);
+    if (existsByEmail(member.getEmail())) {
+      return updateTokenExistMember(member.getEmail());
+    } else {
+      return saveNewMember(member);
+    }
+  }
+
+  private MemberRegisterDto updateTokenExistMember(String email) {
+    Member savedMember = findByEmail(email);
+    return memberMapper.toMemberRegisterDTO(savedMember);
+  }
+
+  private MemberRegisterDto saveNewMember(Member member) {
     memberRepository.save(member);
     createNotificationStandard(member);
     return memberMapper.toMemberRegisterDTO(member);
@@ -131,6 +156,7 @@ public class MemberServiceImpl implements MemberService {
     return memberMapper.toMemberStatusDTO(member.isHardMode(member.getIsHardMode()));
   }
 
+  @Transactional(readOnly = true)
   public MemberModeDTO findModeByMemberId(final Long memberId) {
     Member member = findById(memberId);
     NotificationStandard standard = findNotificationStandardByMemberId(memberId);
@@ -138,8 +164,15 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Member findById(Long id) {
     return memberRepository.findByIdAndDeletedAtIsNull(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
+  }
+
+  @Transactional(readOnly = true)
+  public Member findByEmail(String email) {
+    return memberRepository.findByEmailAndDeletedAtIsNull(email)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
   }
 
@@ -147,5 +180,11 @@ public class MemberServiceImpl implements MemberService {
   public void deleteMember(Long memberId) {
     Member member = findById(memberId);
     member.delete();
+  }
+
+  @Override
+  public void updateNotificationSettings(Long memberId, String timezone, String fcmToken) {
+    Member member = findById(memberId);
+    member.updateNotificationSettings(fcmToken, timezone);
   }
 }
