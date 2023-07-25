@@ -123,8 +123,14 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
+  public Bookmark findByIdAndRead(Long id, Long memberId) {
+    bookmarkRepository.readByUser(id, memberId);
+    return bookmarkRepository.findOneById(id)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+  }
+
+  @Override
   public Bookmark findById(Long id) {
-    bookmarkRepository.readByUser(id);
     return bookmarkRepository.findOneById(id)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
   }
