@@ -3,6 +3,7 @@ package org.pickly.service.member.service.impl;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.block.repository.interfaces.BlockRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.common.utils.page.PageRequest;
@@ -31,6 +32,8 @@ public class MemberServiceImpl implements MemberService {
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
   private final BookmarkRepository bookmarkRepository;
+
+  private final BlockRepository blockRepository;
   private final NotificationStandardRepository notificationStandardRepository;
   private final AuthTokenUtil authTokenUtil;
 
@@ -105,7 +108,7 @@ public class MemberServiceImpl implements MemberService {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberRepository.findByEmail(decodedToken.getEmail())
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저입니다."));
-    return memberMapper.toMemberProfileDTO(member, false);
+    return memberMapper.toMemberProfileDTO(member, false, false);
   }
 
   @Override
@@ -120,7 +123,11 @@ public class MemberServiceImpl implements MemberService {
     return searchMemberResults.stream().peek(searchMemberResult -> {
       boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(memberId,
           searchMemberResult.getMemberId());
+      boolean isBlocked = blockRepository.existsByBlockerIdAndBlockeeId(memberId,
+          searchMemberResult.getMemberId());
+
       searchMemberResult.setFollowingFlag(isFollowing);
+      searchMemberResult.setBlockedFlag(isBlocked);
     }).toList();
   }
 
@@ -143,8 +150,9 @@ public class MemberServiceImpl implements MemberService {
   @Transactional(readOnly = true)
   public MemberProfileDTO findProfileById(final Long loginId, final Long memberId) {
     boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
+    boolean isBlocked = blockRepository.existsByBlockerIdAndBlockeeId(loginId, memberId);
     Member member = findById(memberId);
-    return memberMapper.toMemberProfileDTO(member, isFollowing);
+    return memberMapper.toMemberProfileDTO(member, isFollowing, isBlocked);
   }
 
   @Override
