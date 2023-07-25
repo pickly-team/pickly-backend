@@ -11,6 +11,7 @@ public class SearchMemberResultResDTO {
   private String nickname;
   private Boolean isFollowing;
   private String emoji;
+  private Boolean isBlocked;
 
   public SearchMemberResultResDTO(Long memberId, String nickname, String emoji) {
     this.memberId = memberId;
@@ -20,5 +21,9 @@ public class SearchMemberResultResDTO {
 
   public void setFollowingFlag(Boolean isFollowing) {
     this.isFollowing = isFollowing;
+  }
+
+  public void setBlockedFlag(Boolean isBlocked) {
+    this.isBlocked = isBlocked;
   }
 }
