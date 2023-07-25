@@ -25,4 +25,7 @@ public class MemberProfileRes {
 
   @Schema(description = "is login member's followee?", example = "true")
   private Boolean isFollowing;
+
+  @Schema(description = "is login member's blocked?", example = "false")
+  private Boolean isBlocked;
 }
