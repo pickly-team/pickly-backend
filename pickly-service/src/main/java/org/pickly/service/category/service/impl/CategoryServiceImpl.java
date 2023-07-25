@@ -1,6 +1,7 @@
 package org.pickly.service.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.category.common.CategoryMapper;
 import org.pickly.service.category.controller.request.CategoryOrderNumUpdateReq;
 import org.pickly.service.category.controller.request.CategoryRequestDTO;
@@ -18,6 +19,7 @@ import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
   private final CategoryQueryRepository categoryQueryRepository;
   private final CategoryJdbcRepository categoryJdbcRepository;
   private final CategoryMapper categoryMapper;
-
+  private final ApplicationEventPublisher eventPublisher;
   private static final int LAST_ITEM = 1;
 
   @Transactional
@@ -106,6 +108,7 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = categoryRepository.findById(categoryId)
             .orElseThrow();
     category.delete();
+    eventPublisher.publishEvent(category.getId());
   }
 
   @Transactional

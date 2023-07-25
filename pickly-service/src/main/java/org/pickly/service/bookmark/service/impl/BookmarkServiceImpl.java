@@ -28,7 +28,9 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.custom.MemberNotFoundException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.interfaces.MemberService;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -39,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
@@ -237,5 +241,20 @@ public class BookmarkServiceImpl implements BookmarkService {
             Bookmark::getMember, LinkedHashMap::new, Collectors.toList()
         )
     );
+  }
+
+  /**
+   * @description : 카테고리 삭제시 해당 카테고리에 속한 북마크 삭제
+   * @param categoryId
+   */
+  @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void findBookmarkByCategoryIdAndDelete(final Long categoryId) {
+    PageRequest pageRequest = new PageRequest(null, 15);
+    LocalDateTime now = TimezoneHandler.getNowByZone();
+    List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
+        categoryId);
+    List<Long> bookmarkIds = bookmarks.stream().map(Bookmark::getId).toList();
+    bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
   }
 }
