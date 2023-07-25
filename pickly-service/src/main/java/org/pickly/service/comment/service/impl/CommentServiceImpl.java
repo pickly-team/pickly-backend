@@ -8,8 +8,8 @@ import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
-import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
+import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.member.entity.Member;
@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);
-    return commentMapper.toDTO(comment);
+    return commentMapper.toBookmarkCommentDTO(comment);
   }
 
   @Override
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<CommentDTO> findByMember(final Long memberId) {
+  public List<CommentDTO> findByMember(Long memberId) {
     return commentQueryRepository.findComments(memberId, null);
   }
 
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
   public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
     Comment comment = findById(commentId);
     comment.updateContent(request.getContent());
-    return commentMapper.toDTO(comment);
+    return commentMapper.toBookmarkCommentDTO(comment);
   }
 
   public Comment findById(final Long id) {

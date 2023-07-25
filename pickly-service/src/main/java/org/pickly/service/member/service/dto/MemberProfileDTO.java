@@ -14,4 +14,5 @@ public class MemberProfileDTO {
   private String nickname;
   private String profileEmoji;
   private Boolean isFollowing;
+  private Boolean isBlocked;
 }

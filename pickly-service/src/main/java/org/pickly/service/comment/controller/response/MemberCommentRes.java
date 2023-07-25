@@ -6,13 +6,19 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CommentRes {
+public class MemberCommentRes {
 
   @Schema(description = "Comment ID", example = "1")
   private Long id;
 
   @Schema(description = "Comment를 추가한 Member 닉네임", example = "피클리마스터")
   private String member;
+
+  @Schema(description = "Comment를 추가한 Member의 프로필 이모지", example = "😃")
+  private String profileEmoji;
+
+  @Schema(description = "bookmark ID", example = "1")
+  private Long bookmarkId;
 
   @Schema(description = "Comment를 추가한 Bookmark 제목", example = "JS 기초 다루기")
   private String bookmark;
