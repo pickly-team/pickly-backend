@@ -17,6 +17,9 @@ public class MemberCommentRes {
   @Schema(description = "Comment를 추가한 Member의 프로필 이모지", example = "😃")
   private String profileEmoji;
 
+  @Schema(description = "bookmark ID", example = "1")
+  private Long bookmarkId;
+
   @Schema(description = "Comment를 추가한 Bookmark 제목", example = "JS 기초 다루기")
   private String bookmark;
 
