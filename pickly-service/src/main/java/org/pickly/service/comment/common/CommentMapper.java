@@ -16,6 +16,8 @@ public class CommentMapper {
     return CommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
+        .memberId(dto.getMemberId())
+        .profileEmoji(dto.getProfileEmoji())
         .bookmark(dto.getBookmark())
         .category(dto.getCategory())
         .isOwnerComment(dto.getIsOwnerComment())

@@ -10,6 +10,8 @@ public class CommentDTO {
 
   private Long id;
   private String member;
+  private Long memberId;
+  private String profileEmoji;
   private String bookmark;
   private String category;
   private Boolean isOwnerComment;
@@ -19,6 +21,8 @@ public class CommentDTO {
   public CommentDTO(Comment comment) {
     this.id = comment.getId();
     this.member = comment.getMember().getNickname();
+    this.profileEmoji = comment.getMember().getProfileEmoji();
+    this.memberId = comment.getMember().getId();
     this.bookmark = comment.getBookmark().getTitle();
     this.category = comment.getBookmark().getCategory().getName();
     this.isOwnerComment = comment.getIsOwnerComment();
@@ -27,9 +31,11 @@ public class CommentDTO {
   }
 
   @QueryProjection
-  public CommentDTO(Comment comment, String member, String bookmark, String category) {
+  public CommentDTO(Comment comment, String member, String bookmark, String category, String profileEmoji, Long memberId) {
     this.id = comment.getId();
     this.member = member;
+    this.profileEmoji = profileEmoji;
+    this.memberId = memberId;
     this.bookmark = bookmark;
     this.category = category;
     this.isOwnerComment = comment.getIsOwnerComment();
