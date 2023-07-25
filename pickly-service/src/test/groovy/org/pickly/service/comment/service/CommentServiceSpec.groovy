@@ -55,10 +55,11 @@ class CommentServiceSpec extends Specification {
         bookmarkRepository.save(bookmark)
         var comment = commentFactory.testComment(member, bookmark, true, "첫번째 내용")
         commentRepository.save(comment)
+        var memberId = member.id
 
         when:
         CommentUpdateDTO request = new CommentUpdateDTO("두번째 내용")
-        def updateComment = commentService.update(comment.id, request)
+        def updateComment = commentService.update(comment.id, memberId, request)
 
         then:
         updateComment.isOwnerComment == true
