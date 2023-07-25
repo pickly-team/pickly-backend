@@ -13,5 +13,6 @@ public class SearchMemberResultRes {
   private String nickname;
   private Boolean isFollowing;
   private String emoji;
+  private Boolean isBlocked;
 
 }
