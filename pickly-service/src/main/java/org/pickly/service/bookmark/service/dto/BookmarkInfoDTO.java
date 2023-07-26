@@ -21,13 +21,13 @@ public class BookmarkInfoDTO {
     this.previewImageUrl = null;
   }
 
-  public void updateTitleAndImage(String title, String previewImageUrl) {
-    this.title = title.isBlank() ? makeTitle() : title;
+  public void updateTitleAndImage(String title, String previewImageUrl, String timezone) {
+    this.title = title.isBlank() ? makeTitle(timezone) : title;
     this.previewImageUrl = title.isBlank() ? null : previewImageUrl;
   }
 
-  private String makeTitle() {
-    LocalDateTime now = TimezoneHandler.getKSTnow();
+  private String makeTitle(String timezone) {
+    LocalDateTime now = TimezoneHandler.getNowInTimezone(timezone);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분의 북마크");
     return now.format(formatter);
   }
