@@ -16,4 +16,8 @@ public class NotificationSettingsUpdateReq {
   @Schema(description = "timezone", example = "Asia/Seoul")
   private String timezone;
 
+  @NotBlank(message = "유저의 fcm token을 입력해주세요.")
+  @Schema(description = "fcmToken", example = "aedjfajglk1249d~~")
+  private String fcmToken;
+
 }

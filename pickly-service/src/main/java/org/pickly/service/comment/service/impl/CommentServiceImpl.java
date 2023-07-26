@@ -1,11 +1,11 @@
 package org.pickly.service.comment.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.entity.Comment;
+import org.pickly.service.comment.exception.CommentException;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);
-    return commentMapper.toDTO(comment);
+    return commentMapper.toBookmarkCommentDTO(comment);
   }
 
   @Override
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<CommentDTO> findByMember(final Long memberId) {
+  public List<CommentDTO> findByMember(Long memberId) {
     return commentQueryRepository.findComments(memberId, null);
   }
 
@@ -66,15 +66,23 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   @Transactional
-  public CommentDTO update(final Long commentId, final CommentUpdateDTO request) {
+  public CommentDTO update(final Long commentId, final Long memberId, final CommentUpdateDTO request) {
     Comment comment = findById(commentId);
+
+    Member member = comment.getMember();
+
+    if (!member.getId().equals(memberId)) {
+      throw new CommentException.OnlyAuthorCanEditException();
+    }
+
     comment.updateContent(request.getContent());
-    return commentMapper.toDTO(comment);
+    return commentMapper.toBookmarkCommentDTO(comment);
   }
 
+  @Override
   public Comment findById(final Long id) {
     return commentRepository.findByIdAndDeletedAtNull(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+        .orElseThrow(CommentException.CommentNotFoundException::new);
   }
 
 }

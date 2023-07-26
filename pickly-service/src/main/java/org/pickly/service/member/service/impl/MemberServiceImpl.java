@@ -2,18 +2,20 @@ package org.pickly.service.member.service.impl;
 
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
-import org.pickly.common.error.exception.EntityNotFoundException;
+import org.pickly.service.block.repository.interfaces.BlockRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
 import org.pickly.service.member.entity.Member;
+import org.pickly.service.member.exception.MemberException;
 import org.pickly.service.member.repository.interfaces.MemberQueryRepository;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.dto.*;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
+import org.pickly.service.notification.exception.NotificationException;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,19 +33,21 @@ public class MemberServiceImpl implements MemberService {
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
   private final BookmarkRepository bookmarkRepository;
+
+  private final BlockRepository blockRepository;
   private final NotificationStandardRepository notificationStandardRepository;
   private final AuthTokenUtil authTokenUtil;
 
   @Transactional(readOnly = true)
   public NotificationStandard findNotificationStandardByMemberId(final Long memberId) {
     return notificationStandardRepository.findByMemberId(memberId)
-        .orElseThrow(() -> new EntityNotFoundException("요청 member의 알림 기준이 존재하지 않습니다."));
+        .orElseThrow(NotificationException.NotificationStandardNotFoundException::new);
   }
 
   @Override
   public void existsById(Long memberId) {
     if (!memberRepository.existsByIdAndDeletedAtIsNull(memberId)) {
-      throw new EntityNotFoundException("존재하지 않는 유저입니다.");
+      throw new MemberException.MemberNotFoundException();
     }
   }
 
@@ -104,8 +108,8 @@ public class MemberServiceImpl implements MemberService {
   public MemberProfileDTO getMemberIdByToken(String token) {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member member = memberRepository.findByEmail(decodedToken.getEmail())
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 유저입니다."));
-    return memberMapper.toMemberProfileDTO(member, false);
+        .orElseThrow(MemberException.MemberNotFoundException::new);
+    return memberMapper.toMemberProfileDTO(member, false, false);
   }
 
   @Override
@@ -120,7 +124,11 @@ public class MemberServiceImpl implements MemberService {
     return searchMemberResults.stream().peek(searchMemberResult -> {
       boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(memberId,
           searchMemberResult.getMemberId());
+      boolean isBlocked = blockRepository.existsByBlockerIdAndBlockeeId(memberId,
+          searchMemberResult.getMemberId());
+
       searchMemberResult.setFollowingFlag(isFollowing);
+      searchMemberResult.setBlockedFlag(isBlocked);
     }).toList();
   }
 
@@ -143,8 +151,9 @@ public class MemberServiceImpl implements MemberService {
   @Transactional(readOnly = true)
   public MemberProfileDTO findProfileById(final Long loginId, final Long memberId) {
     boolean isFollowing = friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId);
+    boolean isBlocked = blockRepository.existsByBlockerIdAndBlockeeId(loginId, memberId);
     Member member = findById(memberId);
-    return memberMapper.toMemberProfileDTO(member, isFollowing);
+    return memberMapper.toMemberProfileDTO(member, isFollowing, isBlocked);
   }
 
   @Override
@@ -156,6 +165,7 @@ public class MemberServiceImpl implements MemberService {
     return memberMapper.toMemberStatusDTO(member.isHardMode(member.getIsHardMode()));
   }
 
+  @Transactional(readOnly = true)
   public MemberModeDTO findModeByMemberId(final Long memberId) {
     Member member = findById(memberId);
     NotificationStandard standard = findNotificationStandardByMemberId(memberId);
@@ -163,14 +173,16 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Member findById(Long id) {
     return memberRepository.findByIdAndDeletedAtIsNull(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
+        .orElseThrow(MemberException.MemberNotFoundException::new);
   }
 
+  @Transactional(readOnly = true)
   public Member findByEmail(String email) {
     return memberRepository.findByEmailAndDeletedAtIsNull(email)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 member 입니다."));
+        .orElseThrow(MemberException.MemberNotFoundException::new);
   }
 
   @Override
@@ -180,7 +192,7 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public void updateNotificationSettings(Long memberId, String fcmToken, String timezone) {
+  public void updateNotificationSettings(Long memberId, String timezone, String fcmToken) {
     Member member = findById(memberId);
     member.updateNotificationSettings(fcmToken, timezone);
   }

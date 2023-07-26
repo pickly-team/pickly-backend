@@ -2,7 +2,8 @@ package org.pickly.service.comment.common;
 
 import org.pickly.service.comment.controller.request.CommentCreateReq;
 import org.pickly.service.comment.controller.request.CommentUpdateReq;
-import org.pickly.service.comment.controller.response.CommentRes;
+import org.pickly.service.comment.controller.response.BookmarkCommentRes;
+import org.pickly.service.comment.controller.response.MemberCommentRes;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.comment.service.dto.CommentDTO;
@@ -12,11 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentMapper {
 
-  public CommentRes toResponse(CommentDTO dto) {
-    return CommentRes.builder()
+  public MemberCommentRes toMemberCommentsResponse(CommentDTO dto) {
+    return MemberCommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
+        .bookmarkId(dto.getBookmarkId())
         .bookmark(dto.getBookmark())
+        .profileEmoji(dto.getProfileEmoji())
         .category(dto.getCategory())
         .isOwnerComment(dto.getIsOwnerComment())
         .content(dto.getContent())
@@ -24,7 +27,21 @@ public class CommentMapper {
         .build();
   }
 
-  public CommentDTO toDTO(Comment comment) {
+  public BookmarkCommentRes toBookmarkCommentsResponse(CommentDTO dto, Long memberId) {
+    return BookmarkCommentRes.builder()
+        .id(dto.getId())
+        .member(dto.getMember())
+        .memberId(dto.getMemberId())
+        .profileEmoji(dto.getProfileEmoji())
+        .bookmark(dto.getBookmark())
+        .category(dto.getCategory())
+        .isOwnerComment(dto.getMemberId().equals(memberId))
+        .content(dto.getContent())
+        .createdTimestamp(dto.getCreatedTimestamp())
+        .build();
+  }
+
+  public CommentDTO toBookmarkCommentDTO(Comment comment) {
     return new CommentDTO(comment);
   }
 

@@ -188,9 +188,12 @@ public class BookmarkController {
       @PathVariable
       @Positive(message = "북마크 ID는 양수입니다.")
       @Schema(description = "Bookmark id", example = "1")
-      Long bookmarkId
+      Long bookmarkId,
+
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long memberId
   ) {
-    Bookmark entity = bookmarkService.findById(bookmarkId);
+    Bookmark entity = bookmarkService.findByIdAndRead(bookmarkId, memberId);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
     return ResponseEntity.ok(response);
   }

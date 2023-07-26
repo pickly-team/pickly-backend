@@ -76,16 +76,18 @@ public class MemberMapper {
         .nickname(dto.getNickname())
         .profileEmoji(dto.getProfileEmoji())
         .isFollowing(dto.getIsFollowing())
+        .isBlocked(dto.getIsBlocked())
         .build();
   }
 
-  public MemberProfileDTO toMemberProfileDTO(Member member, boolean isFollowing) {
+  public MemberProfileDTO toMemberProfileDTO(Member member, boolean isFollowing, boolean isBlocked) {
     return MemberProfileDTO.builder()
         .id(member.getId())
         .name(member.getName())
         .nickname(member.getNickname())
         .profileEmoji(member.getProfileEmoji())
         .isFollowing(isFollowing)
+        .isBlocked(isBlocked)
         .build();
   }
 
@@ -134,8 +136,11 @@ public class MemberMapper {
 
   public SearchMemberResultRes toSearchMemberResultRes(SearchMemberResultResDTO dto) {
     return new SearchMemberResultRes(
-        dto.getMemberId(), dto.getNickname(),
-        dto.getIsFollowing(), dto.getEmoji());
+        dto.getMemberId(),
+        dto.getNickname(),
+        dto.getIsFollowing(),
+        dto.getEmoji(),
+        dto.getIsBlocked());
   }
 
 }

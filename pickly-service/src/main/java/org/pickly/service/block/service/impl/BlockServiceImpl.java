@@ -1,10 +1,8 @@
 package org.pickly.service.block.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.pickly.common.error.exception.BusinessException;
-import org.pickly.common.error.exception.ErrorCode;
 import org.pickly.service.block.entity.Block;
+import org.pickly.service.block.exception.BlockException;
 import org.pickly.service.block.repository.interfaces.BlockQueryRepository;
 import org.pickly.service.block.repository.interfaces.BlockRepository;
 import org.pickly.service.block.service.BlockService;
@@ -18,6 +16,8 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -93,13 +93,13 @@ public class BlockServiceImpl implements BlockService {
 
   private void checkAlreadyBlock(Long blockerId, Long blockeeId) {
     if (blockRepository.existsByBlockerIdAndBlockeeId(blockerId, blockeeId)) {
-      throw new BusinessException(ErrorCode.ENTITY_CONFLICT);
+      throw new BlockException.AlreadyBlockException();
     }
   }
 
   private void checkAlreadyBlockBookmark(Long blockerId, Long bookmarkId) {
     if (blockRepository.existsByBlockerIdAndBookmarkId(blockerId, bookmarkId)) {
-      throw new BusinessException(ErrorCode.ENTITY_CONFLICT);
+      throw new BlockException.AlreadyBlockException();
     }
   }
 }

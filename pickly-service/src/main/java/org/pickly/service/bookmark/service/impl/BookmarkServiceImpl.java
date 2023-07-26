@@ -4,12 +4,12 @@ package org.pickly.service.bookmark.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
+import org.pickly.service.bookmark.exception.BookmarkException;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
@@ -18,18 +18,21 @@ import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.category.entity.Category;
-import org.pickly.service.category.exception.custom.CategoryNotFoundException;
+import org.pickly.service.category.exception.CategoryException;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.exception.custom.MemberNotFoundException;
+import org.pickly.service.member.exception.MemberException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -119,16 +122,22 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
-  public Bookmark findById(Long id) {
-    bookmarkRepository.readByUser(id);
+  public Bookmark findByIdAndRead(Long id, Long memberId) {
+    bookmarkRepository.readByUser(id, memberId);
     return bookmarkRepository.findOneById(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
+  }
+
+  @Override
+  public Bookmark findById(Long id) {
+    return bookmarkRepository.findOneById(id)
+        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
   @Override
   public Bookmark findByIdWithCategory(Long id) {
     return bookmarkRepository.findByIdWithCategory(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
   @Override
@@ -179,9 +188,9 @@ public class BookmarkServiceImpl implements BookmarkService {
   public Bookmark create(BookmarkCreateReq dto) {
 
     Category category = categoryRepository.findById(dto.getCategoryId())
-        .orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryId()));
+        .orElseThrow(CategoryException.CategoryNotFoundException::new);
     Member member = memberRepository.findById(dto.getMemberId())
-        .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
+        .orElseThrow(MemberException.MemberNotFoundException::new);
 
     BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl());
     Bookmark entity = Bookmark.create(category, member, dto.getTitle(), info, dto.getVisibility());
@@ -219,7 +228,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     Bookmark bookmark = findById(bookmarkId);
 
     Category category = categoryRepository.findById(request.getCategoryId())
-        .orElseThrow(() -> new CategoryNotFoundException(request.getCategoryId()));
+        .orElseThrow(CategoryException.CategoryNotFoundException::new);
 
     bookmark.updateBookmark(
         category,
@@ -237,5 +246,20 @@ public class BookmarkServiceImpl implements BookmarkService {
             Bookmark::getMember, LinkedHashMap::new, Collectors.toList()
         )
     );
+  }
+
+  /**
+   * @param categoryId
+   * @description : 카테고리 삭제시 해당 카테고리에 속한 북마크 삭제
+   */
+  @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void findBookmarkByCategoryIdAndDelete(final Long categoryId) {
+    PageRequest pageRequest = new PageRequest(null, 15);
+    LocalDateTime now = TimezoneHandler.getNowByZone();
+    List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
+        categoryId);
+    List<Long> bookmarkIds = bookmarks.stream().map(Bookmark::getId).toList();
+    bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
   }
 }

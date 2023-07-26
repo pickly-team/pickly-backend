@@ -29,8 +29,8 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
   @Transactional
   @Modifying
-  @Query("UPDATE Bookmark b SET b.readByUser=True WHERE b.id=:bookmarkId")
-  void readByUser(@Param("bookmarkId") Long id);
+  @Query("UPDATE Bookmark b SET b.readByUser=True WHERE b.id=:bookmarkId and b.member.id = :memberId")
+  void readByUser(@Param("bookmarkId") Long id, @Param("memberId") Long memberId);
 
   @Query("select b from Bookmark b where b.readByUser = false and b.deletedAt is null")
   List<Bookmark> findAllUnreadBookmark();

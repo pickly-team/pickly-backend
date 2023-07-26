@@ -1,7 +1,7 @@
 package org.pickly.service.notification.service
 
 import org.junit.jupiter.api.BeforeEach
-import org.pickly.common.error.exception.BusinessException
+import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.member.MemberFactory
 import org.pickly.service.member.repository.interfaces.MemberRepository
 import org.pickly.service.notification.NotificationStandardFactory

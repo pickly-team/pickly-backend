@@ -3,7 +3,8 @@ package org.pickly.service.common.utils.validator.url;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.exception.InvalidValueException;
+import org.pickly.service.common.error.CommonErrorCode;
+import org.pickly.service.common.error.exception.BusinessException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -20,7 +21,7 @@ public class UrlValidator implements ConstraintValidator<UrlCheck, String> {
       return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
     } catch (IOException e) {
       log.error("msg = {}", e.getMessage());
-      throw new InvalidValueException("유효하지 않은 URL 입니다.");
+      throw new BusinessException(CommonErrorCode.INVALID_VALUE_ERROR);
     }
   }
 }

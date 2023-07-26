@@ -2,7 +2,6 @@ package org.pickly.service.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.member.entity.Member;
@@ -12,6 +11,7 @@ import org.pickly.service.notification.entity.Notification;
 import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.entity.NotificationTemplate;
 import org.pickly.service.notification.enums.NotificationType;
+import org.pickly.service.notification.exception.NotificationException;
 import org.pickly.service.notification.repository.interfaces.NotificationJdbcRepository;
 import org.pickly.service.notification.repository.interfaces.NotificationRepository;
 import org.pickly.service.notification.service.dto.NotificationDTO;
@@ -129,7 +129,7 @@ public class NotificationServiceImpl implements NotificationService {
 
   public Notification findById(Long id) {
     return notificationRepository.findByIdAndDeletedAtNull(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
+        .orElseThrow(NotificationException.NotificationNotFoundException::new);
   }
 
 }

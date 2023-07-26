@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.report.controller.request.ReportReq;
 import org.pickly.service.report.service.BookmarkReportService;
+import org.pickly.service.report.service.CommentReportService;
 import org.pickly.service.report.service.MemberReportService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ public class ReportController {
 
   private final MemberReportService memberReportService;
   private final BookmarkReportService bookmarkReportService;
+  private final CommentReportService commentReportService;
 
   @PostMapping("/members")
   @Operation(summary = "특정 유저를 신고한다.")
@@ -35,6 +37,16 @@ public class ReportController {
   @Operation(summary = "특정 북마크를 신고한다.")
   public void reportBookmark(@Valid @RequestBody ReportReq request) {
     bookmarkReportService.reportBookmark(
+        request.getReporterId(),
+        request.getReportedId(),
+        request.getContent()
+    );
+  }
+
+  @PostMapping("/comments")
+  @Operation(summary = "특정 댓글을 신고한다.")
+  public void reportComment(@Valid @RequestBody ReportReq request) {
+    commentReportService.reportComment(
         request.getReporterId(),
         request.getReportedId(),
         request.getContent()

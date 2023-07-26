@@ -5,19 +5,20 @@ import org.pickly.service.category.common.CategoryMapper;
 import org.pickly.service.category.controller.request.CategoryOrderNumUpdateReq;
 import org.pickly.service.category.controller.request.CategoryRequestDTO;
 import org.pickly.service.category.controller.request.CategoryUpdateRequestDTO;
-import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.entity.Category;
-import org.pickly.service.category.exception.custom.CategoryOrderNumDuplicateException;
+import org.pickly.service.category.exception.CategoryException;
 import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
 import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
+import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.service.interfaces.CategoryService;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.exception.custom.MemberNotFoundException;
+import org.pickly.service.member.exception.MemberException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
   private final CategoryQueryRepository categoryQueryRepository;
   private final CategoryJdbcRepository categoryJdbcRepository;
   private final CategoryMapper categoryMapper;
-
+  private final ApplicationEventPublisher eventPublisher;
   private static final int LAST_ITEM = 1;
 
   @Transactional
@@ -46,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
     List<Category> categories = new ArrayList<>();
 
     Member member = memberRepository.findById(memberId)
-        .orElseThrow(() -> new MemberNotFoundException(memberId));
+        .orElseThrow(MemberException.MemberNotFoundException::new);
 
     Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId);
     int orderNum = (lastCategory == null) ? 0 : lastCategory.getOrderNum() + 1;
@@ -80,13 +81,13 @@ public class CategoryServiceImpl implements CategoryService {
   public void updateOrderNum(List<CategoryOrderNumUpdateReq> requests) {
 
     if (!checkOrderNumUnique(requests)) {
-      throw new CategoryOrderNumDuplicateException();
+      throw new CategoryException.CategoryOrderNumDuplicateException();
     }
 
     try {
       categoryJdbcRepository.updateCategoryOrderNums(requests);
     } catch (DataIntegrityViolationException e) {
-      throw new CategoryOrderNumDuplicateException();
+      throw new CategoryException.CategoryOrderNumDuplicateException();
     }
 
   }
@@ -106,6 +107,7 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = categoryRepository.findById(categoryId)
             .orElseThrow();
     category.delete();
+    eventPublisher.publishEvent(category.getId());
   }
 
   @Transactional

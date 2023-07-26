@@ -1,7 +1,7 @@
 package org.pickly.service.report.service
 
 import org.junit.jupiter.api.BeforeEach
-import org.pickly.common.error.exception.BusinessException
+import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.bookmark.BookmarkFactory
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
