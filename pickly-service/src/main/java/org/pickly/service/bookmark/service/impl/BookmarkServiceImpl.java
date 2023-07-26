@@ -125,7 +125,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   public Bookmark findByIdAndRead(Long id, Long memberId) {
     bookmarkRepository.readByUser(id, memberId);
     return bookmarkRepository.findOneById(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
   @Override

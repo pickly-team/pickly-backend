@@ -1,5 +1,6 @@
 drop table if exists member_report;
 drop table if exists bookmark_report;
+drop table if exists comment_report;
 drop table if exists friend;
 drop table if exists comment;
 drop table if exists block;
@@ -312,5 +313,34 @@ create unique index bookmark_report_reporter_id_reported_id_uindex
 create trigger update_trigger
     before update
     on bookmark_report
+    for each row
+    execute procedure updated_at();
+
+
+create table comment_Report
+(
+    id          bigserial
+        constraint comment_report_pk
+            primary key,
+    reporter_id bigint                  not null
+        constraint comment_report_reporter_member_id_fk
+            references member
+            on update cascade on delete cascade,
+    reported_id bigint                  not null
+        constraint comment_report_reported_comment_id_fk
+            references comment
+            on update cascade on delete cascade,
+    content     varchar(150)            not null,
+    created_at  timestamp default now() not null,
+    updated_at  timestamp,
+    deleted_at  timestamp
+);
+
+create unique index comment_report_reporter_id_reported_id_uindex
+    on comment_report (reporter_id, reported_id);
+
+create trigger update_trigger
+    before update
+    on comment_report
     for each row
     execute procedure updated_at();
