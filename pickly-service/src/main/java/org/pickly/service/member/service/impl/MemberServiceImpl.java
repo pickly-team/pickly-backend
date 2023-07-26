@@ -2,7 +2,6 @@ package org.pickly.service.member.service.impl;
 
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.block.repository.interfaces.BlockRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.common.utils.base.AuthTokenUtil;

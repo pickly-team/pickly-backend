@@ -1,20 +1,18 @@
 package org.pickly.common.error.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
 public class BusinessException extends RuntimeException {
 
-    private ErrorCode errorCode;
+  private final String code;
+  private final HttpStatus httpStatus;
 
-    public BusinessException(String message, ErrorCode errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
+  public BusinessException(ErrorCode errorCode) {
+    super(errorCode.getMessage());
+    this.httpStatus = errorCode.getStatus();
+    this.code = errorCode.getCode();
+  }
 
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }

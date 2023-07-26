@@ -3,7 +3,6 @@ package org.pickly.service.common.utils.validator.url;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.exception.InvalidValueException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
