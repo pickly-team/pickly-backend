@@ -198,13 +198,16 @@ public class BookmarkController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping("/bookmark/title")
+  @GetMapping("/members/{memberId}/bookmark/title")
   @Operation(summary = "특정 북마크의 제목을 url로부터 받아온다.")
   public String getTitleFromUrl(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long memberId,
+
       @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
       @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
   ) {
-    return bookmarkService.getTitleFromUrl(url);
+    return bookmarkService.getTitleFromUrl(memberId, url);
   }
 
   @GetMapping("/categories/{categoryId}/bookmarks")

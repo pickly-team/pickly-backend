@@ -141,8 +141,9 @@ public class BookmarkServiceImpl implements BookmarkService {
   }
 
   @Override
-  public String getTitleFromUrl(String url) {
-    BookmarkInfoDTO info = scrapOgTagInfo(url);
+  public String getTitleFromUrl(Long memberId, String url) {
+    Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+    BookmarkInfoDTO info = scrapOgTagInfo(url, member);
     return info.getTitle();
   }
 
