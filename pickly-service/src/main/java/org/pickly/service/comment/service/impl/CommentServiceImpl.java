@@ -79,6 +79,7 @@ public class CommentServiceImpl implements CommentService {
     return commentMapper.toBookmarkCommentDTO(comment);
   }
 
+  @Override
   public Comment findById(final Long id) {
     return commentRepository.findByIdAndDeletedAtNull(id)
         .orElseThrow(CommentException.CommentNotFoundException::new);
