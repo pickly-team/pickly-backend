@@ -32,7 +32,7 @@ public class MemberCommentRes {
   @Schema(description = "Comment 내용", example = "가슴이 웅장해지는 글이다..")
   private String content;
 
-  @Schema(description = "Comment 생성일자. Unix timestamp 사용", example = "1678802356")
+  @Schema(description = "Comment 생성일자. member timezone 기반의 Unix timestamp 사용", example = "1678802356")
   private Long createdTimestamp;
 
 }
