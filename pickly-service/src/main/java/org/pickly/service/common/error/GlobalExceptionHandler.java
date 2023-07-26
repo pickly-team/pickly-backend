@@ -1,14 +1,14 @@
-package org.pickly.common.error;
+package org.pickly.service.common.error;
 
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.exception.BusinessException;
+import org.pickly.service.common.error.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = {"org.pickly.common", "org.pickly.service"})
 public class GlobalExceptionHandler {
 
   private static final String EXCEPTION_LOG_TEMPLATE = "code = {}, message = {}";

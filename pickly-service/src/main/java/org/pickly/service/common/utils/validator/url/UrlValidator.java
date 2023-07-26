@@ -3,8 +3,8 @@ package org.pickly.service.common.utils.validator.url;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.CommonErrorCode;
-import org.pickly.common.error.exception.BusinessException;
+import org.pickly.service.common.error.CommonErrorCode;
+import org.pickly.service.common.error.exception.BusinessException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

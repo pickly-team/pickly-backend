@@ -8,8 +8,8 @@ import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.exception.CommentException;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
-import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.dto.CommentCreateDTO;
+import org.pickly.service.comment.service.dto.CommentDTO;
 import org.pickly.service.comment.service.dto.CommentUpdateDTO;
 import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.member.entity.Member;
@@ -72,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     Member member = comment.getMember();
 
     if (!member.getId().equals(memberId)) {
-      throw new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
+      throw new CommentException.OnlyAuthorCanEditException();
     }
 
     comment.updateContent(request.getContent());

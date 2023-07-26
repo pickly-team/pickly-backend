@@ -1,4 +1,4 @@
-package org.pickly.common.error.exception;
+package org.pickly.service.common.error.exception;
 
 
 import org.springframework.http.HttpStatus;

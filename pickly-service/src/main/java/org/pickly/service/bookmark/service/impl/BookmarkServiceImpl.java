@@ -1,7 +1,6 @@
 package org.pickly.service.bookmark.service.impl;
 
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,6 +9,7 @@ import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
+import org.pickly.service.bookmark.exception.BookmarkException;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
@@ -131,13 +131,13 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Override
   public Bookmark findById(Long id) {
     return bookmarkRepository.findOneById(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
   @Override
   public Bookmark findByIdWithCategory(Long id) {
     return bookmarkRepository.findByIdWithCategory(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북마크입니다."));
+        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
   @Override

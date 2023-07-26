@@ -1,9 +1,9 @@
-package org.pickly.common.error;
+package org.pickly.service.common.error;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pickly.common.error.exception.BusinessException;
+import org.pickly.service.common.error.exception.BusinessException;
 
 
 @Getter

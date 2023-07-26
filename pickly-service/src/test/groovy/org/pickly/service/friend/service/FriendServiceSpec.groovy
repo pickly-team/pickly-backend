@@ -1,8 +1,8 @@
 package org.pickly.service.friend.service
 
 import org.junit.jupiter.api.BeforeEach
-import org.pickly.common.error.exception.BusinessException
-import org.pickly.common.error.exception.ErrorCode
+import org.pickly.service.common.error.exception.BusinessException
+import org.pickly.service.common.error.exception.ErrorCode
 import org.pickly.service.friend.repository.interfaces.FriendRepository
 import org.pickly.service.friend.service.dto.FriendNotificationStatusReqDTO
 import org.pickly.service.friend.service.interfaces.FriendService
