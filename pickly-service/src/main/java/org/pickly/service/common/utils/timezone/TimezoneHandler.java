@@ -1,17 +1,21 @@
 package org.pickly.service.common.utils.timezone;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 
 public class TimezoneHandler {
 
-  // DB에 UTC로 저장되고 화면에는 유저의 소속 시간대 기준으로 줘야 함
-  private static final ZoneOffset OFFSET = ZoneOffset.of("+09:00");
   private static final ZoneId ZONE_ID = ZoneId.of("UTC");
 
-  public static long convertToUnix(LocalDateTime dateTime) {
-    return dateTime.atZone(OFFSET).toEpochSecond();
+  public static long convertToUnix(LocalDateTime dateTime, String timezone) {
+    ZoneId zoneId = ZoneId.of(timezone);
+    Instant instant = dateTime.atZone(zoneId).toInstant();
+    return instant.getEpochSecond();
+  }
+
+  public static LocalDateTime convertToTimezone(LocalDateTime dateTime, String timezone) {
+    ZoneId zoneId = ZoneId.of(timezone);
+    ZonedDateTime timezoneDateTime = dateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(zoneId);
+    return timezoneDateTime.toLocalDateTime();
   }
 
   public static LocalDateTime getUTCnow() {

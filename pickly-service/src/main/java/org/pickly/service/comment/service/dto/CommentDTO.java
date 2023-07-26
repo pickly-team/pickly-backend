@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
+import org.pickly.service.member.entity.Member;
 
 @Getter
 public class CommentDTO {
@@ -20,6 +21,7 @@ public class CommentDTO {
   private Long createdTimestamp;
 
   public CommentDTO(Comment comment) {
+    String timezone = comment.getMember().getTimezone();
     this.id = comment.getId();
     this.member = comment.getMember().getNickname();
     this.profileEmoji = comment.getMember().getProfileEmoji();
@@ -29,21 +31,22 @@ public class CommentDTO {
     this.category = comment.getBookmark().getCategory().getName();
     this.isOwnerComment = comment.getIsOwnerComment();
     this.content = comment.getContent();
-    this.createdTimestamp = TimezoneHandler.convertToUnix(comment.getCreatedAt());
+    this.createdTimestamp = TimezoneHandler.convertToUnix(comment.getCreatedAt(), timezone);
   }
 
   @QueryProjection
-  public CommentDTO(Comment comment, String member, String bookmark, String category, String profileEmoji, Long memberId, Long bookmarkId) {
+  public CommentDTO(Comment comment, Member member, String bookmark, String category, Long bookmarkId) {
+    String timezone = member.getTimezone();
     this.id = comment.getId();
-    this.member = member;
-    this.profileEmoji = profileEmoji;
+    this.member = member.getNickname();
+    this.profileEmoji = member.getProfileEmoji();
     this.bookmarkId = bookmarkId;
-    this.memberId = memberId;
+    this.memberId = member.getId();
     this.bookmark = bookmark;
     this.category = category;
     this.isOwnerComment = comment.getIsOwnerComment();
     this.content = comment.getContent();
-    this.createdTimestamp = TimezoneHandler.convertToUnix(comment.getCreatedAt());
+    this.createdTimestamp = TimezoneHandler.convertToUnix(comment.getCreatedAt(), timezone);
   }
 
 }
