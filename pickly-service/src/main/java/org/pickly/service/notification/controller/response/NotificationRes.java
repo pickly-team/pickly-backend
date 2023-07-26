@@ -23,7 +23,7 @@ public class NotificationRes {
   @Schema(description = "Is member read this notification?", example = "true")
   private Boolean isChecked;
 
-  @Schema(description = "notification create time : kst timestamp", example = "12131411")
+  @Schema(description = "notification create time : with member timezone", example = "12131411")
   private long createdAt;
 
 }

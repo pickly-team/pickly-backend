@@ -51,9 +51,9 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public List<Notification> makeNormals(Map<Member, List<Bookmark>> unreadBookmarks) {
     List<Notification> notifications = new ArrayList<>();
-
     List<NotificationTemplate> templates = notificationTemplateService.findAllByNotificationType(NotificationType.NORMAL);
     LocalDateTime now = TimezoneHandler.getUTCnow();
+
     for (Map.Entry<Member, List<Bookmark>> entry : unreadBookmarks.entrySet()) {
       Long memberId = entry.getKey().getId();
       NotificationStandard standard = notificationStandardService.findByMemberId(memberId);
