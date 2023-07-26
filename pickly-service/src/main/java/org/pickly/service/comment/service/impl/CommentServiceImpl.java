@@ -1,7 +1,6 @@
 package org.pickly.service.comment.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;

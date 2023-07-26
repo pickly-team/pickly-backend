@@ -2,7 +2,6 @@ package org.pickly.service.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.common.error.exception.BusinessException;
-import org.pickly.common.error.exception.EntityNotFoundException;
 import org.pickly.common.error.exception.ErrorCode;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
