@@ -192,13 +192,13 @@ public class BookmarkServiceImpl implements BookmarkService {
     Member member = memberRepository.findById(dto.getMemberId())
         .orElseThrow(MemberException.MemberNotFoundException::new);
 
-    BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl());
+    BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl(), member);
     Bookmark entity = Bookmark.create(category, member, dto.getTitle(), info, dto.getVisibility());
 
     return bookmarkRepository.save(entity);
   }
 
-  private BookmarkInfoDTO scrapOgTagInfo(final String url) {
+  private BookmarkInfoDTO scrapOgTagInfo(final String url, final Member member) {
     BookmarkInfoDTO result = new BookmarkInfoDTO(url);
     try {
       Document doc = Jsoup.connect(url).get();
@@ -206,7 +206,7 @@ public class BookmarkServiceImpl implements BookmarkService {
       String title = doc.select("meta[property=og:title]").attr(CONTENT_ATTR);
       String previewImageUrl = doc.select("meta[property=og:image]").attr(CONTENT_ATTR);
 
-      result.updateTitleAndImage(title, previewImageUrl);
+      result.updateTitleAndImage(title, previewImageUrl, member.getTimezone());
       return result;
     } catch (IOException e) {
       return result;
