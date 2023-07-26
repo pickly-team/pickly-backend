@@ -2,12 +2,10 @@ package org.pickly.service.friend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.common.error.exception.BusinessException;
-import org.pickly.common.error.exception.ErrorCode;
-import org.pickly.service.block.service.BlockService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.common.FriendMapper;
 import org.pickly.service.friend.entity.Friend;
+import org.pickly.service.friend.exception.FriendException;
 import org.pickly.service.friend.repository.interfaces.FriendQueryRepository;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.friend.service.dto.FollowerResDTO;
@@ -64,16 +62,13 @@ public class FriendServiceImpl implements FriendService {
 
   private void checkAlreadyFriend(final Long followerId, final Long memberId) {
     if (friendRepository.existsByFollowerIdAndFolloweeId(followerId, memberId)) {
-      throw new BusinessException(ErrorCode.ENTITY_CONFLICT);
+      throw new FriendException.AlreadyFriendException();
     }
   }
 
   private Friend findFollowerById(final Long followerId, final Long memberId) {
-    Friend friend = friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId)
-        .orElseThrow(
-            () -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE));
-
-    return friend;
+    return friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId)
+        .orElseThrow(FriendException.FriendNotFoundException::new);
   }
 
   @Override

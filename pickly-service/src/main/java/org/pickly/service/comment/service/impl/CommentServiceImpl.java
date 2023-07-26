@@ -5,6 +5,7 @@ import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;
 import org.pickly.service.comment.entity.Comment;
+import org.pickly.service.comment.exception.CommentException;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.comment.service.dto.CommentDTO;
@@ -80,7 +81,7 @@ public class CommentServiceImpl implements CommentService {
 
   public Comment findById(final Long id) {
     return commentRepository.findByIdAndDeletedAtNull(id)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+        .orElseThrow(CommentException.CommentNotFoundException::new);
   }
 
 }
