@@ -1,6 +1,6 @@
 package org.pickly.service.member.exception;
 
-import org.pickly.common.error.exception.BusinessException;
+import org.pickly.service.common.error.exception.BusinessException;
 
 public abstract class MemberException extends BusinessException {
 

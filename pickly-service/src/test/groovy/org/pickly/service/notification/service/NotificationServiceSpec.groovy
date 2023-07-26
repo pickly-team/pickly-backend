@@ -1,6 +1,6 @@
 package org.pickly.service.notification.service
 
-import org.pickly.common.error.exception.BusinessException
+import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.bookmark.BookmarkFactory
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory

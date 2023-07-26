@@ -1,6 +1,6 @@
 package org.pickly.service.category.exception;
 
-import org.pickly.common.error.exception.BusinessException;
+import org.pickly.service.common.error.exception.BusinessException;
 
 public abstract class CategoryException extends BusinessException {
 

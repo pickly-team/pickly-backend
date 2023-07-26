@@ -1,7 +1,7 @@
 package org.pickly.service.block.exception;
 
 import lombok.Getter;
-import org.pickly.common.error.exception.ErrorCode;
+import org.pickly.service.common.error.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 @Getter

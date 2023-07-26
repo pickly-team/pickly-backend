@@ -1,4 +1,4 @@
-package org.pickly.common.error.exception;
+package org.pickly.service.common.error.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
