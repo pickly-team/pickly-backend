@@ -14,4 +14,10 @@ public abstract class FriendException extends BusinessException {
     }
   }
 
+  public static class AlreadyFriendException extends FriendException {
+    public AlreadyFriendException() {
+      super(FriendErrorCode.ALREADY_FRIEND);
+    }
+  }
+
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 public enum FriendErrorCode implements ErrorCode {
 
   FRIEND_NOT_FOUND(HttpStatus.NOT_FOUND, "F001", "존재하지 않는 친구 정보입니다."),
+  ALREADY_FRIEND(HttpStatus.CONFLICT, "F002", "이미 친구인 사용자입니다."),
   ;
 
   private final HttpStatus status;
