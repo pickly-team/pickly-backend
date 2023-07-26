@@ -14,4 +14,16 @@ public abstract class NotificationException extends BusinessException {
     }
   }
 
+  public static class NotificationStandardAlreadyExistException extends NotificationException {
+    public NotificationStandardAlreadyExistException() {
+      super(NotificationErrorCode.NOTIFICATION_STANDARD_ALREADY_EXIST);
+    }
+  }
+
+  public static class NotificationNotFoundException extends NotificationException {
+    public NotificationNotFoundException() {
+      super(NotificationErrorCode.NOTIFICATION_NOT_FOUND);
+    }
+  }
+
 }
