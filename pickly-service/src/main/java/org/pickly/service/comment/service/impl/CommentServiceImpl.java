@@ -1,6 +1,7 @@
 package org.pickly.service.comment.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.comment.common.CommentMapper;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
