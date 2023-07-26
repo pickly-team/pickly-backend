@@ -256,7 +256,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void findBookmarkByCategoryIdAndDelete(final Long categoryId) {
     PageRequest pageRequest = new PageRequest(null, 15);
-    LocalDateTime now = TimezoneHandler.getNowByZone();
+    LocalDateTime now = TimezoneHandler.getUTCnow();
     List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
         categoryId);
     List<Long> bookmarkIds = bookmarks.stream().map(Bookmark::getId).toList();
