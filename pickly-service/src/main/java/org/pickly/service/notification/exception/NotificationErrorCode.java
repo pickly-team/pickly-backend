@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 public enum NotificationErrorCode implements ErrorCode {
 
   NOTIFICATION_STANDARD_NOT_FOUND(HttpStatus.NOT_FOUND, "NS001", "유저에게 알림 설정 정보가 존재하지 않습니다."),
+  NOTIFICATION_STANDARD_ALREADY_EXIST(HttpStatus.CONFLICT, "NS002", "유저에게 알림 설정 정보가 이미 존재합니다."),
+  NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 알림 정보 입니다.")
   ;
 
   private final HttpStatus status;
