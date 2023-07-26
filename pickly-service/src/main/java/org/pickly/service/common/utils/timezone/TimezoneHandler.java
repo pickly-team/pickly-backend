@@ -7,9 +7,8 @@ public class TimezoneHandler {
   private static final ZoneId ZONE_ID = ZoneId.of("UTC");
 
   public static long convertToUnix(LocalDateTime dateTime, String timezone) {
-    ZoneId zoneId = ZoneId.of(timezone);
-    Instant instant = dateTime.atZone(zoneId).toInstant();
-    return instant.getEpochSecond();
+    LocalDateTime zonedDateTime = convertToTimezone(dateTime, timezone);
+    return zonedDateTime.toEpochSecond(ZoneId.of(timezone).getRules().getOffset(Instant.now()));
   }
 
   public static LocalDateTime convertToTimezone(LocalDateTime dateTime, String timezone) {
