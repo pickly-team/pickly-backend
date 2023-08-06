@@ -241,7 +241,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
   @Override
   public Map<Member, List<Bookmark>> findAllUnreadBookmark() {
-    List<Bookmark> unreadBookmarks = bookmarkRepository.findAllUnreadBookmark();
+    List<Bookmark> unreadBookmarks = bookmarkQueryRepository.findAllUnreadBookmark();
     return unreadBookmarks.stream().collect(
         Collectors.groupingBy(
             Bookmark::getMember, LinkedHashMap::new, Collectors.toList()

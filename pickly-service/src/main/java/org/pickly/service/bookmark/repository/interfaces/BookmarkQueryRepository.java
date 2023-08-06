@@ -15,4 +15,6 @@ public interface BookmarkQueryRepository {
   long count(Long memberId, Boolean isUserLike);
 
   List<Bookmark> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId);
+
+  List<Bookmark> findAllUnreadBookmark();
 }
