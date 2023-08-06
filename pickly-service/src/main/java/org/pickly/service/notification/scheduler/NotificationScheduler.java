@@ -26,7 +26,7 @@ public class NotificationScheduler {
   private final BookmarkService bookmarkService;
 
 
-  @Scheduled(cron = "0 0/1 * * * *")
+  @Scheduled(cron = "0 0/15 * * * *")
   public void makeNormalNotification() {
     Map<Member, List<Bookmark>> unreadBookmarks = bookmarkService.findAllUnreadBookmark();
     List<Notification> notifications = notificationService.makeNormals(unreadBookmarks);
