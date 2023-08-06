@@ -200,6 +200,8 @@ create table notification
     deleted_at        timestamp
 );
 
+CREATE INDEX idx_send_date_time ON notification (send_date_time);
+
 create trigger update_trigger
     before update
     on notification

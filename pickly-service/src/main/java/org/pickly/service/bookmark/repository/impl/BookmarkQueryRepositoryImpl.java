@@ -1,17 +1,22 @@
 package org.pickly.service.bookmark.repository.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
+import static org.pickly.service.notification.entity.QNotification.notification;
 
 @Repository
 @RequiredArgsConstructor
@@ -71,6 +76,28 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
         )
         .orderBy(bookmark.id.desc())
         .limit(pageSize + CHECK_LAST)
+        .fetch();
+  }
+
+  @Override
+  public List<Bookmark> findAllUnreadBookmark() {
+    LocalDate date = TimezoneHandler.getUTCnow().toLocalDate();
+    LocalDateTime startDateTime = date.atTime(0, 0);
+    LocalDateTime endDateTime = startDateTime.plusDays(1);
+
+    return queryFactory
+        .selectFrom(bookmark)
+        .where(
+            JPAExpressions
+                .select(notification.bookmarkId)
+                .from(notification)
+                .where(
+                    notification.bookmarkId.eq(bookmark.id)
+                        .and(notification.sendDateTime.goe(startDateTime))
+                        .and(notification.sendDateTime.lt(endDateTime))
+                ).notExists()
+                .and(bookmark.readByUser.eq(false))
+        )
         .fetch();
   }
 
