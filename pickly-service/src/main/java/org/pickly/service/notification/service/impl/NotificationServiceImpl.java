@@ -21,7 +21,6 @@ import org.pickly.service.notification.service.interfaces.NotificationTemplateSe
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +76,8 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public List<Notification> getNotificationsToSend(LocalDate today) {
-    return notificationRepository.getNotificationsToSend(today);
+  public List<Notification> getNotificationsToSend(LocalDateTime now) {
+    return notificationRepository.getNotificationsToSend(now);
   }
 
   private LocalDateTime getDueDateTime(Bookmark bookmark, NotificationStandard standard) {
