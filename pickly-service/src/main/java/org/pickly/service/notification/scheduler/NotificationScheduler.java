@@ -26,7 +26,7 @@ public class NotificationScheduler {
   private final BookmarkService bookmarkService;
 
 
-  @Scheduled(cron = "0 0/15 * * * *")
+  @Scheduled(cron = "0 0/1 * * * *")
   public void makeNormalNotification() {
     Map<Member, List<Bookmark>> unreadBookmarks = bookmarkService.findAllUnreadBookmark();
     List<Notification> notifications = notificationService.makeNormals(unreadBookmarks);
@@ -36,7 +36,7 @@ public class NotificationScheduler {
   @Scheduled(cron = "0 0/30 * * * *")
   public void sendNormalNotification() {
     LocalDateTime now = TimezoneHandler.getUTCnow();
-    List<Notification> notifications = notificationService.getNotificationsToSend(now);
+    List<Notification> notifications = notificationService.getNotificationsToSend(now.toLocalDate());
     notificationSender.sendMessage(notifications);
   }
 
