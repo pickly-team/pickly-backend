@@ -33,9 +33,10 @@ public class NotificationScheduler {
     notificationService.saveAll(notifications);
   }
 
-  @Scheduled(cron = "0 0/30 * * * *")
+  @Scheduled(cron = "0 0/1 * * * *")
   public void sendNormalNotification() {
     LocalDateTime now = TimezoneHandler.getUTCnow();
+    log.info("현재 시간 = {}", now);
     List<Notification> notifications = notificationService.getNotificationsToSend(now);
     notificationSender.sendMessage(notifications);
   }

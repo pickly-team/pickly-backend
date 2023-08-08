@@ -60,6 +60,7 @@ public class NotificationServiceImpl implements NotificationService {
 
       for (Bookmark bookmark : entry.getValue()) {
         LocalDateTime dueDateTime = getDueDateTime(bookmark, standard);
+        log.info("북마크 ID = {}, 마감기한 = {}", bookmark.getId(), dueDateTime);
         if (isBeforeAndEqual(dueDateTime, now)) {
           notifications.add(
               Notification.makeNormalNotification(
