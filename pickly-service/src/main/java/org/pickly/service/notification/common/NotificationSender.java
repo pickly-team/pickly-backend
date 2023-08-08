@@ -57,6 +57,7 @@ public class NotificationSender {
   ) {
     List<Message> messages = new ArrayList<>();
     for (Notification notification : notifications) {
+      String fcmToken = memberTokens.get(notification.getMemberId());
       try {
         messages.add(
             Message.builder()
@@ -65,11 +66,12 @@ public class NotificationSender {
                     .setTitle(notification.getTitle())
                     .setBody(notification.getContent())
                     .build())
-                .setToken(memberTokens.get(notification.getMemberId()))
+                .setToken(fcmToken)
                 .build()
         );
       } catch (IllegalArgumentException e) {
-        log.error("fail to make message. error info = {}", e.getMessage());
+        log.error("fail to make message. error info = {}, memberId = {}, fcm token = {}",
+            e.getMessage(), notification.getMemberId(), fcmToken);
       }
     }
     return messages;
