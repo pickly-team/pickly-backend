@@ -12,9 +12,9 @@ import org.pickly.service.notification.service.interfaces.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -55,16 +55,24 @@ public class NotificationSender {
   private List<Message> createMessage(
       List<Notification> notifications, Map<Long, String> memberTokens
   ) {
-    return notifications.stream().map(
-            notification -> Message.builder()
+    List<Message> messages = new ArrayList<>();
+    for (Notification notification : notifications) {
+      try {
+        messages.add(
+            Message.builder()
                 .putData("bookmarkId", String.valueOf(notification.getBookmarkId()))
                 .setNotification(com.google.firebase.messaging.Notification.builder()
                     .setTitle(notification.getTitle())
                     .setBody(notification.getContent())
                     .build())
                 .setToken(memberTokens.get(notification.getMemberId()))
-                .build())
-        .collect(Collectors.toList());
+                .build()
+        );
+      } catch (IllegalArgumentException e) {
+        log.error("fail to make message. error info = {}", e.getMessage());
+      }
+    }
+    return messages;
   }
 
 
