@@ -30,4 +30,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
   @Query("update Notification n set n.isSend = true where n.id in :ids")
   void updateAllToSend(@Param("ids") List<Long> ids);
 
+  void deleteAllByMemberId(Long memberId);
+
 }

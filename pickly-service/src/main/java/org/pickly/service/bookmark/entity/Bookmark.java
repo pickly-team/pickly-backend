@@ -19,7 +19,7 @@ public class Bookmark extends BaseEntity {
   @JoinColumn(name = "category_id")
   private Category category;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id")
   private Member member;
 
