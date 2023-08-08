@@ -16,6 +16,7 @@ import org.pickly.service.member.service.dto.*;
 import org.pickly.service.member.service.interfaces.MemberService;
 import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.exception.NotificationException;
+import org.pickly.service.notification.repository.interfaces.NotificationRepository;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +34,8 @@ public class MemberServiceImpl implements MemberService {
   private final FriendRepository friendRepository;
   private final MemberMapper memberMapper;
   private final BookmarkRepository bookmarkRepository;
-
   private final BlockRepository blockRepository;
+  private final NotificationRepository notificationRepository;
   private final NotificationStandardRepository notificationStandardRepository;
   private final AuthTokenUtil authTokenUtil;
 
@@ -188,7 +189,8 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public void deleteMember(Long memberId) {
     Member member = findById(memberId);
-    member.delete();
+    memberRepository.delete(member);
+    notificationRepository.deleteAllByMemberId(memberId);
   }
 
   @Override
