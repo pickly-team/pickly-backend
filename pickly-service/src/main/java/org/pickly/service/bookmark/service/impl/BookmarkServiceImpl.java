@@ -20,7 +20,10 @@ import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.exception.CategoryException;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
+import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
+import org.pickly.service.comment.repository.interfaces.CommentRepository;
+import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
@@ -55,6 +58,8 @@ public class BookmarkServiceImpl implements BookmarkService {
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
+
+  private final CommentRepository commentRepository;
   private final MemberService memberService;
 
   private final CategoryRepository categoryRepository;
@@ -168,8 +173,11 @@ public class BookmarkServiceImpl implements BookmarkService {
   public BookmarkDeleteResDTO deleteBookmark(Long bookmarkId) {
     BookmarkDeleteResDTO bookmarkDeleteReqDTO = new BookmarkDeleteResDTO();
     Bookmark bookmark = findById(bookmarkId);
+
     bookmark.delete();
     bookmarkDeleteReqDTO.setIsDeleted();
+    deleteCommentByBookmark(bookmark.getId());
+
     return bookmarkDeleteReqDTO;
   }
 
@@ -181,6 +189,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     LocalDateTime now = TimezoneHandler.getUTCnow();
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
     bookmarkListDeleteResDTO.setIsDeleted();
+
+    bookmarkIds.forEach(this::deleteCommentByBookmark);
     return bookmarkListDeleteResDTO;
   }
 
@@ -262,5 +272,11 @@ public class BookmarkServiceImpl implements BookmarkService {
         categoryId);
     List<Long> bookmarkIds = bookmarks.stream().map(Bookmark::getId).toList();
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
+  }
+
+
+  private void deleteCommentByBookmark(final Long bookmarkId) {
+    commentRepository.findAllByBookmarkAndDeletedAtNull(bookmarkId)
+        .forEach(Comment::delete);
   }
 }
