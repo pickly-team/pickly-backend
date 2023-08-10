@@ -1,5 +1,7 @@
 package org.pickly.service.comment.repository.interfaces;
 
+import java.util.List;
+import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.comment.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +15,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   @Query("select c from Comment c join fetch c.member where c.id = :id and c.deletedAt is null")
   Optional<Comment> findByIdAndDeletedAtNull(@Param("id") Long id);
+
+  @Query("select c from Comment c join fetch c.member where c.bookmark.id = :bookmark_id and c.deletedAt is null")
+  List<Comment> findAllByBookmarkAndDeletedAtNull(@Param("bookmark_id") Long bookmarkId);
 }
