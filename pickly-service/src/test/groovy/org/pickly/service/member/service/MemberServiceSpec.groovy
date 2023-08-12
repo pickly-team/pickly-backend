@@ -117,7 +117,7 @@ class MemberServiceSpec extends Specification {
         then:
         var found = memberRepository.findById(member.id).orElse(null)
 
-        found != null
+        found == null
     }
 
     def "사용자 알림 설정"() {
