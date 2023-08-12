@@ -23,7 +23,6 @@ import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
-import org.pickly.service.comment.service.interfaces.CommentService;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
@@ -31,6 +30,7 @@ import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.MemberException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
 import org.pickly.service.member.service.interfaces.MemberService;
+import org.pickly.service.notification.repository.interfaces.NotificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,16 +55,15 @@ public class BookmarkServiceImpl implements BookmarkService {
   private static final String CONTENT_ATTR = "content";
 
 
+  private final CategoryRepository categoryRepository;
+  private final MemberRepository memberRepository;
+  private final NotificationRepository notificationRepository;
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
 
   private final CommentRepository commentRepository;
   private final MemberService memberService;
-
-  private final CategoryRepository categoryRepository;
-
-  private final MemberRepository memberRepository;
 
   @Override
   public Long countMemberLikes(final Long memberId) {
@@ -177,6 +176,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmark.delete();
     bookmarkDeleteReqDTO.setIsDeleted();
     deleteCommentByBookmark(bookmark.getId());
+    deleteNotificationByBookmark(bookmark.getId());
 
     return bookmarkDeleteReqDTO;
   }
@@ -191,6 +191,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmarkListDeleteResDTO.setIsDeleted();
 
     bookmarkIds.forEach(this::deleteCommentByBookmark);
+    deleteNotificationByBookmark(bookmarkIds);
     return bookmarkListDeleteResDTO;
   }
 
@@ -278,5 +279,13 @@ public class BookmarkServiceImpl implements BookmarkService {
   private void deleteCommentByBookmark(final Long bookmarkId) {
     commentRepository.findAllByBookmarkAndDeletedAtNull(bookmarkId)
         .forEach(Comment::delete);
+  }
+
+  private void deleteNotificationByBookmark(final Long bookmarkId) {
+    notificationRepository.deleteAllByBookmarkId(bookmarkId);
+  }
+
+  private void deleteNotificationByBookmark(final List<Long> bookmarkIds) {
+    notificationRepository.deleteAllByBookmarkIdIn(bookmarkIds);
   }
 }

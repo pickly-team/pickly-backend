@@ -32,4 +32,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
   void deleteAllByMemberId(Long memberId);
 
+  void deleteAllByBookmarkId(Long bookmarkId);
+  void deleteAllByBookmarkIdIn(List<Long> bookmarkIds);
+
 }
