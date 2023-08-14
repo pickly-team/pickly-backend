@@ -61,12 +61,12 @@ public class NotificationServiceImpl implements NotificationService {
 
       for (Bookmark bookmark : entry.getValue()) {
         LocalDateTime dueDateTime = getDueDateTime(bookmark, standard);
-        log.info("북마크 ID = {}, 마감기한 = {}", bookmark.getId(), dueDateTime);
+        LocalTime sendTime = makeSendTime(bookmark.getCreatedAt());
         if (isBeforeAndEqual(dueDateTime, now)) {
           notifications.add(
               Notification.makeNormalNotification(
                   memberId, bookmark,
-                  getNotificationTitle(templates), getSendDateTime(dueDateTime, now, standard)
+                  getNotificationTitle(templates), getSendDateTime(dueDateTime, now, sendTime)
               )
           );
         }
@@ -87,13 +87,18 @@ public class NotificationServiceImpl implements NotificationService {
     return createdAt.plusDays(standard.getNotifyStandardDay());
   }
 
-  private LocalDateTime getSendDateTime(LocalDateTime dueDateTime, LocalDateTime now, NotificationStandard standard) {
-    LocalTime sendTime = standard.getNotifyDailyAt();
+  private LocalDateTime getSendDateTime(LocalDateTime dueDateTime, LocalDateTime now, LocalTime sendTime) {
     LocalDateTime firstSendDateTime = dueDateTime.toLocalDate().atTime(sendTime);
     if (now.isAfter(firstSendDateTime)) {
       return now.toLocalDate().atTime(sendTime);
     }
     return firstSendDateTime;
+  }
+
+  private LocalTime makeSendTime(LocalDateTime createdAt) {
+    int createdMinute = createdAt.getMinute();
+    int reservationMinute = createdMinute < 30 ? 0 : 30;
+    return createdAt.toLocalTime().withMinute(reservationMinute).withSecond(0).withNano(0);
   }
 
   private boolean isBeforeAndEqual(LocalDateTime dueDateTime, LocalDateTime now) {
