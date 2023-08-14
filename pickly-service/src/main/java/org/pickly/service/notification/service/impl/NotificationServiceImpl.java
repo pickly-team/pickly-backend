@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService {
           notifications.add(
               Notification.makeNormalNotification(
                   memberId, bookmark,
-                  getNotificationTitle(templates), getSendDateTime(dueDateTime, standard)
+                  getNotificationTitle(templates), getSendDateTime(dueDateTime, now, standard)
               )
           );
         }
@@ -86,8 +87,13 @@ public class NotificationServiceImpl implements NotificationService {
     return createdAt.plusDays(standard.getNotifyStandardDay());
   }
 
-  private LocalDateTime getSendDateTime(LocalDateTime dueDateTime, NotificationStandard standard) {
-    return dueDateTime.toLocalDate().atTime(standard.getNotifyDailyAt());
+  private LocalDateTime getSendDateTime(LocalDateTime dueDateTime, LocalDateTime now, NotificationStandard standard) {
+    LocalTime sendTime = standard.getNotifyDailyAt();
+    LocalDateTime firstSendDateTime = dueDateTime.toLocalDate().atTime(sendTime);
+    if (now.isAfter(firstSendDateTime)) {
+      return now.toLocalDate().atTime(sendTime);
+    }
+    return firstSendDateTime;
   }
 
   private boolean isBeforeAndEqual(LocalDateTime dueDateTime, LocalDateTime now) {
