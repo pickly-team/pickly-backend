@@ -1,12 +1,11 @@
 package org.pickly.service.notification.common;
 
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
+import org.pickly.service.member.entity.Member;
 import org.pickly.service.notification.controller.response.NotificationRes;
 import org.pickly.service.notification.entity.Notification;
 import org.pickly.service.notification.service.dto.NotificationDTO;
 import org.springframework.stereotype.Component;
-
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 
 @Component
 public class NotificationMapper {
@@ -22,9 +21,8 @@ public class NotificationMapper {
         .build();
   }
 
-  public NotificationDTO toDto(Notification entity) {
-    ZonedDateTime kstDateTime = entity.getCreatedAt().atZone(ZoneOffset.of("+09:00"));
-    long unixTimestamp = kstDateTime.toEpochSecond();
+  public NotificationDTO toDto(Notification entity, Member member) {
+    long unixTimestamp = TimezoneHandler.convertToUnix(entity.getCreatedAt(), member.getTimezone());
     return NotificationDTO.builder()
         .id(entity.getId())
         .title(entity.getTitle())

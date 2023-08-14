@@ -43,10 +43,10 @@ public class NotificationServiceImpl implements NotificationService {
 
   @Override
   public List<NotificationDTO> findMemberNotifications(final Long memberId) {
-    memberService.existsById(memberId);
+    Member member = memberService.findById(memberId);
     List<Notification> notifications = notificationRepository.findAllByMemberIdAndDeletedAtNull(
         memberId);
-    return notifications.stream().map(notificationMapper::toDto).toList();
+    return notifications.stream().map(n -> notificationMapper.toDto(n, member)).toList();
   }
 
   @Override
