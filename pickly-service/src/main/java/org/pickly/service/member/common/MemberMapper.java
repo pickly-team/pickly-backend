@@ -58,6 +58,10 @@ public class MemberMapper {
 
   public MyProfileDTO toMyProfileDTO(Member member, Long followersCount, Long followeesCount,
       Long bookmarksCount) {
+
+    member.existsNullName();
+    member.existsNullNickname();
+
     return MyProfileDTO.builder()
         .id(member.getId())
         .name(member.getName())

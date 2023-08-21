@@ -31,10 +31,10 @@ public class Member extends BaseEntity {
   @Column(length = 100, nullable = false, unique = true)
   private String email;
 
-  @Column(length = 20, nullable = false)
+  @Column(length = 20)
   private String name;
 
-  @Column(length = 20, nullable = false, unique = true)
+  @Column(length = 20, unique = true)
   private String nickname;
 
   @Column(name = "profile_emoji", columnDefinition = "text")
@@ -67,5 +67,17 @@ public class Member extends BaseEntity {
   public void updateNotificationSettings(String fcmToken, String timezone) {
     this.fcmToken = fcmToken;
     this.timezone = timezone;
+  }
+
+  public void existsNullName() {
+    if (name == null) {
+      this.name = "";
+    }
+  }
+
+  public void existsNullNickname() {
+    if (nickname == null) {
+      this.nickname = "";
+    }
   }
 }
