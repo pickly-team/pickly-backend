@@ -126,8 +126,8 @@ public class MemberMapper {
     return Member.builder()
         .username(token.getUid())
         .email(token.getEmail())
-        .name(token.getName() == null ? "" : token.getName())
-        .nickname("")
+        .name(token.getName() == null ? null : token.getName())
+        .nickname(null)
         .isHardMode(false)
         .password(password)
         .build();
