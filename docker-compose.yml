@@ -46,7 +46,7 @@ services:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
     environment:
-      - GF_SECURITY_ADMIN_USER="${GRAFANA_USER}"
-      - GF_SECURITY_ADMIN_PASSWORD="${GRAFANA_PASS}"
+      GF_SECURITY_ADMIN_USER: "${GF_USER}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GF_PASS}"
     depends_on:
       - prometheus
