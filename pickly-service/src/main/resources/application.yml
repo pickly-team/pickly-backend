@@ -1,7 +1,7 @@
 spring:
   # 실행할 프로필 정보
   profiles:
-    active: dev
+    active: local
   # multipart 이용 시 파일/리퀘스트 사이즈 제한
   servlet:
     multipart:
@@ -42,3 +42,12 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /api/**
+
+# spring actuator
+management:
+  endpoints:
+    prometheus:
+      enabled: true
+    web:
+      exposure:
+        include: prometheus
