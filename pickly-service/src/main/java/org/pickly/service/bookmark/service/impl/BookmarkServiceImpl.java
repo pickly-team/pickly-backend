@@ -224,6 +224,8 @@ public class BookmarkServiceImpl implements BookmarkService {
       result.updateTitleAndImage(title, previewImageUrl, member.getTimezone());
       return result;
     } catch (IOException e) {
+      log.info("exception = {}", e.getMessage());
+      log.info("exception = {}", e.toString());
       return result;
     }
   }
