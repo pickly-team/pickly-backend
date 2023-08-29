@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 public enum BookmarkErrorCode implements ErrorCode {
 
   BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "B001", "존재하지 않는 북마크 정보입니다."),
+  FORBIDDEN_BOOKMARK(HttpStatus.FORBIDDEN, "B002", "유효하지 않은 url 입니다. 비공개 포스트인지 확인해주세요."),
   ;
 
   private final HttpStatus status;

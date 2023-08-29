@@ -219,14 +219,11 @@ public class BookmarkServiceImpl implements BookmarkService {
 
       String title = doc.select("meta[property=og:title]").attr(CONTENT_ATTR);
       String previewImageUrl = doc.select("meta[property=og:image]").attr(CONTENT_ATTR);
-      log.info("크롤링 결과 = {}", title);
 
       result.updateTitleAndImage(title, previewImageUrl, member.getTimezone());
       return result;
     } catch (IOException e) {
-      log.info("exception = {}", e.getMessage());
-      log.info("exception = {}", e.toString());
-      return result;
+      throw new BookmarkException.ForbiddenBookmarkException();
     }
   }
 

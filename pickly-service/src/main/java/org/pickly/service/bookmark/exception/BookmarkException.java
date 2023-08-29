@@ -14,4 +14,10 @@ public abstract class BookmarkException extends BusinessException {
     }
   }
 
+  public static class ForbiddenBookmarkException extends BookmarkException {
+    public ForbiddenBookmarkException() {
+      super(BookmarkErrorCode.FORBIDDEN_BOOKMARK);
+    }
+  }
+
 }
