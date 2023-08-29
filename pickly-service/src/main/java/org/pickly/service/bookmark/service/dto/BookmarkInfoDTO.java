@@ -2,11 +2,13 @@ package org.pickly.service.bookmark.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Getter
 @AllArgsConstructor
 public class BookmarkInfoDTO {
@@ -28,7 +30,9 @@ public class BookmarkInfoDTO {
 
   private String makeTitle(String timezone) {
     LocalDateTime now = TimezoneHandler.getNowInTimezone(timezone);
+    log.info("현재 시간 = {}", now);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분의 북마크");
+    log.info("포맷팅 결과 = {}", now.format(formatter));
     return now.format(formatter);
   }
 

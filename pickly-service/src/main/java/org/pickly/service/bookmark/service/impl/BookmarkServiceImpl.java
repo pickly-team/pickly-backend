@@ -2,6 +2,7 @@ package org.pickly.service.bookmark.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
@@ -46,6 +47,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookmarkServiceImpl implements BookmarkService {
@@ -217,6 +219,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
       String title = doc.select("meta[property=og:title]").attr(CONTENT_ATTR);
       String previewImageUrl = doc.select("meta[property=og:image]").attr(CONTENT_ATTR);
+      log.info("크롤링 결과 = {}", title);
 
       result.updateTitleAndImage(title, previewImageUrl, member.getTimezone());
       return result;
