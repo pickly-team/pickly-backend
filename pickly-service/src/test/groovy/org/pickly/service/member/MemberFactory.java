@@ -24,4 +24,9 @@ public class MemberFactory {
     return testMember("picko123", "picko123@gmail.com", "picko",
         "iAmNotAPickyEater", "👍");
   }
+
+  public Member testMember(String nickname, String email) {
+    return testMember(nickname, email, "picko",
+        nickname, "👍");
+  }
 }

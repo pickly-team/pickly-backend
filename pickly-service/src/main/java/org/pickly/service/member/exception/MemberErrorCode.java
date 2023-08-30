@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 public enum MemberErrorCode implements ErrorCode {
 
   MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 유저 정보입니다."),
+  NICKNAME_DUPLICATE_EXCEPTION(HttpStatus.CONFLICT, "M002", "이미 존재하는 닉네임입니다."),
   ;
 
   private final HttpStatus status;

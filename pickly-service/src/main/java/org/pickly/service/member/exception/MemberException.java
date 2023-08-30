@@ -14,4 +14,10 @@ public abstract class MemberException extends BusinessException {
     }
   }
 
+  public static class NicknameDuplicateException extends MemberException {
+    public NicknameDuplicateException() {
+      super(MemberErrorCode.NICKNAME_DUPLICATE_EXCEPTION);
+    }
+  }
+
 }

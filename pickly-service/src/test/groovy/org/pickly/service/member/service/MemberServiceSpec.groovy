@@ -7,6 +7,7 @@ import org.pickly.service.category.CategoryFactory
 import org.pickly.service.category.repository.interfaces.CategoryRepository
 import org.pickly.service.friend.service.interfaces.FriendService
 import org.pickly.service.member.MemberFactory
+import org.pickly.service.member.exception.MemberException
 import org.pickly.service.member.repository.interfaces.MemberRepository
 import org.pickly.service.member.service.dto.MemberProfileUpdateDTO
 import org.pickly.service.member.service.interfaces.MemberService
@@ -91,7 +92,7 @@ class MemberServiceSpec extends Specification {
     }
 
 
-    def "사용자 프로필 수정"() {
+    def "사용자 프로필 수정_존재하지 않는 닉네임은 사용 가능"() {
         given:
         var member = memberRepository.save(memberFactory.testMember())
 
@@ -105,6 +106,18 @@ class MemberServiceSpec extends Specification {
         found.name == "수정"
         found.nickname == "수정"
         found.profileEmoji == "👎"
+    }
+
+    def "사용자 프로필 수정_이미 존재하는 닉네임은 사용 불가능"() {
+        given:
+        var member = memberRepository.save(memberFactory.testMember("picko", "test@gmail.com"))
+        var member2 = memberRepository.save(memberFactory.testMember("picko2", "test2@gmail.com"))
+
+        when:
+        memberService.updateMyProfile(member.id, new MemberProfileUpdateDTO("수정", member2.getNickname(), "👎"))
+
+        then:
+        thrown(MemberException.NicknameDuplicateException)
     }
 
     def "사용자 탈퇴"() {

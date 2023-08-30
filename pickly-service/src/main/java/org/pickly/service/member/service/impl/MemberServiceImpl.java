@@ -68,7 +68,9 @@ public class MemberServiceImpl implements MemberService {
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
     Member member = findById(memberId);
-
+    if (existsByUsername(request.getNickname())) {
+      throw new MemberException.NicknameDuplicateException();
+    }
     member.updateProfile(
         request.getName(),
         request.getNickname(),
