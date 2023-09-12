@@ -6,7 +6,7 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
 # github repository Actions 페이지에 나타날 이름 
-name: Pickly Backend CI / CD 
+name: Pickly Backend CI / CD
 
 # develop 브렌치에 Push되었을 경우 Workflow Trigger을 실행한다. 
 on:
@@ -49,6 +49,12 @@ jobs:
         run: |
           cd ./pickly-service/src/main/resources
           echo "${{ secrets.SERVICE_FIREBASE_CONFIG }}" > ./firebase.json
+        shell: bash
+
+      - name: Create extension encrypt key
+        run: |
+          cd ./pickly-service/src/main/resources
+          echo "${{ secrets.ET_KEY }}" > ./extension.json
         shell: bash
 
       - name: Build Gradle wrapper
