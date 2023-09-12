@@ -14,7 +14,7 @@ import java.util.Set;
 @Configuration
 public class CacheConfig {
 
-  private static final String AUTHENTICATE = "authenticate";
+  public static final String AUTHENTICATE = "authenticate";
 
   @Bean
   public CacheManager cacheManager() {

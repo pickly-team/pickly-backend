@@ -205,4 +205,21 @@ public class MemberController {
 
     return response;
   }
+
+  @PostMapping("/{memberId}/authentication-code")
+  @Operation(
+      summary = "크롬 익스텐션 대응 : 멤버 인증코드를 발급한다.",
+      description = "웹 로그인을 할 때 사용할 본인 인증용 인증코드를 발급한다. (만료 기한 = 5분)")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  public String makeMemberAuthenticationCode(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    return memberService.makeMemberAuthenticationCode(memberId);
+  }
+
+
 }
