@@ -20,4 +20,10 @@ public abstract class MemberException extends BusinessException {
     }
   }
 
+  public static class CodeNotFoundException extends MemberException {
+    public CodeNotFoundException() {
+      super(MemberErrorCode.CODE_NOT_FOUND);
+    }
+  }
+
 }
