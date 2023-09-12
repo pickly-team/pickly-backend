@@ -1,5 +1,6 @@
 package org.pickly.service.common.utils.encrypt;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
@@ -8,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+@Slf4j
 @Component
 public class ExtensionKey {
 
@@ -23,6 +25,7 @@ public class ExtensionKey {
   }
 
   private SecretKey generateKey() {
+    System.out.println("key = " + key);
     byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
     return new SecretKeySpec(keyBytes, ALGORITHM);
   }
