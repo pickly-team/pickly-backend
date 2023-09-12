@@ -43,3 +43,4 @@ data/
 application.pid
 .env-dev
 firebase.json
+extension.json
