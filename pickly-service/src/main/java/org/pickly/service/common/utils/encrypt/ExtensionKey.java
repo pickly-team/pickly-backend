@@ -25,7 +25,6 @@ public class ExtensionKey {
   }
 
   private SecretKey generateKey() {
-    System.out.println("key = " + key);
     byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
     return new SecretKeySpec(keyBytes, ALGORITHM);
   }
