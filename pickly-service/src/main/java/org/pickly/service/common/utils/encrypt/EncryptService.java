@@ -24,7 +24,7 @@ public class EncryptService {
       ExtensionKey key = objectMapper.readValue(resource.getInputStream(), ExtensionKey.class);
       extensionKey.setKey(key.getKey());
     } catch (Exception e) {
-      log.warn("can not read extension key");
+      e.printStackTrace();
     }
   }
 
