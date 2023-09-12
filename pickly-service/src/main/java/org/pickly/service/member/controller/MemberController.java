@@ -230,7 +230,7 @@ public class MemberController {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "잘못된 인증 코드"),
   })
-  public Long checkMemberAuthenticationCode(
+  public String checkMemberAuthenticationCode(
       @Parameter(name = "code", description = "발급 받은 인증 코드 값", example = "2319", required = true)
       @NotBlank(message = "인증 코드는 필수 값입니다.") @RequestParam final String code
   ) {

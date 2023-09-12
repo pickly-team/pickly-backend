@@ -6,6 +6,8 @@ import org.pickly.service.block.repository.interfaces.BlockRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.common.config.CacheConfig;
 import org.pickly.service.common.utils.base.AuthTokenUtil;
+import org.pickly.service.common.utils.encrypt.EncryptService;
+import org.pickly.service.common.utils.encrypt.ExtensionKey;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.member.common.MemberMapper;
@@ -43,6 +45,7 @@ public class MemberServiceImpl implements MemberService {
   private final NotificationStandardRepository notificationStandardRepository;
   private final AuthTokenUtil authTokenUtil;
   private final CacheManager cacheManager;
+  private final EncryptService encryptService;
 
   @Transactional(readOnly = true)
   public NotificationStandard findNotificationStandardByMemberId(final Long memberId) {
@@ -215,12 +218,13 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public Long checkMemberAuthenticationCode(String code) {
+  public String checkMemberAuthenticationCode(String code) {
     Long memberId = getCodeCache().get(code, Long.class);
     if (memberId == null) {
       throw new MemberException.CodeNotFoundException();
     }
-    return memberId;
+    ExtensionKey key = encryptService.getKey();
+    return key.encrypt(memberId);
   }
 
   private Cache getCodeCache() {

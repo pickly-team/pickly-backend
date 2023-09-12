@@ -38,6 +38,6 @@ public interface MemberService {
 
   String makeMemberAuthenticationCode(Long memberId);
 
-  Long checkMemberAuthenticationCode(String code);
+  String checkMemberAuthenticationCode(String code);
 
 }
