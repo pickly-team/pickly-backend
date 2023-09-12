@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.base.RequestUtil;
@@ -221,5 +222,19 @@ public class MemberController {
     return memberService.makeMemberAuthenticationCode(memberId);
   }
 
+  @DeleteMapping("/authentication-code")
+  @Operation(
+      summary = "크롬 익스텐션 대응 : 멤버 인증 코드를 확인한다.",
+      description = "인증 코드를 제출하고, 맵핑된 멤버 ID를 받는다. 멤버 ID는 암호화한다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "잘못된 인증 코드"),
+  })
+  public Long checkMemberAuthenticationCode(
+      @Parameter(name = "code", description = "발급 받은 인증 코드 값", example = "2319", required = true)
+      @NotBlank(message = "인증 코드는 필수 값입니다.") @RequestParam final String code
+  ) {
+    return memberService.checkMemberAuthenticationCode(code);
+  }
 
 }

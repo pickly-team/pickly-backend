@@ -19,6 +19,7 @@ import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.exception.NotificationException;
 import org.pickly.service.notification.repository.interfaces.NotificationRepository;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -209,8 +210,21 @@ public class MemberServiceImpl implements MemberService {
   public String makeMemberAuthenticationCode(Long memberId) {
     existsById(memberId);
     String authenticationCode = makeRandomCode();
-    cacheManager.getCache(CacheConfig.AUTHENTICATE).put(authenticationCode, memberId);
+    getCodeCache().put(authenticationCode, memberId);
     return authenticationCode;
+  }
+
+  @Override
+  public Long checkMemberAuthenticationCode(String code) {
+    Long memberId = getCodeCache().get(code, Long.class);
+    if (memberId == null) {
+      throw new MemberException.CodeNotFoundException();
+    }
+    return memberId;
+  }
+
+  private Cache getCodeCache() {
+    return cacheManager.getCache(CacheConfig.AUTHENTICATE);
   }
 
   private String makeRandomCode() {

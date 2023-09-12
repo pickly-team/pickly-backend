@@ -20,7 +20,7 @@ public class CacheConfig {
   public CacheManager cacheManager() {
     SimpleCacheManager cacheManager = new SimpleCacheManager();
     cacheManager.setCaches(Set.of(
-        new ExpireConcurrentMapCache(AUTHENTICATE, 5L)
+        new ExpireConcurrentMapCache(AUTHENTICATE, 300L)
     ));
     return cacheManager;
   }

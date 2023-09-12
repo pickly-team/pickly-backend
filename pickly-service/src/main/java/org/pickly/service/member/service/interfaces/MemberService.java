@@ -37,4 +37,7 @@ public interface MemberService {
   void updateNotificationSettings(Long memberId, String timezone, String fcmToken);
 
   String makeMemberAuthenticationCode(Long memberId);
+
+  Long checkMemberAuthenticationCode(String code);
+
 }
