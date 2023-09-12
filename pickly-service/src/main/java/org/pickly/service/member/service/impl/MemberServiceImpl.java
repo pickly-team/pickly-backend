@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.block.repository.interfaces.BlockRepository;
 import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository;
+import org.pickly.service.common.config.CacheConfig;
 import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.friend.repository.interfaces.FriendRepository;
@@ -18,11 +19,13 @@ import org.pickly.service.notification.entity.NotificationStandard;
 import org.pickly.service.notification.exception.NotificationException;
 import org.pickly.service.notification.repository.interfaces.NotificationRepository;
 import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -38,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
   private final NotificationRepository notificationRepository;
   private final NotificationStandardRepository notificationStandardRepository;
   private final AuthTokenUtil authTokenUtil;
+  private final CacheManager cacheManager;
 
   @Transactional(readOnly = true)
   public NotificationStandard findNotificationStandardByMemberId(final Long memberId) {
@@ -200,4 +204,24 @@ public class MemberServiceImpl implements MemberService {
     Member member = findById(memberId);
     member.updateNotificationSettings(fcmToken, timezone);
   }
+
+  @Override
+  public String makeMemberAuthenticationCode(Long memberId) {
+    existsById(memberId);
+    String authenticationCode = makeRandomCode();
+    cacheManager.getCache(CacheConfig.AUTHENTICATE).put(authenticationCode, memberId);
+    return authenticationCode;
+  }
+
+  private String makeRandomCode() {
+    String authenticationCode;
+    do {
+      Random random = new Random();
+      int randomNumber = 1000 + random.nextInt(9000);
+      authenticationCode = Integer.toString(randomNumber);
+    } while (cacheManager.getCache(CacheConfig.AUTHENTICATE).get(authenticationCode) != null);
+
+    return authenticationCode;
+  }
+
 }
