@@ -1,16 +1,13 @@
 package org.pickly.service.common.utils.encrypt;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-@Slf4j
 @Component
 public class ExtensionKey {
 
@@ -26,7 +23,7 @@ public class ExtensionKey {
   }
 
   private SecretKey generateKey() {
-    byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+    byte[] keyBytes = key.getBytes();
     return new SecretKeySpec(keyBytes, ALGORITHM);
   }
 
@@ -42,13 +39,13 @@ public class ExtensionKey {
     }
   }
 
-  public Long decrypt(final String value) {
+  public Long decrypt(String encryptedValue) {
     try {
       Cipher cipher = Cipher.getInstance(ALGORITHM);
       cipher.init(Cipher.DECRYPT_MODE, generateKey());
-      byte[] encryptedBytes = Base64.getDecoder().decode(value);
-      byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-      return ByteBuffer.wrap(decryptedBytes).getLong();
+      byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedValue));
+      String decryptedString = new String(decryptedBytes);
+      return Long.parseLong(decryptedString);
     } catch (Exception e) {
       e.printStackTrace();
       throw new EncryptException.FailToDecryptException();
