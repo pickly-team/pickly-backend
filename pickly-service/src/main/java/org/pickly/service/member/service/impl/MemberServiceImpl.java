@@ -68,15 +68,14 @@ public class MemberServiceImpl implements MemberService {
     return memberRepository.existsByNicknameAndDeletedAtIsNull(nickname);
   }
 
-  public boolean existsByUsername(String username) {
-    return memberRepository.existsByUsernameAndDeletedAtIsNull(username);
-  }
-
   @Override
   @Transactional
   public void updateMyProfile(Long memberId, MemberProfileUpdateDTO request) {
     Member member = findById(memberId);
-    if (existsByNickname(request.getNickname())) {
+    if (
+        !member.getNickname().equals(request.getNickname())
+            && existsByNickname(request.getNickname())
+    ) {
       throw new MemberException.NicknameDuplicateException();
     }
     member.updateProfile(
