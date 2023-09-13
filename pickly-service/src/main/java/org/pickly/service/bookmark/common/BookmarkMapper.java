@@ -1,8 +1,8 @@
 package org.pickly.service.bookmark.common;
 
+import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
 import org.pickly.service.bookmark.controller.response.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.response.BookmarkListDeleteRes;
-import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
 import org.pickly.service.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.bookmark.entity.Bookmark;
 import org.pickly.service.bookmark.service.dto.BookmarkUpdateReqDTO;
@@ -49,4 +49,5 @@ public class BookmarkMapper {
         .visibility(request.getVisibility())
         .build();
   }
+
 }

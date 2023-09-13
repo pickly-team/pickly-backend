@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.bookmark.controller.request.BookmarkUpdateReq;
+import org.pickly.service.bookmark.controller.request.ExtensionBookmarkReq;
 import org.pickly.service.bookmark.controller.response.BookmarkDeleteRes;
 import org.pickly.service.bookmark.controller.response.BookmarkListDeleteRes;
 import org.pickly.service.bookmark.controller.response.BookmarkRes;
@@ -27,6 +28,8 @@ import org.pickly.service.bookmark.entity.Visibility;
 import org.pickly.service.bookmark.service.dto.BookmarkDeleteResDTO;
 import org.pickly.service.bookmark.service.dto.BookmarkListDeleteResDTO;
 import org.pickly.service.bookmark.service.interfaces.BookmarkService;
+import org.pickly.service.common.utils.encrypt.EncryptService;
+import org.pickly.service.common.utils.encrypt.ExtensionKey;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.HttpStatus;
@@ -42,6 +45,7 @@ import java.util.List;
 @Tag(name = "Bookmark", description = "즐겨찾기 API")
 public class BookmarkController {
 
+  private final EncryptService encryptService;
   private final BookmarkService bookmarkService;
   private final BookmarkMapper bookmarkMapper;
 
@@ -240,6 +244,22 @@ public class BookmarkController {
   ) {
     bookmarkService.updateBookmark(bookmarkId,
         bookmarkMapper.toBookmarkUpdateReqDTO(request));
+  }
+
+  @PostMapping("/bookmarks/chrome-extension")
+  @Operation(summary = "[크롬 익스텐션] 북마크를 생성한다.")
+  public ResponseEntity<BookmarkRes> createForExtension(
+      @RequestBody
+      @Valid
+      ExtensionBookmarkReq.CreateDto dto
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    Bookmark entity = bookmarkService.create(key.decrypt(dto.memberId()), dto);
+    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(response);
   }
 
 }
