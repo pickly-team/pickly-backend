@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -37,8 +38,21 @@ public class ExtensionKey {
       return Base64.getEncoder().encodeToString(encrypted);
     } catch (Exception e) {
       e.printStackTrace();
+      throw new EncryptException.FailToEncryptException();
     }
-    return null;
+  }
+
+  public Long decrypt(final String value) {
+    try {
+      Cipher cipher = Cipher.getInstance(ALGORITHM);
+      cipher.init(Cipher.DECRYPT_MODE, generateKey());
+      byte[] encryptedBytes = Base64.getDecoder().decode(value);
+      byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+      return ByteBuffer.wrap(decryptedBytes).getLong();
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new EncryptException.FailToDecryptException();
+    }
   }
 
 }
