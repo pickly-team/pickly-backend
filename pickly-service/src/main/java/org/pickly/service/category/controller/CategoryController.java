@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -20,6 +21,8 @@ import org.pickly.service.category.controller.response.CategoryResponseDTO;
 import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.service.interfaces.CategoryService;
+import org.pickly.service.common.utils.encrypt.EncryptService;
+import org.pickly.service.common.utils.encrypt.ExtensionKey;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,7 @@ import java.util.List;
 @Tag(name = "Category", description = "카테고리 API")
 public class CategoryController {
 
+  private final EncryptService encryptService;
   private final CategoryService categoryService;
   private final CategoryMapper categoryMapper;
 
@@ -175,4 +179,26 @@ public class CategoryController {
     Integer response = categoryService.getCategoryCntByMember(memberId);
     return ResponseEntity.ok(response);
   }
+
+  @GetMapping("/categories/chrome-extension")
+  @Operation(summary = "[크롬 익스텐션] 특정 유저의 카테고리 목록을 조회한다.", description = "페이지네이션이 적용되어 있다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = PageResponse.class)))
+  })
+  public PageResponse<CategoryDTO> getCategoriesByMemberForExtension(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @NotBlank(message = "암호화된 유저 ID를 입력해주세요.") final String memberId,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    return categoryService.getCategoriesWithPagingByMember(cursorId, pageSize, key.decrypt(memberId));
+  }
+
 }
