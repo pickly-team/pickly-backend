@@ -1,6 +1,7 @@
 package org.pickly.service.bookmark.service.interfaces;
 
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
+import org.pickly.service.bookmark.controller.request.ExtensionBookmarkReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -41,6 +42,8 @@ public interface BookmarkService {
   BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds);
 
   Bookmark create(BookmarkCreateReq dto);
+
+  Bookmark create(Long memberId, ExtensionBookmarkReq.CreateDto dto);
 
   PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId);
 

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.pickly.service.bookmark.controller.request.BookmarkCreateReq;
+import org.pickly.service.bookmark.controller.request.ExtensionBookmarkReq;
 import org.pickly.service.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.bookmark.entity.Bookmark;
@@ -21,6 +22,7 @@ import org.pickly.service.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.exception.CategoryException;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
+import org.pickly.service.category.service.interfaces.CategoryService;
 import org.pickly.service.comment.entity.Comment;
 import org.pickly.service.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.comment.repository.interfaces.CommentRepository;
@@ -57,6 +59,7 @@ public class BookmarkServiceImpl implements BookmarkService {
   private static final String CONTENT_ATTR = "content";
 
 
+  private final CategoryService categoryService;
   private final CategoryRepository categoryRepository;
   private final MemberRepository memberRepository;
   private final NotificationRepository notificationRepository;
@@ -208,6 +211,21 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl(), member);
     Bookmark entity = Bookmark.create(category, member, dto.getTitle(), info, dto.getVisibility());
+
+    return bookmarkRepository.save(entity);
+  }
+
+  @Override
+  @Transactional
+  public Bookmark create(Long memberId, ExtensionBookmarkReq.CreateDto dto) {
+
+    Category category = categoryRepository.findById(dto.categoryId())
+        .orElseThrow(CategoryException.CategoryNotFoundException::new);
+    Member member = memberRepository.findById(memberId)
+        .orElseThrow(MemberException.MemberNotFoundException::new);
+
+    BookmarkInfoDTO info = scrapOgTagInfo(dto.url(), member);
+    Bookmark entity = Bookmark.create(category, member, dto.title(), info, dto.visibility());
 
     return bookmarkRepository.save(entity);
   }

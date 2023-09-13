@@ -15,6 +15,8 @@ public interface CategoryService {
 
     CategoryDTO findById(Long categoryId);
 
+    void existsById(Long id);
+
     Category update(Long categoryId, CategoryUpdateRequestDTO dto);
 
     void updateOrderNum(List<CategoryOrderNumUpdateReq> requests);
