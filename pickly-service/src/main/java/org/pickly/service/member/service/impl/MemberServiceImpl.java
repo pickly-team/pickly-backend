@@ -223,7 +223,9 @@ public class MemberServiceImpl implements MemberService {
       throw new MemberException.CodeNotFoundException();
     }
     ExtensionKey key = encryptService.getKey();
-    return key.encrypt(memberId);
+    String result = key.encrypt(memberId);
+    getCodeCache().evict(key);
+    return result;
   }
 
   private Cache getCodeCache() {
