@@ -51,7 +51,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
             )
         ).from(member)
         .where(
-            member.nickname.contains(keyword),
+            member.nickname.likeIgnoreCase(keyword),
             member.id.ne(memberId),
             ltMemberId(cursorId)
         )
