@@ -234,8 +234,8 @@ public class MemberServiceImpl implements MemberService {
     String authenticationCode;
     do {
       Random random = new Random();
-      int randomNumber = 1000 + random.nextInt(9000);
-      authenticationCode = Integer.toString(randomNumber);
+      int randomNumber = random.nextInt(1000000); // 0 이상 999999 이하의 난수 생성
+      authenticationCode = String.format("%06d", randomNumber);
     } while (cacheManager.getCache(CacheConfig.AUTHENTICATE).get(authenticationCode) != null);
 
     return authenticationCode;
