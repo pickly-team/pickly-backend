@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.bookmark.common.BookmarkMapper;
@@ -206,7 +203,7 @@ public class BookmarkController {
   @Operation(summary = "특정 북마크의 제목을 url로부터 받아온다.")
   public String getTitleFromUrl(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long memberId,
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
 
       @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
       @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
@@ -260,6 +257,19 @@ public class BookmarkController {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(response);
+  }
+
+  @GetMapping("/members/{memberId}/bookmark/title/chrome-extension")
+  @Operation(summary = "[크롬 익스텐션] 특정 북마크의 제목을 url로부터 받아온다.")
+  public String getTitleFromUrlForExtension(
+      @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
+      @NotBlank(message = "유저 ID를 입력해주세요.") @PathVariable final String memberId,
+
+      @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
+      @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    return bookmarkService.getTitleFromUrl(key.decrypt(memberId), url);
   }
 
 }
