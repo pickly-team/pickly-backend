@@ -259,11 +259,11 @@ public class BookmarkController {
         .body(response);
   }
 
-  @GetMapping("/members/{memberId}/bookmark/title/chrome-extension")
+  @GetMapping("/members/bookmark/title/chrome-extension")
   @Operation(summary = "[크롬 익스텐션] 특정 북마크의 제목을 url로부터 받아온다.")
   public String getTitleFromUrlForExtension(
       @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
-      @NotBlank(message = "유저 ID를 입력해주세요.") @PathVariable final String memberId,
+      @NotBlank(message = "유저 ID를 입력해주세요.") @RequestParam final String memberId,
 
       @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
       @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
