@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     List<Category> categories = new ArrayList<>();
     Member member = memberRepository.findById(memberId)
         .orElseThrow(MemberException.MemberNotFoundException::new);
-    int orderNum = getNewOrderNum(memberId);
+    int orderNum = getNewOrderNum(memberId, requests.size());
     for (CategoryRequestDTO dto : requests) {
       categories.add(
           new Category(member, dto.name(), dto.emoji(), orderNum)
@@ -53,12 +53,13 @@ public class CategoryServiceImpl implements CategoryService {
     categoryJdbcRepository.createCategories(categories);
   }
 
-  private int getNewOrderNum(Long memberId) {
+  private int getNewOrderNum(Long memberId, int requestSize) {
     List<Category> savedCategories = categoryRepository.findAllCategoryByMemberId(memberId);
-    if (savedCategories.size() == MAX_CATEGORY_CNT) {
+    int savedSize = savedCategories.size();
+    if (savedSize == MAX_CATEGORY_CNT || savedSize + requestSize > MAX_CATEGORY_CNT) {
       throw new CategoryException.ExceedMaxCategorySizeException();
     }
-    return savedCategories.get(0).getOrderNum() + 1;
+    return savedCategories.get(savedSize - 1).getOrderNum() + 1;
   }
 
   @Override
