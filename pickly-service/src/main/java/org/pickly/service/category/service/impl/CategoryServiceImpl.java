@@ -54,12 +54,11 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   private int getNewOrderNum(Long memberId) {
-    Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId);
-    int orderNum = Category.getNewOrderNum(lastCategory);
-    if (orderNum == MAX_CATEGORY_CNT) {
+    List<Category> savedCategories = categoryRepository.findAllCategoryByMemberId(memberId);
+    if (savedCategories.size() == MAX_CATEGORY_CNT) {
       throw new CategoryException.ExceedMaxCategorySizeException();
     }
-    return orderNum;
+    return savedCategories.get(0).getOrderNum();
   }
 
   @Override
