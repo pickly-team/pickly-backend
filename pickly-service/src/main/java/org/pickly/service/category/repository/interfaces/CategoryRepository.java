@@ -27,5 +27,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   @Query(value = "SELECT COUNT(c.id) FROM Category c "
       + "WHERE c.member_id = :member_id AND c.deleted_at IS NULL "
       + "GROUP BY c.member_id", nativeQuery = true)
-  Integer getCategoryCntByMemberId(@Param("member_id") Long memberod);
+  Integer getCategoryCntByMemberId(@Param("member_id") Long memberId);
+
 }
