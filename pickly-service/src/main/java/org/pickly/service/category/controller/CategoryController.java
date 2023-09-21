@@ -18,12 +18,11 @@ import org.pickly.service.category.controller.request.CategoryRequestDTO;
 import org.pickly.service.category.controller.request.CategoryUpdateRequestDTO;
 import org.pickly.service.category.controller.response.CategoryRes;
 import org.pickly.service.category.controller.response.CategoryResponseDTO;
-import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.entity.Category;
+import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.service.interfaces.CategoryService;
 import org.pickly.service.common.utils.encrypt.EncryptService;
 import org.pickly.service.common.utils.encrypt.ExtensionKey;
-import org.pickly.service.common.utils.page.PageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -116,7 +115,7 @@ public class CategoryController {
   }
 
   @GetMapping("/members/{memberId}/categories")
-  @Operation(summary = "특정 유저의 카테고리 목록을 전체 조회한다.", description = "페이지네이션이 적용되어 있지 않다.")
+  @Operation(summary = "특정 유저의 카테고리 목록을 전체 조회한다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "성공",
           content = @Content(mediaType = "application/json",
@@ -128,6 +127,23 @@ public class CategoryController {
       @PathVariable final Long memberId
   ) {
     List<CategoryDTO> dtos = categoryService.getCategoriesByMember(memberId);
+    return dtos.stream().map(categoryMapper::toResponse).toList();
+  }
+
+  @GetMapping("/members/categories/chrome-extension")
+  @Operation(summary = "[크롬 익스텐션] 특정 유저의 카테고리 목록을 전체 조회한다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = CategoryDTO.class)))
+  })
+  public List<CategoryRes> getCategoryByMemberForExtension(
+      @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "1211a9d/=++", required = true)
+      @NotBlank(message = "유저 ID를 입력해주세요.")
+      @RequestParam final String memberId
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    List<CategoryDTO> dtos = categoryService.getCategoriesByMember(key.decrypt(memberId));
     return dtos.stream().map(categoryMapper::toResponse).toList();
   }
 
@@ -158,27 +174,6 @@ public class CategoryController {
   ) {
     Integer response = categoryService.getCategoryCntByMember(memberId);
     return ResponseEntity.ok(response);
-  }
-
-  @GetMapping("/categories/chrome-extension")
-  @Operation(summary = "[크롬 익스텐션] 특정 유저의 카테고리 목록을 조회한다.", description = "페이지네이션이 적용되어 있다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = PageResponse.class)))
-  })
-  public PageResponse<CategoryDTO> getCategoriesByMemberForExtension(
-      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
-      @NotBlank(message = "암호화된 유저 ID를 입력해주세요.") final String memberId,
-
-      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
-      @RequestParam(required = false) final Long cursorId,
-
-      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
-      @RequestParam(required = false) final Integer pageSize
-  ) {
-    ExtensionKey key = encryptService.getKey();
-    return categoryService.getCategoriesWithPagingByMember(cursorId, pageSize, key.decrypt(memberId));
   }
 
 }

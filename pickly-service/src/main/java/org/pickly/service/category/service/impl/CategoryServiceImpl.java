@@ -8,13 +8,10 @@ import org.pickly.service.category.controller.request.CategoryUpdateRequestDTO;
 import org.pickly.service.category.entity.Category;
 import org.pickly.service.category.exception.CategoryException;
 import org.pickly.service.category.repository.interfaces.CategoryJdbcRepository;
-import org.pickly.service.category.repository.interfaces.CategoryQueryRepository;
 import org.pickly.service.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.category.service.dto.CategoryDTO;
 import org.pickly.service.category.service.interfaces.CategoryService;
 import org.pickly.service.common.utils.base.BaseEntity;
-import org.pickly.service.common.utils.page.PageRequest;
-import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.member.entity.Member;
 import org.pickly.service.member.exception.MemberException;
 import org.pickly.service.member.repository.interfaces.MemberRepository;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +32,9 @@ public class CategoryServiceImpl implements CategoryService {
 
   private final MemberRepository memberRepository;
   private final CategoryRepository categoryRepository;
-  private final CategoryQueryRepository categoryQueryRepository;
   private final CategoryJdbcRepository categoryJdbcRepository;
   private final CategoryMapper categoryMapper;
   private final ApplicationEventPublisher eventPublisher;
-  private static final int LAST_ITEM = 1;
 
   @Transactional
   public void create(Long memberId, List<CategoryRequestDTO> requests) {
@@ -67,13 +61,6 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = categoryRepository.findById(categoryId)
         .orElseThrow(CategoryException.CategoryNotFoundException::new);
     return categoryMapper.toDto(category);
-  }
-
-  @Override
-  public void existsById(Long id) {
-    if (!categoryRepository.existsById(id)) {
-      throw new CategoryException.CategoryNotFoundException();
-    }
   }
 
   @Transactional
@@ -111,8 +98,7 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Transactional
   public void delete(Long categoryId) {
-    Category category = categoryRepository.findById(categoryId)
-            .orElseThrow();
+    Category category = categoryRepository.findById(categoryId).orElseThrow();
     category.delete();
     eventPublisher.publishEvent(category.getId());
   }
@@ -130,50 +116,9 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public PageResponse<CategoryDTO> getCategoriesWithPagingByMember(
-      final Long cursorId,
-      final Integer pageSize, 
-      final Long memberId
-  ) {
-    PageRequest pageRequest = makePageRequest(cursorId, pageSize);
-    List<Category> categories = categoryQueryRepository.findAllByMemberId(pageRequest, memberId);
-    return makeResponse(pageRequest.getPageSize(), categories);
-  }
-
-  @Override
   public List<CategoryDTO> getCategoriesByMember(Long memberId) {
     List<Category> categories = categoryRepository.findAllCategoryByMemberId(memberId);
     return categories.stream().map(CategoryDTO::from).toList();
   }
 
-  private <T> List<T> mapToDtoList(
-      final List<Category> categories,
-      final Function<Category, T> mapper
-  ) {
-    return categories.stream().map(mapper).toList();
-  }
-
-  private PageResponse<CategoryDTO> makeResponse(final int pageSize, List<Category> categories) {
-    int contentSize = categories.size();
-    categories = removeElement(categories, contentSize, pageSize);
-    List<CategoryDTO> contents = mapToDtoList(categories, CategoryDTO::from);
-    return new PageResponse<>(contentSize, pageSize, contents);
-  }
-
-  private List<Category> removeElement(
-      final List<Category> categoryList,
-      final int size,
-      final int pageSize
-  ) {
-    if (size - LAST_ITEM >= pageSize) {
-      List<Category> resultList = new ArrayList<>(categoryList);
-      resultList.remove(size - LAST_ITEM);
-      return resultList;
-    }
-    return categoryList;
-  }
-
-  private PageRequest makePageRequest(final Long cursorId, final Integer pageSize) {
-    return new PageRequest(cursorId, pageSize);
-  }
 }
