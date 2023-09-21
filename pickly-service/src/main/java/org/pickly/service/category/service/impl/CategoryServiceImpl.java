@@ -58,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     if (savedCategories.size() == MAX_CATEGORY_CNT) {
       throw new CategoryException.ExceedMaxCategorySizeException();
     }
-    return savedCategories.get(0).getOrderNum();
+    return savedCategories.get(0).getOrderNum() + 1;
   }
 
   @Override
