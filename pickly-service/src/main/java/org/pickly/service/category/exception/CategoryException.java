@@ -20,4 +20,10 @@ public abstract class CategoryException extends BusinessException {
     }
   }
 
+  public static class ExceedMaxCategorySizeException extends CategoryException {
+    public ExceedMaxCategorySizeException() {
+      super(CategoryErrorCode.EXCEED_MAX_CATEGORY_SIZE);
+    }
+  }
+
 }
