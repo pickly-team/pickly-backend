@@ -36,9 +36,4 @@ public class Category extends BaseEntity {
     return this;
   }
 
-  public static int getNewOrderNum(Category lastCategory) {
-    return (lastCategory == null) ? 0 : lastCategory.getOrderNum() + 1;
-  }
-
-
 }
