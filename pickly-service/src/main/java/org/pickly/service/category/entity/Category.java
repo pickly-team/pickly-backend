@@ -33,7 +33,12 @@ public class Category extends BaseEntity {
   public Category update(String name, String emoji) {
     this.name = name;
     this.emoji = emoji;
-
     return this;
   }
+
+  public static int getNewOrderNum(Category lastCategory) {
+    return (lastCategory == null) ? 0 : lastCategory.getOrderNum() + 1;
+  }
+
+
 }

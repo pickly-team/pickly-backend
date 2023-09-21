@@ -36,24 +36,30 @@ public class CategoryServiceImpl implements CategoryService {
   private final CategoryMapper categoryMapper;
   private final ApplicationEventPublisher eventPublisher;
 
+  private static final int MAX_CATEGORY_CNT = 20;
+
   @Transactional
   public void create(Long memberId, List<CategoryRequestDTO> requests) {
     List<Category> categories = new ArrayList<>();
-
     Member member = memberRepository.findById(memberId)
         .orElseThrow(MemberException.MemberNotFoundException::new);
-
-    Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId);
-    int orderNum = (lastCategory == null) ? 0 : lastCategory.getOrderNum() + 1;
-
+    int orderNum = getNewOrderNum(memberId);
     for (CategoryRequestDTO dto : requests) {
       categories.add(
           new Category(member, dto.name(), dto.emoji(), orderNum)
       );
       orderNum++;
     }
-
     categoryJdbcRepository.createCategories(categories);
+  }
+
+  private int getNewOrderNum(Long memberId) {
+    Category lastCategory = categoryRepository.findLastCategoryByMemberId(memberId);
+    int orderNum = Category.getNewOrderNum(lastCategory);
+    if (orderNum == MAX_CATEGORY_CNT) {
+      throw new CategoryException.ExceedMaxCategorySizeException();
+    }
+    return orderNum;
   }
 
   @Override
