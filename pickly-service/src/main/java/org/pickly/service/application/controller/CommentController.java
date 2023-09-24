@@ -7,24 +7,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.application.facade.CommentFacade;
 import org.pickly.service.domain.comment.common.CommentMapper;
 import org.pickly.service.domain.comment.controller.request.CommentCreateReq;
 import org.pickly.service.domain.comment.controller.request.CommentUpdateReq;
 import org.pickly.service.domain.comment.controller.response.BookmarkCommentRes;
 import org.pickly.service.domain.comment.controller.response.MemberCommentRes;
+import org.pickly.service.domain.comment.entity.Comment;
+import org.pickly.service.domain.comment.service.CommentReadService;
 import org.pickly.service.domain.comment.service.dto.CommentDTO;
-import org.pickly.service.domain.comment.service.interfaces.CommentService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Comment", description = "댓글 API")
 public class CommentController {
 
-  private final CommentService commentService;
+  private final CommentReadService commentReadService;
+  private final CommentFacade commentFacade;
   private final CommentMapper commentMapper;
 
   @GetMapping("/members/{memberId}/comments/count")
@@ -45,7 +41,7 @@ public class CommentController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    return commentService.countMemberComments(memberId);
+    return commentReadService.countMemberComments(memberId);
   }
 
   @GetMapping("/members/{memberId}/comments")
@@ -58,7 +54,7 @@ public class CommentController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    List<CommentDTO> dtoList = commentService.findByMember(memberId);
+    List<CommentDTO> dtoList = commentReadService.findByMember(memberId);
     return dtoList.stream()
         .map(commentMapper::toMemberCommentsResponse)
         .toList();
@@ -76,9 +72,10 @@ public class CommentController {
 
       @Valid @RequestBody CommentCreateReq request
   ) {
-    CommentDTO dto = commentService.create(bookmarkId, memberId,
-        commentMapper.toCreateDTO(request));
-    return commentMapper.toBookmarkCommentsResponse(dto, memberId);
+    Comment comment = commentFacade.create(
+        bookmarkId, memberId, commentMapper.toCreateDTO(request)
+    );
+    return commentMapper.toResponse(comment, memberId);
   }
 
   @GetMapping("/bookmarks/{bookmarkId}/comments")
@@ -90,7 +87,7 @@ public class CommentController {
       @Parameter(name = "memberId", description = "댓글을 조회하는 Member ID 값", example = "1", required = true)
       @Positive(message = "Member ID는 양수입니다.") @RequestParam final Long memberId
   ) {
-    List<CommentDTO> dtoList = commentService.findByBookmark(bookmarkId);
+    List<CommentDTO> dtoList = commentReadService.findByBookmark(bookmarkId);
     return dtoList.stream()
         .map(dto -> commentMapper.toBookmarkCommentsResponse(dto, memberId))
         .toList();
@@ -103,7 +100,7 @@ public class CommentController {
       @Parameter(name = "commentId", description = "Comment ID 값", example = "1", required = true)
       @Positive(message = "Comment ID는 양수입니다.") @PathVariable final Long commentId
   ) {
-    commentService.delete(commentId);
+    commentFacade.delete(commentId);
   }
 
   // TODO: JWT로 로그인 유저가 해당 comment 삭제 권한 있는지 체크하는 로직 추가 예정
@@ -118,8 +115,8 @@ public class CommentController {
 
       @Valid @RequestBody CommentUpdateReq request
   ) {
-    CommentDTO dto = commentService.update(commentId, memberId, commentMapper.toUpdateDTO(request));
-    return commentMapper.toBookmarkCommentsResponse(dto, memberId);
+    Comment comment = commentFacade.update(commentId, memberId, commentMapper.toUpdateDTO(request));
+    return commentMapper.toResponse(comment, memberId);
   }
 
 }
