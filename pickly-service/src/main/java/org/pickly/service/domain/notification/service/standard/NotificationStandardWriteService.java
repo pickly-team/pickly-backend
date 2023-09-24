@@ -1,4 +1,4 @@
-package org.pickly.service.domain.notification.service;
+package org.pickly.service.domain.notification.service.standard;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.member.entity.Member;
