@@ -3,23 +3,10 @@ package org.pickly.service.domain.member.common;
 import com.google.firebase.auth.FirebaseToken;
 import org.pickly.service.domain.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.domain.member.controller.request.MemberStatusReq;
+import org.pickly.service.domain.member.controller.response.*;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.entity.MemberMode;
 import org.pickly.service.domain.member.entity.Password;
-import org.pickly.service.domain.member.controller.response.HardModeRes;
-import org.pickly.service.domain.member.controller.response.MemberModeRes;
-import org.pickly.service.domain.member.controller.response.MemberProfileRes;
-import org.pickly.service.domain.member.controller.response.MemberRegisterRes;
-import org.pickly.service.domain.member.controller.response.MyProfileRes;
-import org.pickly.service.domain.member.controller.response.SearchMemberResultRes;
-import org.pickly.service.domain.member.service.dto.HardModeDTO;
-import org.pickly.service.domain.member.service.dto.MemberModeDTO;
-import org.pickly.service.domain.member.service.dto.MemberProfileDTO;
-import org.pickly.service.domain.member.service.dto.MemberProfileUpdateDTO;
-import org.pickly.service.domain.member.service.dto.MemberRegisterDto;
-import org.pickly.service.domain.member.service.dto.MemberStatusDTO;
-import org.pickly.service.domain.member.service.dto.MyProfileDTO;
-import org.pickly.service.domain.member.service.dto.SearchMemberResultResDTO;
+import org.pickly.service.domain.member.service.dto.*;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.springframework.stereotype.Component;
 
@@ -95,28 +82,11 @@ public class MemberMapper {
         .build();
   }
 
-  public HardModeDTO toMemberStatusDTO(MemberMode isHardMode) {
-    return new HardModeDTO(isHardMode.getDescription());
-  }
-
   public MemberModeDTO toMemberModeDTO(Member member, NotificationStandard standard) {
     return MemberModeDTO.builder()
         .isHardMode(member.getIsHardMode())
         .notifyDailyAt(standard.getNotifyDailyAt())
         .build();
-  }
-
-
-  public MemberRegisterDto toMemberRegisterDTO(Member member) {
-    return new MemberRegisterDto(
-        member.getUsername(),
-        member.getIsHardMode(),
-        member.getEmail(),
-        member.getName(),
-        member.getNickname(),
-        member.getPassword(),
-        member.getId()
-    );
   }
 
   public Member tokenToMember(FirebaseToken token) {
@@ -131,11 +101,6 @@ public class MemberMapper {
         .isHardMode(false)
         .password(password)
         .build();
-  }
-
-  public MemberRegisterRes toMemberRegisterResponse(MemberRegisterDto dto) {
-    return new MemberRegisterRes(dto.getUsername(), dto.getIsHardMode(), dto.getEmail(),
-        dto.getName(), dto.getNickname(), dto.getMemberId());
   }
 
   public MemberRegisterRes toResponse(Member member) {

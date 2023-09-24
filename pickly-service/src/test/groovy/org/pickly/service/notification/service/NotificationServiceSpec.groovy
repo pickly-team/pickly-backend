@@ -1,15 +1,14 @@
 package org.pickly.service.notification.service
 
-import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
-import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
-import org.pickly.service.notification.NotificationFactory
 import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository
-
+import org.pickly.service.domain.notification.service.NotificationWriteService
+import org.pickly.service.member.MemberFactory
+import org.pickly.service.notification.NotificationFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,7 +25,7 @@ import spock.lang.Specification
 class NotificationServiceSpec extends Specification {
 
     @Autowired
-    private NotificationService notificationService
+    private NotificationWriteService notificationWriteService
 
     @Autowired
     private BookmarkRepository bookmarkRepository
@@ -57,21 +56,10 @@ class NotificationServiceSpec extends Specification {
         notificationRepository.save(notification)
 
         when:
-        notificationService.readNotification(notification.id)
+        notificationWriteService.read(notification)
 
         then:
-        notification.checked == true
-    }
-
-    def "존재하지 않는 알림은 읽을 수 없다"() {
-        given:
-        var notificationId = -999L
-
-        when:
-        notificationService.readNotification(notificationId)
-
-        then:
-        thrown(BusinessException)
+        notification.checked
     }
 
 }

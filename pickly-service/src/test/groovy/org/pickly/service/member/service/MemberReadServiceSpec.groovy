@@ -1,16 +1,19 @@
 package org.pickly.service.member.service
 
 import org.junit.jupiter.api.BeforeEach
+import org.pickly.service.application.facade.MemberFacade
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
-
-import org.pickly.service.member.MemberFactory
+import org.pickly.service.domain.friend.service.FriendReadService
+import org.pickly.service.domain.friend.service.FriendWriteService
 import org.pickly.service.domain.member.exception.MemberException
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
+import org.pickly.service.domain.member.service.MemberReadService
+import org.pickly.service.domain.member.service.MemberWriteService
 import org.pickly.service.domain.member.service.dto.MemberProfileUpdateDTO
-import org.pickly.service.domain.member.service.interfaces.MemberReadService
+import org.pickly.service.member.MemberFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,7 +30,13 @@ import spock.lang.Specification
 class MemberReadServiceSpec extends Specification {
 
     @Autowired
-    private MemberReadService memberService
+    private MemberFacade memberFacade
+
+    @Autowired
+    private MemberReadService memberReadService
+
+    @Autowired
+    private MemberWriteService memberWriteService
 
     @Autowired
     private MemberRepository memberRepository
@@ -39,7 +48,10 @@ class MemberReadServiceSpec extends Specification {
     private CategoryRepository categoryRepository
 
     @Autowired
-    private FriendReadService friendService
+    private FriendReadService friendReadService
+
+    @Autowired
+    private FriendWriteService friendWriteService
 
     private memberFactory = new MemberFactory()
     private bookmarkFactory = new BookmarkFactory()
@@ -60,20 +72,17 @@ class MemberReadServiceSpec extends Specification {
         var member2 = memberRepository.save(memberFactory.testMember("picko2",
                 "picko2@pickly.com", "picko2", "picko2", "👎"))
 
-        friendService.follow(member.id, member2.id)
-        friendService.follow(member2.id, member.id)
+        friendWriteService.follow(member, member2)
+        friendWriteService.follow(member2, member)
 
         when:
-        def dto = memberService.findMyProfile(member.id)
+        def info = memberReadService.findById(member.id)
 
         then:
-        dto != null
-        dto.name == "picko"
-        dto.nickname == "iAmNotAPickyEater"
-        dto.profileEmoji == "👍"
-        dto.bookmarksCount == 1
-        dto.followersCount == 1
-        dto.followeesCount == 1
+        info != null
+        info.name == "picko"
+        info.nickname == "iAmNotAPickyEater"
+        info.profileEmoji == "👍"
     }
 
     def "사용자 프로필 조회"() {
@@ -81,7 +90,7 @@ class MemberReadServiceSpec extends Specification {
         var member = memberRepository.save(memberFactory.testMember())
 
         when:
-        def dto = memberService.findProfileById(member.id, member.id)
+        def dto = memberFacade.findProfileById(member.id, member.id)
 
         then:
         dto != null
@@ -97,7 +106,7 @@ class MemberReadServiceSpec extends Specification {
         var member = memberRepository.save(memberFactory.testMember())
 
         when:
-        memberService.updateMyProfile(member.id, new MemberProfileUpdateDTO("수정", "수정", "👎"))
+        memberWriteService.update(member, new MemberProfileUpdateDTO("수정", "수정", "👎"))
 
         then:
         def found = memberRepository.findById(member.id).orElse(null)
@@ -114,7 +123,7 @@ class MemberReadServiceSpec extends Specification {
         var member2 = memberRepository.save(memberFactory.testMember("picko2", "test2@gmail.com"))
 
         when:
-        memberService.updateMyProfile(member.id, new MemberProfileUpdateDTO("수정", member2.getNickname(), "👎"))
+        memberWriteService.update(member, new MemberProfileUpdateDTO("수정", member2.getNickname(), "👎"))
 
         then:
         thrown(MemberException.NicknameDuplicateException)
@@ -125,7 +134,7 @@ class MemberReadServiceSpec extends Specification {
         var member = memberRepository.save(memberFactory.testMember())
 
         when:
-        memberService.deleteMember(member.id)
+        memberWriteService.delete(member)
 
         then:
         var found = memberRepository.findById(member.id).orElse(null)
@@ -140,7 +149,7 @@ class MemberReadServiceSpec extends Specification {
         var member = memberRepository.save(memberFactory.testMember())
 
         when:
-        memberService.updateNotificationSettings(member.id, timezone, fcmToken);
+        memberWriteService.updateNotificationSetting(member, timezone, fcmToken);
 
         then:
         var found = memberRepository.findById(member.id).orElse(null)

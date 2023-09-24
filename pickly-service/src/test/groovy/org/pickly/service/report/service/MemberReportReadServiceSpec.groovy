@@ -2,10 +2,10 @@ package org.pickly.service.report.service
 
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.service.common.error.exception.BusinessException
-import org.pickly.service.domain.report.service.member.MemberReportReadService
-import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.report.repository.MemberReportRepository
+import org.pickly.service.domain.report.service.member.MemberReportWriteService
+import org.pickly.service.member.MemberFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -22,7 +22,7 @@ import spock.lang.Specification
 class MemberReportReadServiceSpec extends Specification {
 
     @Autowired
-    private MemberReportReadService memberReportService
+    private MemberReportWriteService memberReportWriteService
 
     @Autowired
     private MemberReportRepository memberReportRepository
@@ -45,7 +45,7 @@ class MemberReportReadServiceSpec extends Specification {
                 "reported", "👍"))
 
         when:
-        memberReportService.reportMember(reporter.id, reported.id, "test")
+        memberReportWriteService.save(reporter, reported, "test")
 
         then:
         memberReportRepository.count() == 1
@@ -56,23 +56,10 @@ class MemberReportReadServiceSpec extends Specification {
         var reporter = memberRepository.save(memberFactory.testMember())
 
         when:
-        memberReportService.reportMember(reporter.id, reporter.id, "test")
+        memberReportWriteService.save(reporter, reporter, "test")
 
         then:
         thrown(BusinessException)
     }
 
-    def "이미 신고한 사용자를 신고할 수 없다"() {
-        given:
-        var reporter = memberRepository.save(memberFactory.testMember())
-        var reported = memberRepository.save(memberFactory.testMember("reported", "reported@gmail.com", "reported",
-                "reported", "👍"))
-        memberReportService.reportMember(reporter.id, reported.id, "test")
-
-        when:
-        memberReportService.reportMember(reporter.id, reported.id, "test")
-
-        then:
-        thrown(BusinessException)
-    }
 }

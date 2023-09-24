@@ -1,16 +1,16 @@
 package org.pickly.service.report.service
 
 import org.junit.jupiter.api.BeforeEach
-import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
+import org.pickly.service.common.error.exception.BusinessException
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
-import org.pickly.service.domain.report.service.bookmark.BookmarkReportReadService
-import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.report.repository.BookmarkReportRepository
 import org.pickly.service.domain.report.repository.MemberReportRepository
+import org.pickly.service.domain.report.service.bookmark.BookmarkReportWriteService
+import org.pickly.service.member.MemberFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -27,7 +27,7 @@ import spock.lang.Specification
 class BookmarkReportReadServiceSpec extends Specification {
 
     @Autowired
-    private BookmarkReportReadService bookmarkReportService
+    private BookmarkReportWriteService bookmarkReportWriteService
 
     @Autowired
     private BookmarkReportRepository bookmarkReportRepository
@@ -65,7 +65,7 @@ class BookmarkReportReadServiceSpec extends Specification {
         var reported = bookmarkRepository.save(bookmarkFactory.testBookmark(bookmarkOwner, category))
 
         when:
-        bookmarkReportService.reportBookmark(reporter.id, reported.id, "test")
+        bookmarkReportWriteService.save(reporter, reported, "test")
 
         then:
         bookmarkReportRepository.count() == 1
@@ -78,25 +78,10 @@ class BookmarkReportReadServiceSpec extends Specification {
         var reported = bookmarkRepository.save(bookmarkFactory.testBookmark(reporter, category))
 
         when:
-        bookmarkReportService.reportBookmark(reporter.id, reported.id, "test")
+        bookmarkReportWriteService.save(reporter, reported, "test")
 
         then:
         thrown(BusinessException)
     }
 
-    def "중복된 신고를 할 수 없다"() {
-        given:
-        var reporter = memberRepository.save(memberFactory.testMember())
-        var bookmarkOwner = memberRepository.save(memberFactory.testMember("bookmarkOwner", "bookmarker@pickly.com",
-                "bookmarkOwner", "bookmarkOwner", "👍"))
-        var category = categoryRepository.save(categoryFactory.testCategory(bookmarkOwner))
-        var reported = bookmarkRepository.save(bookmarkFactory.testBookmark(bookmarkOwner, category))
-        bookmarkReportService.reportBookmark(reporter.id, reported.id, "test")
-
-        when:
-        bookmarkReportService.reportBookmark(reporter.id, reported.id, "test")
-
-        then:
-        thrown(BusinessException)
-    }
 }

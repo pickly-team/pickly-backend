@@ -8,7 +8,6 @@ public class CategoryFactory {
 
   private final MemberFactory memberFactory = new MemberFactory();
 
-
   public Category testCategory(Member member) {
     return Category.builder()
         .member(member)

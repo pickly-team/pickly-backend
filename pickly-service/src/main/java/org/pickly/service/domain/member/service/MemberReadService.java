@@ -3,9 +3,7 @@ package org.pickly.service.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.block.repository.interfaces.BlockRepository;
-import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.domain.friend.repository.interfaces.FriendRepository;
-import org.pickly.service.domain.member.common.MemberMapper;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberQueryRepository;
@@ -25,8 +23,6 @@ public class MemberReadService {
   private final MemberRepository memberRepository;
   private final MemberQueryRepository memberQueryRepository;
   private final FriendRepository friendRepository;
-  private final MemberMapper memberMapper;
-  private final BookmarkRepository bookmarkRepository;
   private final BlockRepository blockRepository;
 
   public void existsById(Long memberId) {
