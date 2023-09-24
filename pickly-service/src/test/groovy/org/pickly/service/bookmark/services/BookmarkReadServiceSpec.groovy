@@ -3,7 +3,7 @@ package org.pickly.service.bookmark.services
 import org.pickly.service.bookmark.BookmarkFactory
 import org.pickly.service.domain.bookmark.entity.Bookmark
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
-import org.pickly.service.domain.bookmark.service.interfaces.BookmarkService
+
 import org.pickly.service.category.CategoryFactory
 import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.member.MemberFactory
@@ -21,10 +21,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class BookmarkServiceSpec extends Specification {
+class BookmarkReadServiceSpec extends Specification {
 
     @Autowired
-    private BookmarkService bookmarkService
+    private BookmarkReadService bookmarkService
 
     @Autowired
     private BookmarkRepository bookmarkRepository
