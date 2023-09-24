@@ -28,6 +28,9 @@ public class CategoryReadService {
     if (savedSize == MAX_CATEGORY_CNT || savedSize + requestSize > MAX_CATEGORY_CNT) {
       throw new CategoryException.ExceedMaxCategorySizeException();
     }
+    if (savedSize == 0) {
+      return 1;
+    }
     return savedCategories.get(savedSize - 1).getOrderNum() + 1;
   }
 
