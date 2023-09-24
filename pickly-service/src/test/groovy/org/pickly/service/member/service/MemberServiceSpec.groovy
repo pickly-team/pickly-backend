@@ -2,15 +2,15 @@ package org.pickly.service.member.service
 
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
-import org.pickly.service.category.repository.interfaces.CategoryRepository
-import org.pickly.service.friend.service.interfaces.FriendService
+import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
+import org.pickly.service.domain.friend.service.interfaces.FriendService
 import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.exception.MemberException
-import org.pickly.service.member.repository.interfaces.MemberRepository
-import org.pickly.service.member.service.dto.MemberProfileUpdateDTO
-import org.pickly.service.member.service.interfaces.MemberService
+import org.pickly.service.domain.member.exception.MemberException
+import org.pickly.service.domain.member.repository.interfaces.MemberRepository
+import org.pickly.service.domain.member.service.dto.MemberProfileUpdateDTO
+import org.pickly.service.domain.member.service.interfaces.MemberService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest

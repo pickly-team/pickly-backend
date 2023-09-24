@@ -3,11 +3,11 @@ package org.pickly.service.notification.service
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.repository.interfaces.MemberRepository
+import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.notification.NotificationStandardFactory
-import org.pickly.service.notification.repository.interfaces.NotificationStandardRepository
-import org.pickly.service.notification.service.dto.NotificationStandardDTO
-import org.pickly.service.notification.service.interfaces.NotificationStandardService
+import org.pickly.service.domain.notification.repository.interfaces.NotificationStandardRepository
+import org.pickly.service.domain.notification.service.dto.NotificationStandardDTO
+import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest

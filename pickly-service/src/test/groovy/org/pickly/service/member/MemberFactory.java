@@ -1,7 +1,7 @@
 package org.pickly.service.member;
 
-import org.pickly.service.member.entity.Member;
-import org.pickly.service.member.entity.Password;
+import org.pickly.service.domain.member.entity.Member;
+import org.pickly.service.domain.member.entity.Password;
 
 public class MemberFactory {
 

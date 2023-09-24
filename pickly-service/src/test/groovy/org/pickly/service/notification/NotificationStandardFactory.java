@@ -1,8 +1,8 @@
 package org.pickly.service.notification;
 
 import java.time.LocalTime;
-import org.pickly.service.member.entity.Member;
-import org.pickly.service.notification.entity.NotificationStandard;
+import org.pickly.service.domain.member.entity.Member;
+import org.pickly.service.domain.notification.entity.NotificationStandard;
 
 public class NotificationStandardFactory {
 
