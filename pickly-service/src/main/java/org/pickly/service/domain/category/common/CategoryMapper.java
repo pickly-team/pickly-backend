@@ -17,8 +17,8 @@ public class CategoryMapper {
     );
   }
 
-  public CategoryDTO toDto(final Category category) {
-    return CategoryDTO.builder()
+  public CategoryRes toResponse(final Category category) {
+    return CategoryRes.builder()
         .categoryId(category.getId())
         .name(category.getName())
         .emoji(category.getEmoji())

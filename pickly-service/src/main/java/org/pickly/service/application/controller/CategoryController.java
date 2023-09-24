@@ -12,6 +12,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.pickly.service.application.facade.CategoryFacade;
+import org.pickly.service.common.utils.encrypt.EncryptService;
+import org.pickly.service.common.utils.encrypt.ExtensionKey;
 import org.pickly.service.domain.category.common.CategoryMapper;
 import org.pickly.service.domain.category.controller.request.CategoryOrderNumUpdateReq;
 import org.pickly.service.domain.category.controller.request.CategoryRequestDTO;
@@ -19,10 +22,9 @@ import org.pickly.service.domain.category.controller.request.CategoryUpdateReque
 import org.pickly.service.domain.category.controller.response.CategoryRes;
 import org.pickly.service.domain.category.controller.response.CategoryResponseDTO;
 import org.pickly.service.domain.category.entity.Category;
+import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.category.service.dto.CategoryDTO;
-import org.pickly.service.domain.category.service.interfaces.CategoryService;
-import org.pickly.service.common.utils.encrypt.EncryptService;
-import org.pickly.service.common.utils.encrypt.ExtensionKey;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,8 @@ import java.util.List;
 public class CategoryController {
 
   private final EncryptService encryptService;
-  private final CategoryService categoryService;
+  private final CategoryFacade categoryFacade;
+  private final CategoryReadService categoryReadService;
   private final CategoryMapper categoryMapper;
 
   @PostMapping("/categories")
@@ -51,7 +54,7 @@ public class CategoryController {
       @RequestBody @Valid
       @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.") final List<CategoryRequestDTO> requests
   ) {
-    categoryService.create(memberId, requests);
+    categoryFacade.create(memberId, requests);
   }
 
   @PutMapping("/categories/{categoryId}")
@@ -65,8 +68,7 @@ public class CategoryController {
       @PathVariable @Positive Long categoryId,
       @RequestBody @Valid final CategoryUpdateRequestDTO dto
   ) {
-    Category category = categoryService.update(categoryId, dto);
-
+    Category category = categoryFacade.update(categoryId, dto);
     return ResponseEntity
         .ok(categoryMapper.toResponseDTO(category));
   }
@@ -81,7 +83,7 @@ public class CategoryController {
       @RequestBody @Valid
       @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.") final List<CategoryOrderNumUpdateReq> requests
   ) {
-    categoryService.updateOrderNum(requests);
+    categoryFacade.updateOrderNum(requests);
   }
 
   @DeleteMapping("/categories/{categoryId}")
@@ -90,13 +92,11 @@ public class CategoryController {
       @ApiResponse(responseCode = "204", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
   })
-  public ResponseEntity<Void> delete(
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(
       @PathVariable Long categoryId
   ) {
-    categoryService.delete(categoryId);
-    return ResponseEntity
-        .noContent()
-        .build();
+    categoryFacade.delete(categoryId);
   }
 
   @DeleteMapping("/categories")
@@ -105,13 +105,11 @@ public class CategoryController {
       @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리"),
   })
-  public ResponseEntity<Void> deleteAllById(
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteAllById(
       @RequestParam(value = "categoryId") List<Long> categoryIds
   ) {
-    categoryService.deleteAllByCategoryId(categoryIds);
-    return ResponseEntity
-        .noContent()
-        .build();
+    categoryFacade.delete(categoryIds);
   }
 
   @GetMapping("/members/{memberId}/categories")
@@ -126,7 +124,7 @@ public class CategoryController {
       @Positive(message = "유저 ID는 양수입니다.")
       @PathVariable final Long memberId
   ) {
-    List<CategoryDTO> dtos = categoryService.getCategoriesByMember(memberId);
+    List<CategoryDTO> dtos = categoryReadService.getCategoriesByMember(memberId);
     return dtos.stream().map(categoryMapper::toResponse).toList();
   }
 
@@ -143,7 +141,7 @@ public class CategoryController {
       @RequestParam final String memberId
   ) {
     ExtensionKey key = encryptService.getKey();
-    List<CategoryDTO> dtos = categoryService.getCategoriesByMember(key.decrypt(memberId));
+    List<CategoryDTO> dtos = categoryReadService.getCategoriesByMember(key.decrypt(memberId));
     return dtos.stream().map(categoryMapper::toResponse).toList();
   }
 
@@ -158,8 +156,8 @@ public class CategoryController {
       @Parameter(name = "categoryId", description = "카테고리 ID (PK) 값", example = "1", required = true)
       @Positive(message = "카테고리 ID (PK)는 양수입니다.") @PathVariable final Long categoryId
   ) {
-    CategoryDTO dto = categoryService.findById(categoryId);
-    return categoryMapper.toResponse(dto);
+    Category category = categoryReadService.findById(categoryId);
+    return categoryMapper.toResponse(category);
   }
 
   @GetMapping("/categories/cnt")
@@ -172,7 +170,7 @@ public class CategoryController {
   public ResponseEntity<Integer> getCategoryCntByMember(
       @RequestParam(value = "memberId") Long memberId
   ) {
-    Integer response = categoryService.getCategoryCntByMember(memberId);
+    Integer response = categoryReadService.getCategoryCntByMember(memberId);
     return ResponseEntity.ok(response);
   }
 
