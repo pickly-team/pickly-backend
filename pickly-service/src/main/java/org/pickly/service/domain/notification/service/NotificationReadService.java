@@ -11,7 +11,6 @@ import org.pickly.service.domain.notification.entity.NotificationTemplate;
 import org.pickly.service.domain.notification.enums.NotificationType;
 import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository;
-import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService;
 import org.pickly.service.domain.notification.service.interfaces.NotificationTemplateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,7 @@ import java.util.Random;
 public class NotificationReadService {
 
   private final NotificationRepository notificationRepository;
-  private final NotificationStandardService notificationStandardService;
+  private final NotificationStandardReadService notificationStandardReadService;
   private final NotificationTemplateService notificationTemplateService;
 
   public List<Notification> findByMember(Long memberId) {
@@ -45,7 +44,7 @@ public class NotificationReadService {
 
     for (Map.Entry<Member, List<Bookmark>> entry : unreadBookmarks.entrySet()) {
       Long memberId = entry.getKey().getId();
-      NotificationStandard standard = notificationStandardService.findByMemberId(memberId);
+      NotificationStandard standard = notificationStandardReadService.findByMemberId(memberId);
 
       for (Bookmark bookmark : entry.getValue()) {
         LocalDateTime dueDateTime = getDueDateTime(bookmark, standard);

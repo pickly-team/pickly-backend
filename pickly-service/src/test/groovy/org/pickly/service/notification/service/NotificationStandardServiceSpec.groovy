@@ -7,7 +7,7 @@ import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.notification.NotificationStandardFactory
 import org.pickly.service.domain.notification.repository.interfaces.NotificationStandardRepository
 import org.pickly.service.domain.notification.service.dto.NotificationStandardDTO
-import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
