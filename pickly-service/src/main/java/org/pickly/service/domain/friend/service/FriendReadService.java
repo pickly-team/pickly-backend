@@ -1,20 +1,15 @@
-package org.pickly.service.domain.friend.service.impl;
+package org.pickly.service.domain.friend.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.exception.FriendException;
 import org.pickly.service.domain.friend.repository.interfaces.FriendQueryRepository;
 import org.pickly.service.domain.friend.repository.interfaces.FriendRepository;
-import org.pickly.service.domain.friend.service.interfaces.FriendService;
-import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
-import org.pickly.service.domain.friend.common.FriendMapper;
-import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.service.dto.FollowerResDTO;
 import org.pickly.service.domain.friend.service.dto.FollowingResDTO;
-import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusReqDTO;
-import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusResDTO;
+import org.pickly.service.domain.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,69 +19,38 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class FriendServiceImpl implements FriendService {
+public class FriendReadService {
 
-  private static final int LAST_ITEM = 1;
-  static final boolean FRIEND_NOTIFICATION_ON = true;
   private final FriendRepository friendRepository;
   private final FriendQueryRepository friendQueryRepository;
   private final MemberService memberService;
-  private final FriendMapper friendMapper;
 
-  @Override
-  @Transactional
-  public void follow(final Long followerId, final Long memberId) {
-    checkAlreadyFriend(followerId, memberId);
-    Member follower = memberService.findById(followerId);
-    Member followee = memberService.findById(memberId);
-    friendRepository.save(new Friend(followee, follower, FRIEND_NOTIFICATION_ON));
-  }
-
-  @Override
-  @Transactional
-  public void unfollow(final Long followerId, final Long memberId) {
-    friendRepository.unfollow(followerId, memberId);
-  }
-
-  @Override
   public Long countFollowerByMember(Long memberId) {
     memberService.existsById(memberId);
     return friendRepository.countByFolloweeId(memberId);
   }
 
-  @Override
   public Long countFollowingByMember(Long memberId) {
     memberService.existsById(memberId);
     return friendRepository.countByFollowerId(memberId);
   }
 
-  private void checkAlreadyFriend(final Long followerId, final Long memberId) {
+  public void checkAlreadyFriend(final Long followerId, final Long memberId) {
     if (friendRepository.existsByFollowerIdAndFolloweeId(followerId, memberId)) {
       throw new FriendException.AlreadyFriendException();
     }
   }
 
-  private Friend findFollowerById(final Long followerId, final Long memberId) {
+  public Friend findFollowerById(final Long followerId, final Long memberId) {
     return friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId)
         .orElseThrow(FriendException.FriendNotFoundException::new);
   }
 
-  @Override
-  @Transactional
-  public FriendNotificationStatusResDTO setNotification(Long followerId,
-                                                        FriendNotificationStatusReqDTO request) {
-    Friend friend = findFollowerById(followerId, request.getMemberId());
-    friend.updateNotificationEnabled(request.getIsFollowing());
-    return friendMapper.toFriendStatusResDTO(friend.getNotificationMode());
-  }
-
-  @Override
   public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
     memberService.existsById(memberId);
     return friendQueryRepository.findAllFollowerWithOutBlockByMember(memberId, pageRequest);
   }
 
-  @Override
   public List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest) {
     memberService.existsById(memberId);
     return friendQueryRepository.findAllFollowingByMember(memberId, pageRequest);

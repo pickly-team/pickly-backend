@@ -5,7 +5,7 @@ import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.common.error.exception.ErrorCode
 import org.pickly.service.domain.friend.repository.interfaces.FriendRepository
 import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusReqDTO
-import org.pickly.service.domain.friend.service.interfaces.FriendService
+
 import org.pickly.service.domain.member.entity.Member
 import org.pickly.service.domain.member.entity.Password
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
@@ -22,10 +22,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class FriendServiceSpec extends Specification {
+class FriendReadServiceSpec extends Specification {
 
     @Autowired
-    private FriendService friendService
+    private FriendReadService friendService
 
     @Autowired
     private FriendRepository friendRepository
