@@ -4,6 +4,7 @@ import org.pickly.service.domain.friend.controller.request.FriendNotificationSta
 import org.pickly.service.domain.friend.controller.response.FollowerRes;
 import org.pickly.service.domain.friend.controller.response.FollowingRes;
 import org.pickly.service.domain.friend.controller.response.FriendNotificationStatusRes;
+import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.entity.FriendNotificationMode;
 import org.pickly.service.domain.friend.service.dto.FollowerResDTO;
 import org.pickly.service.domain.friend.service.dto.FollowingResDTO;
@@ -18,12 +19,12 @@ public class FriendMapper {
     return new FriendNotificationStatusReqDTO(memberId, request.getNotificationAllowed());
   }
 
-  public FriendNotificationStatusRes toFriendStatusDTO(FriendNotificationMode request) {
-    return new FriendNotificationStatusRes(request);
-  }
-
   public FriendNotificationStatusResDTO toFriendStatusResDTO(FriendNotificationMode request) {
     return new FriendNotificationStatusResDTO(request.isNotificationAllowed());
+  }
+
+  public FriendNotificationStatusRes toResponse(Friend friend) {
+    return new FriendNotificationStatusRes(friend.getNotificationMode());
   }
 
   public FollowerRes toFollowerRes(FollowerResDTO dto) {

@@ -10,15 +10,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.application.facade.FriendFacade;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.domain.friend.common.FriendMapper;
 import org.pickly.service.domain.friend.controller.request.FriendNotificationStatusReq;
 import org.pickly.service.domain.friend.controller.response.FollowerRes;
 import org.pickly.service.domain.friend.controller.response.FollowingRes;
 import org.pickly.service.domain.friend.controller.response.FriendNotificationStatusRes;
-import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusResDTO;
-import org.pickly.service.domain.friend.service.interfaces.FriendService;
-import org.pickly.service.domain.friend.common.FriendMapper;
+import org.pickly.service.domain.friend.entity.Friend;
+import org.pickly.service.domain.friend.service.FriendReadService;
+import org.pickly.service.domain.friend.service.FriendWriteService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +31,9 @@ import java.util.List;
 @Tag(name = "Friend", description = "친구 API")
 public class FriendController {
 
-  private final FriendService friendService;
+  private final FriendReadService friendReadService;
+  private final FriendWriteService friendWriteService;
+  private final FriendFacade friendFacade;
   private final FriendMapper friendMapper;
 
   // TODO: JWT 개발 후 followerId를 삭제 예정
@@ -42,7 +46,7 @@ public class FriendController {
       @Parameter(name = "memberId", description = "팔로우 할 유저 ID 값", example = "3", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    friendService.follow(followerId, memberId);
+    friendFacade.follow(followerId, memberId);
   }
 
   // TODO: JWT 개발 후 followerId를 삭제 예정
@@ -55,7 +59,7 @@ public class FriendController {
       @Parameter(name = "memberId", description = "언팔로우 할 유저 ID 값", example = "3", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    friendService.unfollow(followerId, memberId);
+    friendWriteService.unfollow(followerId, memberId);
   }
 
   // TODO: JWT 개발 후 followerId를 삭제 예정
@@ -72,11 +76,10 @@ public class FriendController {
       @Valid final
       FriendNotificationStatusReq request
   ) {
-    FriendNotificationStatusResDTO friendStatusResDTO = friendService.setNotification(followerId,
-        friendMapper.toDTO(memberId, request));
-    return friendMapper.toFriendStatusDTO(
-        friendStatusResDTO.getNotificationMode(friendStatusResDTO.getIsNotificationAllowed()));
-
+    Friend friend = friendFacade.setNotification(
+        followerId, friendMapper.toDTO(memberId, request)
+    );
+    return friendMapper.toResponse(friend);
   }
 
   @GetMapping("/members/{memberId}/followers/count")
@@ -89,7 +92,7 @@ public class FriendController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    return friendService.countFollowerByMember(memberId);
+    return friendReadService.countFollowerByMember(memberId);
   }
 
   @GetMapping("/members/{memberId}/followers")
@@ -114,7 +117,7 @@ public class FriendController {
       @RequestParam(required = false) final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    List<FollowerRes> resDto = friendService.findAllFollowerByMember(memberId, pageRequest)
+    List<FollowerRes> resDto = friendReadService.findAllFollowerByMember(memberId, pageRequest)
         .stream().map(friendMapper::toFollowerRes).toList();
     PageResponse<FollowerRes> response = new PageResponse<>(resDto.size(),
         pageRequest.getPageSize(), resDto);
@@ -132,7 +135,7 @@ public class FriendController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    return friendService.countFollowingByMember(memberId);
+    return friendReadService.countFollowingByMember(memberId);
   }
 
   @GetMapping("/members/{memberId}/followings")
@@ -157,7 +160,7 @@ public class FriendController {
       @RequestParam(required = false) final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    List<FollowingRes> resDto = friendService.findAllFollowingByMember(memberId, pageRequest)
+    List<FollowingRes> resDto = friendReadService.findAllFollowingByMember(memberId, pageRequest)
         .stream().map(friendMapper::toFollowingRes).toList();
     PageResponse<FollowingRes> response = new PageResponse<>(resDto.size(),
         pageRequest.getPageSize(), resDto);

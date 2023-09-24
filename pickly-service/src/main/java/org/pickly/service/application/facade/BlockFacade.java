@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.block.service.BlockWriteService;
 import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
-import org.pickly.service.domain.friend.service.interfaces.FriendService;
+import org.pickly.service.domain.friend.service.FriendWriteService;
 import org.pickly.service.domain.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class BlockFacade {
   private final BookmarkReadService bookmarkReadService;
   private final BookmarkWriteService bookmarkWriteService;
   private final BlockWriteService blockWriteService;
-  private final FriendService friendService;
+  private final FriendWriteService friendWriteService;
 
   public void blockMember(Long fromMemberId, Long toMemberId) {
     var fromMember = memberService.findById(fromMemberId);
@@ -24,8 +24,8 @@ public class BlockFacade {
 
     blockWriteService.blockMember(fromMember, toMember);
 
-    friendService.unfollow(fromMemberId, toMemberId);
-    friendService.unfollow(toMemberId, fromMemberId);
+    friendWriteService.unfollow(fromMemberId, toMemberId);
+    friendWriteService.unfollow(toMemberId, fromMemberId);
   }
 
   public void unblockMember(Long fromMemberId, Long toMemberId) {
