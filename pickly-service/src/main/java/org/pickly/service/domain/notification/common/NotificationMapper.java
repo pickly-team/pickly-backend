@@ -7,6 +7,8 @@ import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.service.dto.NotificationDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class NotificationMapper {
 
@@ -21,16 +23,20 @@ public class NotificationMapper {
         .build();
   }
 
-  public NotificationDTO toDto(Notification entity, Member member) {
-    long unixTimestamp = TimezoneHandler.convertToUnix(entity.getCreatedAt(), member.getTimezone());
-    return NotificationDTO.builder()
-        .id(entity.getId())
-        .title(entity.getTitle())
-        .content(entity.getContent())
-        .bookmarkId(entity.getBookmarkId())
-        .isChecked(entity.isChecked())
+  public NotificationRes toResponse(Notification notification, String timezone) {
+    long unixTimestamp = TimezoneHandler.convertToUnix(notification.getCreatedAt(), timezone);
+    return NotificationRes.builder()
+        .id(notification.getId())
+        .title(notification.getTitle())
+        .content(notification.getContent())
+        .bookmarkId(notification.getBookmarkId())
+        .isChecked(notification.isChecked())
         .createdAt(unixTimestamp)
         .build();
+  }
+
+  public List<NotificationRes> toResponse(List<Notification> notifications, Member member) {
+    return notifications.stream().map(a -> toResponse(a, member.getTimezone())).toList();
   }
 
 }

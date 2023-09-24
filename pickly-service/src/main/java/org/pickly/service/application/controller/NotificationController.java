@@ -6,20 +6,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.service.domain.notification.controller.response.NotificationRes;
+import org.pickly.service.application.facade.NotificationFacade;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.common.NotificationMapper;
-import org.pickly.service.domain.notification.service.dto.NotificationDTO;
-import org.pickly.service.domain.notification.service.interfaces.NotificationService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.pickly.service.domain.notification.controller.response.NotificationRes;
+import org.pickly.service.domain.notification.entity.Notification;
+import org.pickly.service.domain.notification.service.NotificationReadService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Notification", description = "알림 API")
 public class NotificationController {
 
-  private final NotificationService notificationService;
+  private final MemberReadService memberReadService;
+  private final NotificationReadService notificationReadService;
+  private final NotificationFacade notificationFacade;
   private final NotificationMapper notificationMapper;
 
   @GetMapping("/members/{memberId}/notifications")
@@ -41,8 +40,9 @@ public class NotificationController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    List<NotificationDTO> dtoList = notificationService.findMemberNotifications(memberId);
-    return dtoList.stream().map(notificationMapper::toResponse).collect(Collectors.toList());
+    var member = memberReadService.findById(memberId);
+    List<Notification> notifications = notificationReadService.findByMember(memberId);
+    return notificationMapper.toResponse(notifications, member);
   }
 
   @PatchMapping("notifications/{notificationId}")
@@ -54,7 +54,7 @@ public class NotificationController {
       @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
       @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId
   ) {
-    notificationService.readNotification(notificationId);
+    notificationFacade.read(notificationId);
   }
 
   @DeleteMapping("notifications/{notificationId}")
@@ -66,7 +66,7 @@ public class NotificationController {
       @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
       @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId
   ) {
-    notificationService.deleteNotification(notificationId);
+    notificationFacade.delete(notificationId);
   }
 
 }

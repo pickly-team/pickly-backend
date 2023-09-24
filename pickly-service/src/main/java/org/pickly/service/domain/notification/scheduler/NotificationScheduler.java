@@ -8,7 +8,8 @@ import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.notification.common.NotificationSender;
 import org.pickly.service.domain.notification.entity.Notification;
-import org.pickly.service.domain.notification.service.interfaces.NotificationService;
+import org.pickly.service.domain.notification.service.NotificationReadService;
+import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NotificationScheduler {
 
-  private final NotificationService notificationService;
+  private final NotificationReadService notificationReadService;
+  private final NotificationWriteService notificationWriteService;
   private final NotificationSender notificationSender;
   private final BookmarkReadService bookmarkReadService;
 
@@ -29,14 +31,14 @@ public class NotificationScheduler {
   @Scheduled(cron = "0 0/30 * * * *")
   public void makeNormalNotification() {
     Map<Member, List<Bookmark>> unreadBookmarks = bookmarkReadService.findAllUnreadBookmark();
-    List<Notification> notifications = notificationService.makeNormals(unreadBookmarks);
-    notificationService.saveAll(notifications);
+    List<Notification> notifications = notificationReadService.makeNormals(unreadBookmarks);
+    notificationWriteService.save(notifications);
     sendNormalNotification();
   }
 
   private void sendNormalNotification() {
     LocalDateTime now = TimezoneHandler.getUTCnow();
-    List<Notification> notifications = notificationService.getNotificationsToSend(now);
+    List<Notification> notifications = notificationReadService.getNotificationsToSend(now);
     notificationSender.sendMessage(notifications);
   }
 

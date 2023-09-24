@@ -1,23 +1,18 @@
-package org.pickly.service.domain.notification.service.impl;
+package org.pickly.service.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
+import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.service.interfaces.MemberReadService;
-import org.pickly.service.domain.notification.exception.NotificationException;
-import org.pickly.service.domain.notification.service.interfaces.NotificationService;
-import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService;
-import org.pickly.service.domain.notification.service.interfaces.NotificationTemplateService;
-import org.pickly.service.domain.notification.common.NotificationMapper;
 import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.pickly.service.domain.notification.entity.NotificationTemplate;
 import org.pickly.service.domain.notification.enums.NotificationType;
-import org.pickly.service.domain.notification.repository.interfaces.NotificationJdbcRepository;
+import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository;
-import org.pickly.service.domain.notification.service.dto.NotificationDTO;
+import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService;
+import org.pickly.service.domain.notification.service.interfaces.NotificationTemplateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,24 +27,17 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationReadService {
 
-  private final NotificationJdbcRepository notificationJdbcRepository;
   private final NotificationRepository notificationRepository;
-  private final MemberReadService memberReadService;
   private final NotificationStandardService notificationStandardService;
   private final NotificationTemplateService notificationTemplateService;
-  private final NotificationMapper notificationMapper;
 
-  @Override
-  public List<NotificationDTO> findMemberNotifications(final Long memberId) {
-    Member member = memberReadService.findById(memberId);
-    List<Notification> notifications = notificationRepository.findAllByMemberIdAndDeletedAtNull(
+  public List<Notification> findByMember(Long memberId) {
+    return notificationRepository.findAllByMemberIdAndDeletedAtNull(
         memberId);
-    return notifications.stream().map(n -> notificationMapper.toDto(n, member)).toList();
   }
 
-  @Override
   public List<Notification> makeNormals(Map<Member, List<Bookmark>> unreadBookmarks) {
     List<Notification> notifications = new ArrayList<>();
     List<NotificationTemplate> templates = notificationTemplateService.findAllByNotificationType(NotificationType.NORMAL);
@@ -77,7 +65,6 @@ public class NotificationServiceImpl implements NotificationService {
     return notifications;
   }
 
-  @Override
   public List<Notification> getNotificationsToSend(LocalDateTime now) {
     return notificationRepository.getNotificationsToSend(now);
   }
@@ -110,34 +97,6 @@ public class NotificationServiceImpl implements NotificationService {
     int randomIndex = random.nextInt(templates.size());
     return templates.get(randomIndex).getTitle();
   }
-
-  @Override
-  @Transactional
-  public void readNotification(final Long notificationId) {
-    Notification notification = findById(notificationId);
-    notification.check();
-  }
-
-  @Override
-  @Transactional
-  public void deleteNotification(final Long notificationId) {
-    Notification notification = findById(notificationId);
-    notification.delete();
-  }
-
-  @Override
-  @Transactional
-  public void saveAll(List<Notification> notifications) {
-    notificationJdbcRepository.saveAll(notifications);
-  }
-
-  @Override
-  @Transactional
-  public void updateAllToSend(List<Notification> notifications) {
-    List<Long> ids = notifications.stream().map(Notification::getId).toList();
-    notificationRepository.updateAllToSend(ids);
-  }
-
 
   public Notification findById(Long id) {
     return notificationRepository.findByIdAndDeletedAtNull(id)
