@@ -7,6 +7,8 @@ import org.pickly.service.domain.notification.repository.interfaces.Notification
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -18,6 +20,18 @@ public class NotificationStandardWriteService {
     notificationStandardRepository.save(
         NotificationStandard.createDafaultStandard(member)
     );
+  }
+
+  public void create(NotificationStandard standard) {
+    notificationStandardRepository.save(standard);
+  }
+
+  public void update(NotificationStandard standard, boolean isActive, LocalTime notifyDailyAt) {
+    standard.update(isActive, notifyDailyAt);
+  }
+
+  public void updateNotifyStandardDay(NotificationStandard standard, Integer notifyStandardDay) {
+    standard.updateNotifyStandardDay(notifyStandardDay);
   }
 
 }

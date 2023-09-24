@@ -19,4 +19,20 @@ public class NotificationStandardReadService {
         .orElseThrow(NotificationException.NotificationStandardNotFoundException::new);
   }
 
+  public Integer findMyNotifyStandardDay(final Long memberId) {
+    NotificationStandard standard = findByMemberId(memberId);
+    return standard.getNotifyStandardDay();
+  }
+
+  public void checkByMemberId(Long memberId) {
+    if (existsByMemberId(memberId)) {
+      throw new NotificationException.NotificationStandardAlreadyExistException();
+    }
+  }
+
+  public boolean existsByMemberId(Long memberId) {
+    return notificationStandardRepository.existsByMemberId(memberId);
+  }
+
+
 }
