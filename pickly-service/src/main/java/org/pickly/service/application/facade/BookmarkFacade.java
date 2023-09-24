@@ -10,7 +10,7 @@ import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.comment.service.CommentWriteService;
-import org.pickly.service.domain.member.service.interfaces.MemberReadService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
 

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberFacade {
 
-  // FIXME: mapper가 service 계층까지 들어오는게 맞는가?
   private final MemberMapper memberMapper;
   private final MemberReadService memberReadService;
   private final MemberWriteService memberWriteService;

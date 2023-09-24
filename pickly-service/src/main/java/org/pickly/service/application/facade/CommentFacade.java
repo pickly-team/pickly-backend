@@ -7,7 +7,7 @@ import org.pickly.service.domain.comment.service.CommentReadService;
 import org.pickly.service.domain.comment.service.CommentWriteService;
 import org.pickly.service.domain.comment.service.dto.CommentCreateDTO;
 import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO;
-import org.pickly.service.domain.member.service.interfaces.MemberReadService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 
 @Service
