@@ -5,7 +5,7 @@ import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.service.FriendReadService;
 import org.pickly.service.domain.friend.service.FriendWriteService;
 import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusReqDTO;
-import org.pickly.service.domain.member.service.interfaces.MemberReadService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 
 @Service

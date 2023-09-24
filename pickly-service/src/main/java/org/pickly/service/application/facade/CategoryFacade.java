@@ -7,7 +7,7 @@ import org.pickly.service.domain.category.controller.request.CategoryUpdateReque
 import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.category.service.CategoryWriteService;
-import org.pickly.service.domain.member.service.interfaces.MemberReadService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
