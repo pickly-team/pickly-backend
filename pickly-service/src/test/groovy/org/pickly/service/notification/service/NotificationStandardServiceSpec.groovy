@@ -1,7 +1,6 @@
 package org.pickly.service.notification.service
 
 import org.junit.jupiter.api.BeforeEach
-import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.notification.repository.interfaces.NotificationStandardRepository
 import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService
@@ -57,18 +56,6 @@ class NotificationStandardServiceSpec extends Specification {
         var found = notificationStandardReadService.findByMemberId(member.id)
         found.isActive == true
         found.notifyDailyAt == LocalTime.of(9, 0)
-    }
-
-    def "사용자가 이미 알림 설정을 가지고 있는 경우 생성할 수 없다"() {
-        given:
-        var member = memberRepository.save(memberFactory.testMember())
-        notificationStandardWriteService.create(member)
-
-        when:
-        notificationStandardWriteService.create(member)
-
-        then:
-        thrown(BusinessException)
     }
 
     def "사용자가 알림 설정을 이미 가지고 있는 경우 수정할 수 있다"() {

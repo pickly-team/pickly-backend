@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.pickly.service.member.entity.QMember.member;
+import static org.pickly.service.domain.member.entity.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
