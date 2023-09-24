@@ -9,7 +9,7 @@ import org.pickly.service.domain.friend.repository.interfaces.FriendQueryReposit
 import org.pickly.service.domain.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.domain.friend.service.dto.FollowerResDTO;
 import org.pickly.service.domain.friend.service.dto.FollowingResDTO;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,15 +23,15 @@ public class FriendReadService {
 
   private final FriendRepository friendRepository;
   private final FriendQueryRepository friendQueryRepository;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   public Long countFollowerByMember(Long memberId) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     return friendRepository.countByFolloweeId(memberId);
   }
 
   public Long countFollowingByMember(Long memberId) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     return friendRepository.countByFollowerId(memberId);
   }
 
@@ -47,13 +47,25 @@ public class FriendReadService {
   }
 
   public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     return friendQueryRepository.findAllFollowerWithOutBlockByMember(memberId, pageRequest);
   }
 
   public List<FollowingResDTO> findAllFollowingByMember(Long memberId, PageRequest pageRequest) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     return friendQueryRepository.findAllFollowingByMember(memberId, pageRequest);
+  }
+
+  public Long getFollowerCount(Long followeeId) {
+    return friendRepository.countByFolloweeId(followeeId);
+  }
+
+  public Long getFolloweeCount(Long followerId) {
+    return friendRepository.countByFollowerId(followerId);
+  }
+
+  public boolean existsByFollowerIdAndFolloweeId(Long fromMemberId, Long toMemberId) {
+    return friendRepository.existsByFollowerIdAndFolloweeId(fromMemberId, toMemberId);
   }
 
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.pickly.service.domain.member.entity.MemberMode;
 
 @Getter
 @Builder
@@ -16,6 +17,10 @@ public class HardModeRes {
 
   public String getIsHardMode() {
     return this.isHardMode;
+  }
+
+  public HardModeRes(MemberMode mode) {
+    this.isHardMode = mode.getDescription();
   }
 
 }

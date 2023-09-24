@@ -7,7 +7,7 @@ import org.pickly.service.domain.comment.exception.CommentException;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository;
 import org.pickly.service.domain.comment.service.dto.CommentDTO;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +21,14 @@ public class CommentReadService {
 
   private final CommentRepository commentRepository;
   private final CommentQueryRepository commentQueryRepository;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   public List<CommentDTO> findByBookmark(final Long bookmarkId) {
     return commentQueryRepository.findComments(null, bookmarkId);
   }
 
   public Long countMemberComments(final Long memberId) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     return commentRepository.countAllByMemberIdAndDeletedAtNull(memberId);
   }
 

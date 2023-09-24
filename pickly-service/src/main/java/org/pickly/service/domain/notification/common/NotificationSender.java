@@ -6,7 +6,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.service.interfaces.NotificationService;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NotificationSender {
 
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
   private final NotificationService notificationService;
 
   // FCM 메세지 송신 메서드
@@ -49,7 +49,7 @@ public class NotificationSender {
 
   private Map<Long, String> createMemberFcmTokenMap(List<Notification> notifications) {
     List<Long> memberIds = notifications.stream().map(Notification::getMemberId).toList();
-    return memberService.findTokenByIds(memberIds);
+    return memberReadService.findTokenByIds(memberIds);
   }
 
   private List<Message> createMessage(

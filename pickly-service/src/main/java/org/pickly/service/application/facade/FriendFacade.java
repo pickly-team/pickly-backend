@@ -5,7 +5,7 @@ import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.service.FriendReadService;
 import org.pickly.service.domain.friend.service.FriendWriteService;
 import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusReqDTO;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.interfaces.MemberReadService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,13 +14,13 @@ public class FriendFacade {
 
   private final FriendReadService friendReadService;
   private final FriendWriteService friendWriteService;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   public void follow(Long fromMemberId, Long toMemberId) {
     friendReadService.checkAlreadyFriend(fromMemberId, toMemberId);
 
-    var fromMember = memberService.findById(fromMemberId);
-    var toMember = memberService.findById(toMemberId);
+    var fromMember = memberReadService.findById(fromMemberId);
+    var toMember = memberReadService.findById(toMemberId);
 
     friendWriteService.follow(fromMember, toMember);
   }

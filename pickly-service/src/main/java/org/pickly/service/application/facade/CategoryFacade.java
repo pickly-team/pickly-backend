@@ -7,7 +7,7 @@ import org.pickly.service.domain.category.controller.request.CategoryUpdateReque
 import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.category.service.CategoryWriteService;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.interfaces.MemberReadService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +18,10 @@ public class CategoryFacade {
 
   private final CategoryWriteService categoryWriteService;
   private final CategoryReadService categoryReadService;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   public void create(Long memberId, List<CategoryRequestDTO> requests) {
-    var member = memberService.findById(memberId);
+    var member = memberReadService.findById(memberId);
     int nextOrderNum = categoryReadService.getNewOrderNum(memberId, requests.size());
 
     categoryWriteService.create(member, requests, nextOrderNum);

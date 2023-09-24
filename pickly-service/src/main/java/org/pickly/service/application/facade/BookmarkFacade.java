@@ -10,7 +10,7 @@ import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.comment.service.CommentWriteService;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.interfaces.MemberReadService;
 import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +26,11 @@ public class BookmarkFacade {
   private final CategoryReadService categoryReadService;
   private final CommentWriteService commentWriteService;
   private final NotificationWriteService notificationWriteService;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   public Bookmark create(BookmarkCreateReq request) {
     var category = categoryReadService.findById(request.getCategoryId());
-    var member = memberService.findById(request.getMemberId());
+    var member = memberReadService.findById(request.getMemberId());
 
     BookmarkInfoDTO info = bookmarkReadService.scrapOgTagInfo(request.getUrl(), member);
     Bookmark bookmark = Bookmark.create(category, member, request.getTitle(), info, request.getVisibility());

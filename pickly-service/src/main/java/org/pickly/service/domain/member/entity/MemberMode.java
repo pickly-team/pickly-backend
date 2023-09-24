@@ -12,4 +12,7 @@ public enum MemberMode {
   MemberMode(String description) {
     this.description = description;
   }
+
+// FIXME: 굳이 enum으로..? boolean isHard로 충분 -> 프론트에게 변경 공수 문의
+
 }
