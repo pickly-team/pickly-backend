@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.comment.service.dto.CommentDTO;
-import org.pickly.service.comment.service.dto.QCommentDTO;
+import org.pickly.service.domain.comment.service.dto.QCommentDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
-import static org.pickly.service.category.entity.QCategory.category;
-import static org.pickly.service.comment.entity.QComment.comment;
-import static org.pickly.service.member.entity.QMember.member;
+import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
+import static org.pickly.service.domain.category.entity.QCategory.category;
+import static org.pickly.service.domain.comment.entity.QComment.comment;
+import static org.pickly.service.domain.member.entity.QMember.member;
 
 @Slf4j
 @Repository

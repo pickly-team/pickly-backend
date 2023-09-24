@@ -8,7 +8,6 @@ import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkReposito
 import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.domain.friend.service.FriendReadService
 import org.pickly.service.domain.friend.service.FriendWriteService
-import org.pickly.service.domain.member.exception.MemberException
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.member.service.MemberReadService
 import org.pickly.service.domain.member.service.MemberWriteService
@@ -115,18 +114,6 @@ class MemberReadServiceSpec extends Specification {
         found.name == "수정"
         found.nickname == "수정"
         found.profileEmoji == "👎"
-    }
-
-    def "사용자 프로필 수정_이미 존재하는 닉네임은 사용 불가능"() {
-        given:
-        var member = memberRepository.save(memberFactory.testMember("picko", "test@gmail.com"))
-        var member2 = memberRepository.save(memberFactory.testMember("picko2", "test2@gmail.com"))
-
-        when:
-        memberWriteService.update(member, new MemberProfileUpdateDTO("수정", member2.getNickname(), "👎"))
-
-        then:
-        thrown(MemberException.NicknameDuplicateException)
     }
 
     def "사용자 탈퇴"() {

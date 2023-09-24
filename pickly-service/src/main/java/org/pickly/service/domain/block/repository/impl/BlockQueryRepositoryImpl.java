@@ -1,8 +1,8 @@
 package org.pickly.service.domain.block.repository.impl;
 
-import static org.pickly.service.block.entity.QBlock.block;
-import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
-import static org.pickly.service.member.entity.QMember.member;
+import static org.pickly.service.domain.block.entity.QBlock.block;
+import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
+import static org.pickly.service.domain.member.entity.QMember.member;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;

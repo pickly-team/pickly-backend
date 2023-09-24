@@ -15,8 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.pickly.service.bookmark.entity.QBookmark.bookmark;
-import static org.pickly.service.notification.entity.QNotification.notification;
+import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
+import static org.pickly.service.domain.notification.entity.QNotification.notification;
 
 @Repository
 @RequiredArgsConstructor
