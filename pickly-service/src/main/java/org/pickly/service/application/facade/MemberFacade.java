@@ -9,8 +9,8 @@ import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.member.service.MemberWriteService;
 import org.pickly.service.domain.member.service.dto.*;
-import org.pickly.service.domain.notification.service.NotificationStandardReadService;
-import org.pickly.service.domain.notification.service.NotificationStandardWriteService;
+import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService;
+import org.pickly.service.domain.notification.service.standard.NotificationStandardWriteService;
 import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
 

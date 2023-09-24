@@ -2,7 +2,7 @@ package org.pickly.service.report.service
 
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.service.common.error.exception.BusinessException
-import org.pickly.service.domain.report.service.MemberReportService
+import org.pickly.service.domain.report.service.member.MemberReportReadService
 import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.report.repository.MemberReportRepository
@@ -19,10 +19,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class MemberReportServiceSpec extends Specification {
+class MemberReportReadServiceSpec extends Specification {
 
     @Autowired
-    private MemberReportService memberReportService
+    private MemberReportReadService memberReportService
 
     @Autowired
     private MemberReportRepository memberReportRepository

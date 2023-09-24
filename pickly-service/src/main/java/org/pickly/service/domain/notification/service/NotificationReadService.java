@@ -11,7 +11,8 @@ import org.pickly.service.domain.notification.entity.NotificationTemplate;
 import org.pickly.service.domain.notification.enums.NotificationType;
 import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository;
-import org.pickly.service.domain.notification.service.interfaces.NotificationTemplateService;
+import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService;
+import org.pickly.service.domain.notification.service.template.NotificationTemplateReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class NotificationReadService {
 
   private final NotificationRepository notificationRepository;
   private final NotificationStandardReadService notificationStandardReadService;
-  private final NotificationTemplateService notificationTemplateService;
+  private final NotificationTemplateReadService notificationTemplateReadService;
 
   public List<Notification> findByMember(Long memberId) {
     return notificationRepository.findAllByMemberIdAndDeletedAtNull(
@@ -39,7 +40,7 @@ public class NotificationReadService {
 
   public List<Notification> makeNormals(Map<Member, List<Bookmark>> unreadBookmarks) {
     List<Notification> notifications = new ArrayList<>();
-    List<NotificationTemplate> templates = notificationTemplateService.findAllByNotificationType(NotificationType.NORMAL);
+    List<NotificationTemplate> templates = notificationTemplateReadService.findAllByNotificationType(NotificationType.NORMAL);
     LocalDateTime now = TimezoneHandler.getUTCnow();
 
     for (Map.Entry<Member, List<Bookmark>> entry : unreadBookmarks.entrySet()) {

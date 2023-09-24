@@ -11,7 +11,7 @@ import org.pickly.service.domain.notification.controller.request.NotificationSta
 import org.pickly.service.domain.notification.controller.request.NotifyStandardDayUpdateReq;
 import org.pickly.service.domain.notification.controller.response.NotificationStandardRes;
 import org.pickly.service.domain.notification.mapper.NotificationStandardMapper;
-import org.pickly.service.domain.notification.service.NotificationStandardReadService;
+import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
