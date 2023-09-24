@@ -1,15 +1,15 @@
 package org.pickly.service.comment.service
 
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
-import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.comment.CommentFactory
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
+import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository
+import org.pickly.service.domain.comment.service.CommentWriteService
 import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO
-import org.pickly.service.domain.comment.service.interfaces.CommentReadService
-import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
+import org.pickly.service.member.MemberFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,10 +23,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class CommentReadServiceSpec extends Specification {
+class CommentWriteServiceSpec extends Specification {
 
     @Autowired
-    private CommentReadService commentService
+    private CommentWriteService commentService
 
     @Autowired
     private BookmarkRepository bookmarkRepository
@@ -59,7 +59,7 @@ class CommentReadServiceSpec extends Specification {
 
         when:
         CommentUpdateDTO request = new CommentUpdateDTO("두번째 내용")
-        def updateComment = commentService.update(comment.id, memberId, request)
+        def updateComment = commentService.update(comment, memberId, request.content)
 
         then:
         updateComment.isOwnerComment == true

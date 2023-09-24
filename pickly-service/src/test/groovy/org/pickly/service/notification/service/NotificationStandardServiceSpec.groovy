@@ -2,12 +2,12 @@ package org.pickly.service.notification.service
 
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.service.common.error.exception.BusinessException
-import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
-import org.pickly.service.notification.NotificationStandardFactory
 import org.pickly.service.domain.notification.repository.interfaces.NotificationStandardRepository
-import org.pickly.service.domain.notification.service.dto.NotificationStandardDTO
-
+import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService
+import org.pickly.service.domain.notification.service.standard.NotificationStandardWriteService
+import org.pickly.service.member.MemberFactory
+import org.pickly.service.notification.NotificationStandardFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,7 +26,10 @@ import java.time.LocalTime
 class NotificationStandardServiceSpec extends Specification {
 
     @Autowired
-    private NotificationStandardService notificationStandardService
+    private NotificationStandardWriteService notificationStandardWriteService
+
+    @Autowired
+    private NotificationStandardReadService notificationStandardReadService
 
     @Autowired
     private NotificationStandardRepository notificationStandardRepository
@@ -48,13 +51,10 @@ class NotificationStandardServiceSpec extends Specification {
         var member = memberRepository.save(memberFactory.testMember())
 
         when:
-        notificationStandardService.createNotificationStandard(
-                member.id,
-                new NotificationStandardDTO(true, LocalTime.of(9, 0))
-        )
+        notificationStandardWriteService.create(member)
 
         then:
-        var found = notificationStandardService.findByMemberId(member.id)
+        var found = notificationStandardReadService.findByMemberId(member.id)
         found.isActive == true
         found.notifyDailyAt == LocalTime.of(9, 0)
     }
@@ -62,16 +62,10 @@ class NotificationStandardServiceSpec extends Specification {
     def "사용자가 이미 알림 설정을 가지고 있는 경우 생성할 수 없다"() {
         given:
         var member = memberRepository.save(memberFactory.testMember())
-        notificationStandardService.createNotificationStandard(
-                member.id,
-                new NotificationStandardDTO(true, LocalTime.of(9, 0))
-        )
+        notificationStandardWriteService.create(member)
 
         when:
-        notificationStandardService.createNotificationStandard(
-                member.id,
-                new NotificationStandardDTO(true, LocalTime.of(9, 0))
-        )
+        notificationStandardWriteService.create(member)
 
         then:
         thrown(BusinessException)
@@ -80,31 +74,15 @@ class NotificationStandardServiceSpec extends Specification {
     def "사용자가 알림 설정을 이미 가지고 있는 경우 수정할 수 있다"() {
         given:
         var member = memberRepository.save(memberFactory.testMember())
-        notificationStandardRepository.save(notificationStandardFactory.testNotificationStandard(member))
+        var standard = notificationStandardRepository.save(notificationStandardFactory.testNotificationStandard(member))
 
         when:
-        notificationStandardService.updateNotificationStandard(
-                member.id,
-                new NotificationStandardDTO(false, LocalTime.of(10, 0))
-        )
+        notificationStandardWriteService.update(standard, false, LocalTime.of(10, 0))
 
         then:
-        var found = notificationStandardService.findByMemberId(member.id)
+        var found = notificationStandardReadService.findByMemberId(member.id)
         found.isActive == false
         found.notifyDailyAt == LocalTime.of(10, 0)
     }
 
-    def "사용자가 알림 설정을 가지고 있지 않은 경우 수정할 수 없다"() {
-        given:
-        var member = memberRepository.save(memberFactory.testMember())
-
-        when:
-        notificationStandardService.updateNotificationStandard(
-                member.id,
-                new NotificationStandardDTO(false, LocalTime.of(10, 0))
-        )
-
-        then:
-        thrown(BusinessException)
-    }
 }
