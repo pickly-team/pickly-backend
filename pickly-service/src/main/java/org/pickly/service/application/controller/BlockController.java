@@ -5,12 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.application.facade.BlockFacade;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.domain.block.common.BlockMapper;
 import org.pickly.service.domain.block.controller.response.BlockBookmarkRes;
 import org.pickly.service.domain.block.controller.response.BlockMemberRes;
-import org.pickly.service.domain.block.service.BlockService;
+import org.pickly.service.domain.block.service.BlockReadService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,8 @@ import java.util.stream.Collectors;
 @Tag(name = "Block", description = "차단 ( 유저 / 북마크 ) API")
 public class BlockController {
 
-  private final BlockService blockService;
+  private final BlockReadService blockReadService;
+  private final BlockFacade blockFacade;
 
   /*
    * 2023 / 04 / 09
@@ -42,7 +44,7 @@ public class BlockController {
       @Positive(message = "유저 ID는 양수입니다.")
       @PathVariable final Long blockeeId
   ) {
-    blockService.blockMember(blockerId, blockeeId);
+    blockFacade.blockMember(blockerId, blockeeId);
   }
 
   @DeleteMapping("/member/{blockerId}/block/{blockeeId}")
@@ -56,7 +58,7 @@ public class BlockController {
       @Positive(message = "유저 ID는 양수입니다.")
       @PathVariable final Long blockeeId
   ) {
-    blockService.unBlockMember(blockerId, blockeeId);
+    blockFacade.unblockMember(blockerId, blockeeId);
   }
 
   @GetMapping("/member/blocks/{blockerId}")
@@ -71,7 +73,7 @@ public class BlockController {
       @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1") final @RequestParam(defaultValue = "15") Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    List<BlockMemberRes> blockedMembers = blockService.getBlockedMembers(blockerId, pageRequest)
+    List<BlockMemberRes> blockedMembers = blockReadService.getBlockedMembers(blockerId, pageRequest)
         .stream()
         .map(BlockMapper::toMember)
         .collect(Collectors.toList());
@@ -100,7 +102,7 @@ public class BlockController {
       @Positive(message = "북마크 ID는 양수입니다.")
       @PathVariable final Long bookmarkId
   ) {
-    blockService.blockBookmark(blockerId, bookmarkId);
+    blockFacade.blockBookmark(blockerId, bookmarkId);
   }
 
   @DeleteMapping("/bookmark/{blockerId}/block/{bookmarkId}")
@@ -112,7 +114,7 @@ public class BlockController {
       @Parameter(name = "bookmarkId", description = "차단 해제를 할 북마크 ID 값", example = "2", required = true)
       @Positive(message = "북마크 ID는 양수입니다.") @PathVariable final Long bookmarkId
   ) {
-    blockService.unBlockBookmark(blockerId, bookmarkId);
+    blockFacade.unblockBookmark(blockerId, bookmarkId);
   }
 
   @GetMapping("/bookmark/blocks/{blockerId}")
@@ -126,7 +128,7 @@ public class BlockController {
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
 
-    List<BlockBookmarkRes> blockedBookmarks = blockService.getBlockedBookmarks(blockerId, pageRequest)
+    List<BlockBookmarkRes> blockedBookmarks = blockReadService.getBlockedBookmarks(blockerId, pageRequest)
         .stream()
         .map(BlockMapper::toBookmark)
         .collect(Collectors.toList());
