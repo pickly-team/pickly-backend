@@ -40,4 +40,9 @@ public class BlockReadService {
       throw new BlockException.AlreadyBlockException();
     }
   }
+
+  public boolean existsByBlockerIdAndBlockeeId(Long fromMemberId, Long toMemberId) {
+    return blockRepository.existsByBlockerIdAndBlockeeId(fromMemberId, toMemberId);
+  }
+
 }

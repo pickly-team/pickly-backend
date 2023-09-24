@@ -1,7 +1,7 @@
 package org.pickly.service.domain.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.interfaces.MemberReadService;
 import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationStandardServiceImpl implements NotificationStandardService {
 
   private final NotificationStandardRepository notificationStandardRepository;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   @Override
   @Transactional(readOnly = true)
@@ -41,7 +41,7 @@ public class NotificationStandardServiceImpl implements NotificationStandardServ
 
     notificationStandardRepository.save(
         new NotificationStandard(
-            memberService.findById(memberId), dto.isActive(), 7, dto.getNotifyDailyAt()
+            memberReadService.findById(memberId), dto.isActive(), 7, dto.getNotifyDailyAt()
         )
     );
   }

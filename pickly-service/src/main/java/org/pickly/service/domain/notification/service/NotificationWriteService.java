@@ -21,4 +21,9 @@ public class NotificationWriteService {
   public void deleteByBookmark(List<Long> bookmarkIds) {
     notificationRepository.deleteAllByBookmarkIdIn(bookmarkIds);
   }
+
+  public void deleteByMember(Long memberId) {
+    notificationRepository.deleteAllByMemberId(memberId);
+  }
+
 }

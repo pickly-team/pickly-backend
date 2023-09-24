@@ -38,8 +38,8 @@ public class MemberMapper {
         .build();
   }
 
-  public HardModeRes toMemberStatusRes(HardModeDTO hardModeDTO) {
-    return new HardModeRes(hardModeDTO.getIsHardMode());
+  public HardModeRes toMemberStatusRes(Member member) {
+    return new HardModeRes(member.isHardMode(member.getIsHardMode()));
   }
 
   public MemberModeRes toResponse(MemberModeDTO dto) {
@@ -136,6 +136,13 @@ public class MemberMapper {
   public MemberRegisterRes toMemberRegisterResponse(MemberRegisterDto dto) {
     return new MemberRegisterRes(dto.getUsername(), dto.getIsHardMode(), dto.getEmail(),
         dto.getName(), dto.getNickname(), dto.getMemberId());
+  }
+
+  public MemberRegisterRes toResponse(Member member) {
+    return new MemberRegisterRes(
+        member.getUsername(), member.getIsHardMode(), member.getEmail(),
+        member.getName(), member.getNickname(), member.getId()
+    );
   }
 
   public SearchMemberResultRes toSearchMemberResultRes(SearchMemberResultResDTO dto) {

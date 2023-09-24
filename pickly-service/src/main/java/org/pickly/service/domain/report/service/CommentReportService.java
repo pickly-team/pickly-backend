@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.service.interfaces.CommentReadService;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.interfaces.MemberReadService;
 import org.pickly.service.domain.report.exception.ReportException;
 import org.pickly.service.domain.report.repository.CommentReportRepository;
 import org.pickly.service.domain.report.entity.CommentReport;
@@ -17,12 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentReportService {
 
   private final CommentReportRepository commentReportRepository;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
   private final CommentReadService commentReadService;
 
   public void reportComment(Long reporterId, Long reportedId, String content) {
     checkIsAlreadyReport(reporterId, reportedId);
-    Member reporter = memberService.findById(reporterId);
+    Member reporter = memberReadService.findById(reporterId);
     Comment comment = commentReadService.findById(reportedId);
     checkIsMyComment(reporterId, comment.getMember().getId());
     commentReportRepository.save(CommentReport.create(reporter, comment, content));

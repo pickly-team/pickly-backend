@@ -10,7 +10,7 @@ import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.exception.MemberException
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.member.service.dto.MemberProfileUpdateDTO
-import org.pickly.service.domain.member.service.interfaces.MemberService
+import org.pickly.service.domain.member.service.interfaces.MemberReadService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -24,10 +24,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class MemberServiceSpec extends Specification {
+class MemberReadServiceSpec extends Specification {
 
     @Autowired
-    private MemberService memberService
+    private MemberReadService memberService
 
     @Autowired
     private MemberRepository memberRepository

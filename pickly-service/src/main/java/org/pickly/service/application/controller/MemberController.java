@@ -1,5 +1,6 @@
 package org.pickly.service.application.controller;
 
+import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,19 +12,20 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.application.facade.MemberFacade;
+import org.pickly.service.common.utils.base.AuthTokenUtil;
 import org.pickly.service.common.utils.base.RequestUtil;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.domain.member.common.MemberMapper;
 import org.pickly.service.domain.member.controller.request.MemberProfileUpdateReq;
 import org.pickly.service.domain.member.controller.request.MemberStatusReq;
 import org.pickly.service.domain.member.controller.request.NotificationSettingsUpdateReq;
 import org.pickly.service.domain.member.controller.response.*;
-import org.pickly.service.domain.member.common.MemberMapper;
-import org.pickly.service.member.controller.response.*;
-import org.pickly.service.domain.member.service.dto.MemberProfileDTO;
-import org.pickly.service.domain.member.service.dto.MemberRegisterDto;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
-import org.springframework.http.ResponseEntity;
+import org.pickly.service.domain.member.entity.Member;
+import org.pickly.service.domain.member.service.MemberReadService;
+import org.pickly.service.domain.member.service.MemberWriteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +40,11 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
 
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
+  private final MemberWriteService memberWriteService;
+  private final MemberFacade memberFacade;
   private final MemberMapper memberMapper;
+  private final AuthTokenUtil authTokenUtil;
 
   @PutMapping("/me")
   @Operation(summary = "유저 프로필을 수정한다.")
@@ -54,7 +59,7 @@ public class MemberController {
       @Valid
       MemberProfileUpdateReq request
   ) {
-    memberService.updateMyProfile(memberId, memberMapper.toDTO(request));
+    memberFacade.update(memberId, memberMapper.toDTO(request));
   }
 
   // TODO: ApiResponse.content 없어도 Swagger Schema 동작하는지 확인 필요
@@ -65,7 +70,7 @@ public class MemberController {
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
   ) {
     return memberMapper.toResponse(
-        memberService.findMyProfile(loginId)
+        memberFacade.findMyProfile(loginId)
     );
   }
 
@@ -87,7 +92,7 @@ public class MemberController {
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
   ) {
     return memberMapper.toResponse(
-        memberService.findProfileById(loginId, memberId)
+        memberFacade.findProfileById(loginId, memberId)
     );
   }
 
@@ -105,7 +110,7 @@ public class MemberController {
       Long memberId
   ) {
     return memberMapper.toResponse(
-        memberService.findModeByMemberId(memberId)
+        memberFacade.findModeByMemberId(memberId)
     );
   }
 
@@ -121,8 +126,8 @@ public class MemberController {
       @Valid
       MemberStatusReq request
   ) {
-    return memberMapper.toMemberStatusRes(
-        memberService.setHardMode(memberId, memberMapper.toStatusDTO(request)));
+    Member member = memberFacade.setHardMode(memberId, memberMapper.toStatusDTO(request));
+    return memberMapper.toMemberStatusRes(member);
   }
 
 
@@ -138,7 +143,7 @@ public class MemberController {
       @Valid
       NotificationSettingsUpdateReq request
   ) {
-    memberService.updateNotificationSettings(
+    memberFacade.updateNotificationSettings(
         memberId, request.getTimezone(), request.getFcmToken()
     );
   }
@@ -150,27 +155,33 @@ public class MemberController {
       @Parameter(name = "loginId", description = "로그인 유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId
   ) {
-    memberService.deleteMember(loginId);
+    memberFacade.delete(loginId);
   }
 
   @PostMapping("/register")
   @Operation(summary = "회원가입")
-  public ResponseEntity<MemberRegisterRes> register(
+  @ResponseStatus(HttpStatus.OK)
+  public MemberRegisterRes register(
       @RequestHeader("Authorization") String authorization
   ) {
     String token = RequestUtil.getAuthorizationToken(authorization);
-    MemberRegisterDto memberRegisterDto = memberService.register(token);
-    MemberRegisterRes response = memberMapper.toMemberRegisterResponse(memberRegisterDto);
-    return ResponseEntity.ok(response);
+    FirebaseToken decodedToken = authTokenUtil.validateToken(token);
+    Member request = memberMapper.tokenToMember(decodedToken);
+
+    Member member = memberFacade.create(request);
+    return memberMapper.toResponse(member);
   }
 
   @GetMapping("/id")
   @Operation(summary = "Access token으로 유저 ID를 조회한다.")
-  public ResponseEntity<Long> getMemberId(
-      @RequestHeader("Authorization") String authorization) {
-    String token = RequestUtil.getAuthorizationToken(authorization);
-    MemberProfileDTO memberProfileDto = memberService.getMemberIdByToken(token);
-    return ResponseEntity.ok(memberProfileDto.getId());
+  @ResponseStatus(HttpStatus.OK)
+  public Long getMemberId(
+      @RequestHeader("Authorization") String authorization
+  ) {
+    var token = RequestUtil.getAuthorizationToken(authorization);
+    var decodedToken = authTokenUtil.validateToken(token);
+    var member = memberReadService.findByEmail(decodedToken.getEmail());
+    return member.getId();
   }
 
   @GetMapping("/{memberId}/search/{keyword}")
@@ -197,7 +208,7 @@ public class MemberController {
       @RequestParam(required = false) final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    List<SearchMemberResultRes> resDto = memberService.searchMemberByKeywords(keyword, memberId,
+    List<SearchMemberResultRes> resDto = memberReadService.searchMemberByKeywords(keyword, memberId,
             pageRequest)
         .stream().map(memberMapper::toSearchMemberResultRes).toList();
 
@@ -220,7 +231,7 @@ public class MemberController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    return memberService.makeMemberAuthenticationCode(memberId);
+    return memberFacade.makeAuthenticationCode(memberId);
   }
 
   @DeleteMapping("/authentication-code")
@@ -235,7 +246,7 @@ public class MemberController {
       @Parameter(name = "code", description = "발급 받은 인증 코드 값", example = "2319", required = true)
       @NotBlank(message = "인증 코드는 필수 값입니다.") @RequestParam final String code
   ) {
-    return memberService.checkMemberAuthenticationCode(code);
+    return memberWriteService.checkMemberAuthenticationCode(code);
   }
 
 }

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.interfaces.MemberReadService;
 import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.service.interfaces.NotificationService;
 import org.pickly.service.domain.notification.service.interfaces.NotificationStandardService;
@@ -36,14 +36,14 @@ public class NotificationServiceImpl implements NotificationService {
 
   private final NotificationJdbcRepository notificationJdbcRepository;
   private final NotificationRepository notificationRepository;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
   private final NotificationStandardService notificationStandardService;
   private final NotificationTemplateService notificationTemplateService;
   private final NotificationMapper notificationMapper;
 
   @Override
   public List<NotificationDTO> findMemberNotifications(final Long memberId) {
-    Member member = memberService.findById(memberId);
+    Member member = memberReadService.findById(memberId);
     List<Notification> notifications = notificationRepository.findAllByMemberIdAndDeletedAtNull(
         memberId);
     return notifications.stream().map(n -> notificationMapper.toDto(n, member)).toList();

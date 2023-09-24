@@ -20,7 +20,7 @@ import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepos
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
-import org.pickly.service.domain.member.service.interfaces.MemberService;
+import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,16 +49,16 @@ public class BookmarkReadService {
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
-  private final MemberService memberService;
+  private final MemberReadService memberReadService;
 
   public Long countMemberLikes(final Long memberId) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     return bookmarkQueryRepository.count(memberId, USER_LIKE);
   }
 
   public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(final PageRequest pageRequest,
                                                                final Long memberId) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(pageRequest, memberId, null,
         USER_LIKE, null, null);
     return makeResponse(pageRequest.getPageSize(), memberLikes);
@@ -68,7 +68,7 @@ public class BookmarkReadService {
       final PageRequest pageRequest, final Long memberId, final Long categoryId,
       final Boolean readByUser, final Visibility visibility
   ) {
-    memberService.existsById(memberId);
+    memberReadService.existsById(memberId);
     List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
         categoryId, null, readByUser, visibility);
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
@@ -173,6 +173,10 @@ public class BookmarkReadService {
         categoryId);
     List<Long> bookmarkIds = bookmarks.stream().map(Bookmark::getId).toList();
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
+  }
+
+  public Long countByMemberId(Long memberId) {
+    return bookmarkRepository.countByMemberIdAndDeletedAtNull(memberId);
   }
 
 }
