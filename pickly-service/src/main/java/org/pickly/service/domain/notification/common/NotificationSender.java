@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.entity.Notification;
-import org.pickly.service.domain.notification.service.interfaces.NotificationService;
+import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +23,7 @@ import java.util.Map;
 public class NotificationSender {
 
   private final MemberReadService memberReadService;
-  private final NotificationService notificationService;
+  private final NotificationWriteService notificationWriteService;
 
   // FCM 메세지 송신 메서드
   public void sendMessage(List<Notification> notifications) {
@@ -44,7 +44,7 @@ public class NotificationSender {
     }
 
     // 송신한 메세지의 is_send 값을 true로 업데이트해줍니다.
-    notificationService.updateAllToSend(notifications);
+    notificationWriteService.updateAllToSend(notifications);
   }
 
   private Map<Long, String> createMemberFcmTokenMap(List<Notification> notifications) {
