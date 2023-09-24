@@ -41,10 +41,14 @@ public class MemberReadService {
 
   public void isValidNickname(Member member, String newNickname) {
     if (
-        !member.getNickname().equals(newNickname) && existsByNickname(newNickname)
+        checkIsNewNickname(member, newNickname) && existsByNickname(newNickname)
     ) {
       throw new MemberException.NicknameDuplicateException();
     }
+  }
+
+  public boolean checkIsNewNickname(Member member, String newNickname) {
+    return member.getNickname() != null && !member.getNickname().equals(newNickname);
   }
 
   public List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
