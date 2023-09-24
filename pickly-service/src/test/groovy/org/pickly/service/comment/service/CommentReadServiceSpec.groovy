@@ -7,7 +7,7 @@ import org.pickly.service.domain.category.repository.interfaces.CategoryReposito
 import org.pickly.service.comment.CommentFactory
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository
 import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO
-import org.pickly.service.domain.comment.service.interfaces.CommentService
+import org.pickly.service.domain.comment.service.interfaces.CommentReadService
 import org.pickly.service.member.MemberFactory
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,10 +23,10 @@ import spock.lang.Specification
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class CommentServiceSpec extends Specification {
+class CommentReadServiceSpec extends Specification {
 
     @Autowired
-    private CommentService commentService
+    private CommentReadService commentService
 
     @Autowired
     private BookmarkRepository bookmarkRepository

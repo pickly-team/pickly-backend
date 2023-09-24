@@ -2,7 +2,7 @@ package org.pickly.service.domain.report.service;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.comment.entity.Comment;
-import org.pickly.service.domain.comment.service.interfaces.CommentService;
+import org.pickly.service.domain.comment.service.interfaces.CommentReadService;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.service.interfaces.MemberService;
 import org.pickly.service.domain.report.exception.ReportException;
@@ -18,12 +18,12 @@ public class CommentReportService {
 
   private final CommentReportRepository commentReportRepository;
   private final MemberService memberService;
-  private final CommentService commentService;
+  private final CommentReadService commentReadService;
 
   public void reportComment(Long reporterId, Long reportedId, String content) {
     checkIsAlreadyReport(reporterId, reportedId);
     Member reporter = memberService.findById(reporterId);
-    Comment comment = commentService.findById(reportedId);
+    Comment comment = commentReadService.findById(reportedId);
     checkIsMyComment(reporterId, comment.getMember().getId());
     commentReportRepository.save(CommentReport.create(reporter, comment, content));
   }
