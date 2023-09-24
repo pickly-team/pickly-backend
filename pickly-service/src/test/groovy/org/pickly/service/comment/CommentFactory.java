@@ -1,8 +1,8 @@
 package org.pickly.service.comment;
 
-import org.pickly.service.bookmark.entity.Bookmark;
-import org.pickly.service.comment.entity.Comment;
-import org.pickly.service.member.entity.Member;
+import org.pickly.service.domain.bookmark.entity.Bookmark;
+import org.pickly.service.domain.comment.entity.Comment;
+import org.pickly.service.domain.member.entity.Member;
 
 public class CommentFactory {
 

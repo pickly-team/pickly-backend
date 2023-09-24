@@ -1,7 +1,7 @@
 package org.pickly.service.notification;
 
-import org.pickly.service.notification.entity.Notification;
-import org.pickly.service.notification.enums.NotificationType;
+import org.pickly.service.domain.notification.entity.Notification;
+import org.pickly.service.domain.notification.enums.NotificationType;
 
 import java.time.LocalDateTime;
 

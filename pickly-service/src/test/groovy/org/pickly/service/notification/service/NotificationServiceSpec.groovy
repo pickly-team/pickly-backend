@@ -2,14 +2,14 @@ package org.pickly.service.notification.service
 
 import org.pickly.service.common.error.exception.BusinessException
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
-import org.pickly.service.category.repository.interfaces.CategoryRepository
+import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.repository.interfaces.MemberRepository
+import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.notification.NotificationFactory
-import org.pickly.service.notification.repository.interfaces.NotificationRepository
-import org.pickly.service.notification.service.interfaces.NotificationService
+import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository
+import org.pickly.service.domain.notification.service.interfaces.NotificationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest

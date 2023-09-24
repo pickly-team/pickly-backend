@@ -3,10 +3,10 @@ package org.pickly.service.bookmark;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.pickly.service.bookmark.entity.Bookmark;
-import org.pickly.service.bookmark.entity.Visibility;
-import org.pickly.service.category.entity.Category;
-import org.pickly.service.member.entity.Member;
+import org.pickly.service.domain.bookmark.entity.Bookmark;
+import org.pickly.service.domain.bookmark.entity.Visibility;
+import org.pickly.service.domain.category.entity.Category;
+import org.pickly.service.domain.member.entity.Member;
 
 public class BookmarkFactory {
 

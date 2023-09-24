@@ -1,15 +1,15 @@
 package org.pickly.service.comment.service
 
 import org.pickly.service.bookmark.BookmarkFactory
-import org.pickly.service.bookmark.repository.interfaces.BookmarkRepository
+import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository
 import org.pickly.service.category.CategoryFactory
-import org.pickly.service.category.repository.interfaces.CategoryRepository
+import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.comment.CommentFactory
-import org.pickly.service.comment.repository.interfaces.CommentRepository
-import org.pickly.service.comment.service.dto.CommentUpdateDTO
-import org.pickly.service.comment.service.interfaces.CommentService
+import org.pickly.service.domain.comment.repository.interfaces.CommentRepository
+import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO
+import org.pickly.service.domain.comment.service.interfaces.CommentService
 import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.repository.interfaces.MemberRepository
+import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest

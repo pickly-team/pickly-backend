@@ -2,9 +2,10 @@ package org.pickly.service.report.service
 
 import org.junit.jupiter.api.BeforeEach
 import org.pickly.service.common.error.exception.BusinessException
+import org.pickly.service.domain.report.service.MemberReportService
 import org.pickly.service.member.MemberFactory
-import org.pickly.service.member.repository.interfaces.MemberRepository
-import org.pickly.service.report.repository.MemberReportRepository
+import org.pickly.service.domain.member.repository.interfaces.MemberRepository
+import org.pickly.service.domain.report.repository.MemberReportRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
