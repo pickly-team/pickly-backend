@@ -11,24 +11,22 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.pickly.service.application.facade.BookmarkFacade;
+import org.pickly.service.common.utils.encrypt.EncryptService;
+import org.pickly.service.common.utils.encrypt.ExtensionKey;
+import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.domain.bookmark.common.BookmarkMapper;
 import org.pickly.service.domain.bookmark.controller.request.BookmarkCreateReq;
 import org.pickly.service.domain.bookmark.controller.request.BookmarkUpdateReq;
 import org.pickly.service.domain.bookmark.controller.request.ExtensionBookmarkReq;
-import org.pickly.service.domain.bookmark.controller.response.BookmarkDeleteRes;
-import org.pickly.service.domain.bookmark.controller.response.BookmarkListDeleteRes;
 import org.pickly.service.domain.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.entity.Visibility;
-import org.pickly.service.domain.bookmark.service.dto.BookmarkDeleteResDTO;
-import org.pickly.service.domain.bookmark.service.dto.BookmarkListDeleteResDTO;
-import org.pickly.service.domain.bookmark.service.interfaces.BookmarkService;
-import org.pickly.service.common.utils.encrypt.EncryptService;
-import org.pickly.service.common.utils.encrypt.ExtensionKey;
-import org.pickly.service.common.utils.page.PageRequest;
-import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.domain.bookmark.service.BookmarkReadService;
+import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +41,9 @@ import java.util.List;
 public class BookmarkController {
 
   private final EncryptService encryptService;
-  private final BookmarkService bookmarkService;
+  private final BookmarkReadService bookmarkReadService;
+  private final BookmarkWriteService bookmarkWriteService;
+  private final BookmarkFacade bookmarkFacade;
   private final BookmarkMapper bookmarkMapper;
 
   @ApiResponses(value = {
@@ -56,7 +56,7 @@ public class BookmarkController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    return bookmarkService.countMemberLikes(memberId);
+    return bookmarkReadService.countMemberLikes(memberId);
   }
 
   @Operation(
@@ -80,7 +80,7 @@ public class BookmarkController {
       @RequestParam(required = false) final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    return bookmarkService.findMemberLikeBookmarks(pageRequest, memberId);
+    return bookmarkReadService.findMemberLikeBookmarks(pageRequest, memberId);
   }
 
   @Operation(
@@ -109,7 +109,7 @@ public class BookmarkController {
       @RequestParam(required = false) final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    return bookmarkService.findMemberBookmarks(
+    return bookmarkReadService.findMemberBookmarks(
         pageRequest, memberId, categoryId, readByUser, visibility
     );
   }
@@ -119,12 +119,11 @@ public class BookmarkController {
       @ApiResponse(responseCode = "200", description = "성공"),
   })
   @DeleteMapping("/bookmarks/{bookmarkId}")
-  public BookmarkDeleteRes deleteBookmark(
+  public void deleteBookmark(
       @Parameter(name = "bookmarkId", description = "북마크 ID (PK) 값", example = "1", required = true)
       @Positive(message = "북마크 ID는 양수입니다.") @PathVariable final Long bookmarkId
   ) {
-    BookmarkDeleteResDTO bookmarkDeleteResDTO = bookmarkService.deleteBookmark(bookmarkId);
-    return bookmarkMapper.toBookmarkDelete(bookmarkDeleteResDTO.getIsDeleted());
+    bookmarkFacade.delete(bookmarkId);
   }
 
   @Operation(summary = "주어진 북마크 목록을 삭제한다.")
@@ -132,14 +131,12 @@ public class BookmarkController {
       @ApiResponse(responseCode = "200", description = "성공"),
   })
   @DeleteMapping("/bookmarks/list")
-  public BookmarkListDeleteRes deleteBookmarks(
+  public void deleteBookmarks(
       @NotNull(message = "북마크 ID 리스트는 필수입니다.")
       @Size(min = 1, message = "북마크 ID 리스트는 최소 1개 이상이어야 합니다.")
       @RequestParam(value = "bookmarkId") List<@Positive(message = "북마크 ID는 양수입니다.") Long> bookmarkIds
   ) {
-    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = bookmarkService.deleteBookmarks(
-        bookmarkIds);
-    return bookmarkMapper.toBookmarkListDelete(bookmarkListDeleteResDTO.getIsDeleted());
+    bookmarkFacade.delete(bookmarkIds);
   }
 
   // TODO : 멤버 아이디를 토큰에서 가져오도록 수정
@@ -153,7 +150,7 @@ public class BookmarkController {
       @Schema(description = "Bookmark id", example = "1")
       Long bookmarkId
   ) {
-    bookmarkService.likeBookmark(bookmarkId);
+    bookmarkWriteService.like(bookmarkId);
   }
 
   @DeleteMapping("/bookmarks/{bookmarkId}/like")
@@ -165,7 +162,7 @@ public class BookmarkController {
       @Schema(description = "Bookmark id", example = "1")
       Long bookmarkId
   ) {
-    bookmarkService.cancelLikeBookmark(bookmarkId);
+    bookmarkWriteService.cancelLike(bookmarkId);
   }
 
   @PostMapping("/bookmarks")
@@ -175,7 +172,7 @@ public class BookmarkController {
       @Valid
       BookmarkCreateReq dto
   ) {
-    Bookmark entity = bookmarkService.create(dto);
+    Bookmark entity = bookmarkFacade.create(dto);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
 
     return ResponseEntity
@@ -194,7 +191,7 @@ public class BookmarkController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long memberId
   ) {
-    Bookmark entity = bookmarkService.findByIdAndRead(bookmarkId, memberId);
+    Bookmark entity = bookmarkReadService.findByIdAndRead(bookmarkId, memberId);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
     return ResponseEntity.ok(response);
   }
@@ -208,7 +205,7 @@ public class BookmarkController {
       @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
       @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
   ) {
-    return bookmarkService.getTitleFromUrl(memberId, url);
+    return bookmarkReadService.getTitleFromUrl(memberId, url);
   }
 
   @GetMapping("/categories/{categoryId}/bookmarks")
@@ -224,7 +221,7 @@ public class BookmarkController {
       PageRequest pageRequest
   ) {
 
-    return bookmarkService.findBookmarkByCategoryId(pageRequest, categoryId);
+    return bookmarkReadService.findBookmarkByCategoryId(pageRequest, categoryId);
   }
 
   @PutMapping("/bookmarks/{bookmarkId}")
@@ -239,8 +236,10 @@ public class BookmarkController {
       @RequestBody
       BookmarkUpdateReq request
   ) {
-    bookmarkService.updateBookmark(bookmarkId,
-        bookmarkMapper.toBookmarkUpdateReqDTO(request));
+    bookmarkFacade.update(
+        bookmarkId,
+        bookmarkMapper.toBookmarkUpdateReqDTO(request)
+    );
   }
 
   @PostMapping("/bookmarks/chrome-extension")
@@ -251,7 +250,8 @@ public class BookmarkController {
       ExtensionBookmarkReq.CreateDto dto
   ) {
     ExtensionKey key = encryptService.getKey();
-    Bookmark entity = bookmarkService.create(key.decrypt(dto.memberId()), dto);
+    BookmarkCreateReq createReq = new BookmarkCreateReq(key.decrypt(dto.memberId()), dto);
+    Bookmark entity = bookmarkFacade.create(createReq);
     BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
 
     return ResponseEntity
@@ -269,7 +269,7 @@ public class BookmarkController {
       @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
   ) {
     ExtensionKey key = encryptService.getKey();
-    return bookmarkService.getTitleFromUrl(key.decrypt(memberId), url);
+    return bookmarkReadService.getTitleFromUrl(key.decrypt(memberId), url);
   }
 
 }

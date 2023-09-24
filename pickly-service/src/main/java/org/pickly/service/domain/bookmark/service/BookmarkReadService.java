@@ -1,12 +1,13 @@
-package org.pickly.service.domain.bookmark.service.impl;
+package org.pickly.service.domain.bookmark.service;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.pickly.service.domain.bookmark.controller.request.BookmarkCreateReq;
-import org.pickly.service.domain.bookmark.controller.request.ExtensionBookmarkReq;
+import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.page.PageResponse;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
@@ -14,26 +15,12 @@ import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.exception.BookmarkException;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
-import org.pickly.service.domain.bookmark.service.dto.BookmarkDeleteResDTO;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
-import org.pickly.service.domain.bookmark.service.dto.BookmarkListDeleteResDTO;
-import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
-import org.pickly.service.domain.bookmark.service.interfaces.BookmarkService;
-import org.pickly.service.domain.category.entity.Category;
-import org.pickly.service.domain.category.exception.CategoryException;
-import org.pickly.service.domain.category.repository.interfaces.CategoryRepository;
-import org.pickly.service.domain.category.service.interfaces.CategoryService;
-import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
-import org.pickly.service.domain.comment.repository.interfaces.CommentRepository;
-import org.pickly.service.common.utils.page.PageRequest;
-import org.pickly.service.common.utils.page.PageResponse;
-import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
 import org.pickly.service.domain.member.service.interfaces.MemberService;
-import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,31 +39,23 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BookmarkServiceImpl implements BookmarkService {
+public class BookmarkReadService {
 
   private static final boolean USER_LIKE = true;
   private static final int LAST_ITEM = 1;
   private static final String CONTENT_ATTR = "content";
 
-
-  private final CategoryService categoryService;
-  private final CategoryRepository categoryRepository;
   private final MemberRepository memberRepository;
-  private final NotificationRepository notificationRepository;
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
   private final CommentQueryRepository commentQueryRepository;
-
-  private final CommentRepository commentRepository;
   private final MemberService memberService;
 
-  @Override
   public Long countMemberLikes(final Long memberId) {
     memberService.existsById(memberId);
     return bookmarkQueryRepository.count(memberId, USER_LIKE);
   }
 
-  @Override
   public PageResponse<BookmarkItemDTO> findMemberLikeBookmarks(final PageRequest pageRequest,
                                                                final Long memberId) {
     memberService.existsById(memberId);
@@ -85,7 +64,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     return makeResponse(pageRequest.getPageSize(), memberLikes);
   }
 
-  @Override
   public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(
       final PageRequest pageRequest, final Long memberId, final Long categoryId,
       final Boolean readByUser, final Visibility visibility
@@ -97,7 +75,6 @@ public class BookmarkServiceImpl implements BookmarkService {
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
   }
-
 
   private <T> List<T> mapToDtoList(final List<Bookmark> bookmarks,
                                    final Function<Bookmark, T> mapper) {
@@ -130,107 +107,29 @@ public class BookmarkServiceImpl implements BookmarkService {
     return bookmarkList;
   }
 
-  @Override
   public Bookmark findByIdAndRead(Long id, Long memberId) {
     bookmarkRepository.readByUser(id, memberId);
     return bookmarkRepository.findOneById(id)
         .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
-  @Override
   public Bookmark findById(Long id) {
     return bookmarkRepository.findOneById(id)
         .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
-  @Override
   public Bookmark findByIdWithCategory(Long id) {
     return bookmarkRepository.findByIdWithCategory(id)
         .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
   }
 
-  @Override
   public String getTitleFromUrl(Long memberId, String url) {
     Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
     BookmarkInfoDTO info = scrapOgTagInfo(url, member);
     return info.getTitle();
   }
 
-
-  @Override
-  @Transactional
-  public void likeBookmark(Long bookmarkId) {
-    Bookmark bookmark = findById(bookmarkId);
-    bookmark.like();
-  }
-
-  @Override
-  @Transactional
-  public void cancelLikeBookmark(Long bookmarkId) {
-    Bookmark bookmark = findById(bookmarkId);
-    bookmark.deleteLike();
-  }
-
-
-  @Override
-  @Transactional
-  public BookmarkDeleteResDTO deleteBookmark(Long bookmarkId) {
-    BookmarkDeleteResDTO bookmarkDeleteReqDTO = new BookmarkDeleteResDTO();
-    Bookmark bookmark = findById(bookmarkId);
-
-    bookmark.delete();
-    bookmarkDeleteReqDTO.setIsDeleted();
-    deleteCommentByBookmark(bookmark.getId());
-    deleteNotificationByBookmark(bookmark.getId());
-
-    return bookmarkDeleteReqDTO;
-  }
-
-
-  @Override
-  @Transactional
-  public BookmarkListDeleteResDTO deleteBookmarks(List<Long> bookmarkIds) {
-    BookmarkListDeleteResDTO bookmarkListDeleteResDTO = new BookmarkListDeleteResDTO();
-    LocalDateTime now = TimezoneHandler.getUTCnow();
-    bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
-    bookmarkListDeleteResDTO.setIsDeleted();
-
-    bookmarkIds.forEach(this::deleteCommentByBookmark);
-    deleteNotificationByBookmark(bookmarkIds);
-    return bookmarkListDeleteResDTO;
-  }
-
-  @Override
-  @Transactional
-  public Bookmark create(BookmarkCreateReq dto) {
-
-    Category category = categoryRepository.findById(dto.getCategoryId())
-        .orElseThrow(CategoryException.CategoryNotFoundException::new);
-    Member member = memberRepository.findById(dto.getMemberId())
-        .orElseThrow(MemberException.MemberNotFoundException::new);
-
-    BookmarkInfoDTO info = scrapOgTagInfo(dto.getUrl(), member);
-    Bookmark entity = Bookmark.create(category, member, dto.getTitle(), info, dto.getVisibility());
-
-    return bookmarkRepository.save(entity);
-  }
-
-  @Override
-  @Transactional
-  public Bookmark create(Long memberId, ExtensionBookmarkReq.CreateDto dto) {
-
-    Category category = categoryRepository.findById(dto.categoryId())
-        .orElseThrow(CategoryException.CategoryNotFoundException::new);
-    Member member = memberRepository.findById(memberId)
-        .orElseThrow(MemberException.MemberNotFoundException::new);
-
-    BookmarkInfoDTO info = scrapOgTagInfo(dto.url(), member);
-    Bookmark entity = Bookmark.create(category, member, dto.title(), info, dto.visibility());
-
-    return bookmarkRepository.save(entity);
-  }
-
-  private BookmarkInfoDTO scrapOgTagInfo(final String url, final Member member) {
+  public BookmarkInfoDTO scrapOgTagInfo(final String url, final Member member) {
     BookmarkInfoDTO result = new BookmarkInfoDTO(url);
     try {
       Document doc = Jsoup.connect(url).get();
@@ -245,8 +144,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
   }
 
-
-  @Override
   public PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(final PageRequest pageRequest,
                                                                 final Long categoryId) {
     List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
@@ -254,23 +151,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     return makeResponse(pageRequest.getPageSize(), bookmarks);
   }
 
-  @Transactional
-  @Override
-  public void updateBookmark(Long bookmarkId, BookmarkUpdateReqDTO request) {
-    Bookmark bookmark = findById(bookmarkId);
-
-    Category category = categoryRepository.findById(request.getCategoryId())
-        .orElseThrow(CategoryException.CategoryNotFoundException::new);
-
-    bookmark.updateBookmark(
-        category,
-        request.getTitle(),
-        request.getReadByUser(),
-        request.getVisibility()
-    );
-  }
-
-  @Override
   public Map<Member, List<Bookmark>> findAllUnreadBookmark() {
     List<Bookmark> unreadBookmarks = bookmarkQueryRepository.findAllUnreadBookmark();
     return unreadBookmarks.stream().collect(
@@ -295,17 +175,4 @@ public class BookmarkServiceImpl implements BookmarkService {
     bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
   }
 
-
-  private void deleteCommentByBookmark(final Long bookmarkId) {
-    commentRepository.findAllByBookmarkAndDeletedAtNull(bookmarkId)
-        .forEach(Comment::delete);
-  }
-
-  private void deleteNotificationByBookmark(final Long bookmarkId) {
-    notificationRepository.deleteAllByBookmarkId(bookmarkId);
-  }
-
-  private void deleteNotificationByBookmark(final List<Long> bookmarkIds) {
-    notificationRepository.deleteAllByBookmarkIdIn(bookmarkIds);
-  }
 }

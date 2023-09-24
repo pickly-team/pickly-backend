@@ -34,4 +34,12 @@ public class BookmarkCreateReq {
   @NotNull(message = "공개 범위 표시 정보는 필수입니다. ")
   private Visibility visibility;
 
+  public BookmarkCreateReq(Long memberId, ExtensionBookmarkReq.CreateDto dto) {
+    this.memberId = memberId;
+    this.categoryId = dto.categoryId();
+    this.url = dto.url();
+    this.title = dto.title();
+    this.visibility = dto.visibility();
+  }
+
 }

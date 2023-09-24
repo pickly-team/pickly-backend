@@ -3,7 +3,7 @@ package org.pickly.service.domain.comment.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
-import org.pickly.service.domain.bookmark.service.interfaces.BookmarkService;
+import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.comment.common.CommentMapper;
 import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.exception.CommentException;
@@ -29,14 +29,14 @@ public class CommentServiceImpl implements CommentService {
   private final CommentRepository commentRepository;
   private final CommentQueryRepository commentQueryRepository;
   private final CommentMapper commentMapper;
-  private final BookmarkService bookmarkService;
+  private final BookmarkReadService bookmarkReadService;
   private final MemberService memberService;
 
   @Override
   @Transactional
   public CommentDTO create(final Long bookmarkId, final Long memberId,
       final CommentCreateDTO request) {
-    Bookmark bookmark = bookmarkService.findByIdWithCategory(bookmarkId);
+    Bookmark bookmark = bookmarkReadService.findByIdWithCategory(bookmarkId);
     Member member = memberService.findById(memberId);
     Comment comment = Comment.create(member, bookmark, request.getContent());
     commentRepository.save(comment);

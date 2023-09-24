@@ -2,7 +2,8 @@ package org.pickly.service.application.facade;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.block.service.BlockWriteService;
-import org.pickly.service.domain.bookmark.service.interfaces.BookmarkService;
+import org.pickly.service.domain.bookmark.service.BookmarkReadService;
+import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.pickly.service.domain.friend.service.interfaces.FriendService;
 import org.pickly.service.domain.member.service.interfaces.MemberService;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service;
 public class BlockFacade {
 
   private final MemberService memberService;
-  private final BookmarkService bookmarkService;
+  private final BookmarkReadService bookmarkReadService;
+  private final BookmarkWriteService bookmarkWriteService;
   private final BlockWriteService blockWriteService;
   private final FriendService friendService;
 
@@ -35,16 +37,16 @@ public class BlockFacade {
 
   public void blockBookmark(Long fromMemberId, Long toBookmarkId) {
     var fromMember = memberService.findById(fromMemberId);
-    var toBookmark = bookmarkService.findById(toBookmarkId);
+    var toBookmark = bookmarkReadService.findById(toBookmarkId);
 
     blockWriteService.blockBookmark(fromMember, toBookmark);
 
-    bookmarkService.cancelLikeBookmark(toBookmarkId);
+    bookmarkWriteService.cancelLike(toBookmarkId);
   }
 
   public void unblockBookmark(Long fromMemberId, Long toBookmarkId) {
     var fromMember = memberService.findById(fromMemberId);
-    var toBookmark = bookmarkService.findById(toBookmarkId);
+    var toBookmark = bookmarkReadService.findById(toBookmarkId);
 
     blockWriteService.unblockBookmark(fromMember, toBookmark);
   }

@@ -2,9 +2,9 @@ package org.pickly.service.domain.notification.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.service.domain.bookmark.entity.Bookmark;
-import org.pickly.service.domain.bookmark.service.interfaces.BookmarkService;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
+import org.pickly.service.domain.bookmark.entity.Bookmark;
+import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.notification.common.NotificationSender;
 import org.pickly.service.domain.notification.entity.Notification;
@@ -23,12 +23,12 @@ public class NotificationScheduler {
 
   private final NotificationService notificationService;
   private final NotificationSender notificationSender;
-  private final BookmarkService bookmarkService;
+  private final BookmarkReadService bookmarkReadService;
 
 
   @Scheduled(cron = "0 0/30 * * * *")
   public void makeNormalNotification() {
-    Map<Member, List<Bookmark>> unreadBookmarks = bookmarkService.findAllUnreadBookmark();
+    Map<Member, List<Bookmark>> unreadBookmarks = bookmarkReadService.findAllUnreadBookmark();
     List<Notification> notifications = notificationService.makeNormals(unreadBookmarks);
     notificationService.saveAll(notifications);
     sendNormalNotification();
