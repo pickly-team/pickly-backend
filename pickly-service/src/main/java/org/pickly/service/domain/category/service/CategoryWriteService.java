@@ -9,7 +9,6 @@ import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.exception.CategoryException;
 import org.pickly.service.domain.category.repository.interfaces.CategoryJdbcRepository;
 import org.pickly.service.domain.member.entity.Member;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ import java.util.List;
 public class CategoryWriteService {
 
   private final CategoryJdbcRepository categoryJdbcRepository;
-  private final ApplicationEventPublisher eventPublisher;
 
   public void create(Member member, List<CategoryRequestDTO> requests, int nextOrderNum) {
     List<Category> categories = new ArrayList<>();
@@ -50,7 +48,6 @@ public class CategoryWriteService {
 
   public void delete(Category category) {
     category.delete();
-    eventPublisher.publishEvent(category.getId());
   }
 
   public void delete(List<Category> categories) {
