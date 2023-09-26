@@ -7,7 +7,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
-import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
@@ -22,13 +21,8 @@ import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -158,21 +152,6 @@ public class BookmarkReadService {
             Bookmark::getMember, LinkedHashMap::new, Collectors.toList()
         )
     );
-  }
-
-  /**
-   * @param categoryId
-   * @description : 카테고리 삭제시 해당 카테고리에 속한 북마크 삭제
-   */
-  @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void findBookmarkByCategoryIdAndDelete(final Long categoryId) {
-    PageRequest pageRequest = new PageRequest(null, 15);
-    LocalDateTime now = TimezoneHandler.getUTCnow();
-    List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
-        categoryId);
-    List<Long> bookmarkIds = bookmarks.stream().map(Bookmark::getId).toList();
-    bookmarkRepository.deleteBookmarksByIds(bookmarkIds, now);
   }
 
   public Long countByMemberId(Long memberId) {

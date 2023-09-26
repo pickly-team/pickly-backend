@@ -27,6 +27,18 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
       @Param("bookmarkIds") List<Long> bookmarkIds, @Param("deletedAt") LocalDateTime deletedAt
   );
 
+  @Modifying(clearAutomatically = true)
+  @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.category.id = :categoryId")
+  void deleteByCategory(
+      @Param("categoryId") Long categoryId, @Param("deletedAt") LocalDateTime deletedAt
+  );
+
+  @Modifying(clearAutomatically = true)
+  @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.category.id in :categoryIds")
+  void deleteByCategory(
+      @Param("categoryIds") List<Long> categoryIds, @Param("deletedAt") LocalDateTime deletedAt
+  );
+
   @Transactional
   @Modifying
   @Query("UPDATE Bookmark b SET b.readByUser=True WHERE b.id=:bookmarkId and b.member.id = :memberId")
