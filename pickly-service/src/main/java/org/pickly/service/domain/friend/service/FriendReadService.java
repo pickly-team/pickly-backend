@@ -41,6 +41,12 @@ public class FriendReadService {
     }
   }
 
+  public boolean checkUsersAreFriend(final Long loginId, final Long memberId) {
+    return
+        friendRepository.existsByFollowerIdAndFolloweeId(loginId, memberId)
+        || friendRepository.existsByFollowerIdAndFolloweeId(memberId, loginId);
+  }
+
   public Friend findFollowerById(final Long followerId, final Long memberId) {
     return friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId)
         .orElseThrow(FriendException.FriendNotFoundException::new);
