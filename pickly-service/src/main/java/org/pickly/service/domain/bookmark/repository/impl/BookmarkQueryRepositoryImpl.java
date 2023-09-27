@@ -29,7 +29,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   @Override
   public List<Bookmark> findBookmarks(
       PageRequest pageRequest, Long memberId, Long categoryId, Boolean isUserLike,
-      Boolean readByUser, Visibility visibility
+      Boolean readByUser, List<Visibility> visibilities
   ) {
     Long cursorId = (Long) pageRequest.getCursorId();
     Integer pageSize = pageRequest.getPageSize();
@@ -41,7 +41,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             eqCategoryId(categoryId),
             eqIsUserLike(isUserLike),
             eqReadByUser(readByUser),
-            eqVisibility(visibility),
+            inVisibility(visibilities),
             notDeleted()
         )
         .orderBy(bookmark.id.desc())
@@ -130,11 +130,11 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return bookmark.isUserLike.eq(isUserLike);
   }
 
-  private BooleanExpression eqVisibility(final Visibility visibility) {
-    if (visibility == null) {
+  private BooleanExpression inVisibility(final List<Visibility> visibilities) {
+    if (visibilities == null) {
       return null;
     }
-    return bookmark.visibility.eq(visibility);
+    return bookmark.visibility.in(visibilities);
   }
 
   private BooleanExpression notDeleted() {

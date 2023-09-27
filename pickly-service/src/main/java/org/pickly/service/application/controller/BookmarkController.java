@@ -24,7 +24,6 @@ import org.pickly.service.domain.bookmark.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
-import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.springframework.http.HttpStatus;
@@ -93,14 +92,14 @@ public class BookmarkController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
 
+      @Parameter(name = "loginId", description = "현재 로그인 유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId,
+
       @Parameter(name = "categoryId", description = "카테고리 ID 값. 필터링 필요 없으면 Null", example = "1")
       @RequestParam(required = false) final Long categoryId,
 
       @Parameter(name = "readByUser", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
       @RequestParam(required = false) final Boolean readByUser,
-
-      @Parameter(name = "visibility", description = "북마크 공개 범위", example = "SCOPE_PUBLIC")
-      @RequestParam(required = false) final Visibility visibility,
 
       @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
       @RequestParam(required = false) final Long cursorId,
@@ -109,8 +108,8 @@ public class BookmarkController {
       @RequestParam(required = false) final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
-    return bookmarkReadService.findMemberBookmarks(
-        pageRequest, memberId, categoryId, readByUser, visibility
+    return bookmarkFacade.findMemberBookmarks(
+        pageRequest, memberId, loginId, categoryId, readByUser
     );
   }
 

@@ -1,7 +1,6 @@
 package org.pickly.service.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.exception.CommentException;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -40,6 +39,10 @@ public class CommentReadService {
   public Comment findById(final Long id) {
     return commentRepository.findByIdAndDeletedAtNull(id)
         .orElseThrow(CommentException.CommentNotFoundException::new);
+  }
+
+  public Map<Long, Long> getBookmarkCommentCnt(final Long memberId) {
+    return commentQueryRepository.findBookmarkCommentCntByMember(memberId);
   }
 
 }

@@ -16,6 +16,7 @@ import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRep
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
+import org.pickly.service.domain.friend.entity.Relationship;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
@@ -23,10 +24,7 @@ import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,20 +56,38 @@ public class BookmarkReadService {
     return makeResponse(pageRequest.getPageSize(), memberLikes);
   }
 
-  public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarks(
+  public PageResponse<BookmarkPreviewItemDTO> findMyBookmarks(
       final PageRequest pageRequest, final Long memberId, final Long categoryId,
       final Boolean readByUser, final Visibility visibility
   ) {
     memberReadService.existsById(memberId);
     List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
-        categoryId, null, readByUser, visibility);
+        categoryId, null, readByUser, Collections.singletonList(visibility));
     Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
         memberId);
     return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
   }
 
-  private <T> List<T> mapToDtoList(final List<Bookmark> bookmarks,
-                                   final Function<Bookmark, T> mapper) {
+  public List<Bookmark> findMemberBookmarks(
+      final PageRequest pageRequest, final Long memberId,
+      final Relationship relationship, final Long categoryId, final Boolean readByUser
+  ) {
+    List<Visibility> visibilities = getVisibility(relationship);
+    return bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
+        categoryId, null, readByUser, visibilities);
+  }
+
+  private List<Visibility> getVisibility(final Relationship relationship) {
+    return switch (relationship) {
+      case FRIEND -> List.of(Visibility.SCOPE_PUBLIC, Visibility.SCOPE_FRIEND);
+      case ME -> List.of(Visibility.SCOPE_PUBLIC, Visibility.SCOPE_FRIEND, Visibility.SCOPE_PRIVATE);
+      default -> List.of(Visibility.SCOPE_PUBLIC);
+    };
+  }
+
+  private <T> List<T> mapToDtoList(
+      final List<Bookmark> bookmarks, final Function<Bookmark, T> mapper
+  ) {
     return bookmarks.stream().map(mapper).toList();
   }
 
@@ -82,7 +98,7 @@ public class BookmarkReadService {
     return new PageResponse<>(contentSize, pageSize, contents);
   }
 
-  private PageResponse<BookmarkPreviewItemDTO> makeResponse(
+  public PageResponse<BookmarkPreviewItemDTO> makeResponse(
       final int pageSize, List<Bookmark> bookmarks, final Map<Long, Long> commentCntMap) {
     int contentSize = bookmarks.size();
     bookmarks = removeElement(bookmarks, contentSize, pageSize);
@@ -91,8 +107,9 @@ public class BookmarkReadService {
     return new PageResponse<>(contentSize, pageSize, contents);
   }
 
-  private List<Bookmark> removeElement(final List<Bookmark> bookmarkList, final int size,
-                                       final int pageSize) {
+  private List<Bookmark> removeElement(
+      final List<Bookmark> bookmarkList, final int size, final int pageSize
+  ) {
     if (size - LAST_ITEM >= pageSize) {
       List<Bookmark> resultList = new ArrayList<>(bookmarkList);
       resultList.remove(size - LAST_ITEM);
