@@ -1,9 +1,9 @@
 package org.pickly.service.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.common.config.CacheConfig;
 import org.pickly.service.common.utils.encrypt.EncryptService;
-import org.pickly.service.common.utils.encrypt.ExtensionKey;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -56,14 +57,14 @@ public class MemberWriteService {
   }
 
   public String checkMemberAuthenticationCode(String code) {
-    Long memberId = getCodeCache().get(code, Long.class);
-    if (memberId == null) {
+    Cache cache = getCodeCache();
+    Long memberId = cache.get(code, Long.class);
+    if (memberId != null) {
+      cache.evict(code);
+      return String.valueOf(memberId);
+    } else {
       throw new MemberException.CodeNotFoundException();
     }
-    ExtensionKey key = encryptService.getKey();
-    String result = key.encrypt(memberId);
-    getCodeCache().evict(key);
-    return result;
   }
 
   private Cache getCodeCache() {
