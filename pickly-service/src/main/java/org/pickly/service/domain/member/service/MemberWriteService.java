@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.common.config.CacheConfig;
 import org.pickly.service.common.utils.encrypt.EncryptService;
+import org.pickly.service.common.utils.encrypt.ExtensionKey;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
@@ -61,7 +62,8 @@ public class MemberWriteService {
     Long memberId = cache.get(code, Long.class);
     if (memberId != null) {
       cache.evict(code);
-      return String.valueOf(memberId);
+      ExtensionKey key = encryptService.getKey();
+      return key.encrypt(memberId);
     } else {
       throw new MemberException.CodeNotFoundException();
     }
