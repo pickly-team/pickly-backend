@@ -8,6 +8,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static org.pickly.service.common.utils.encrypt.EncryptException.*;
+
 @Component
 public class ExtensionKey {
 
@@ -35,7 +37,7 @@ public class ExtensionKey {
       return Base64.getEncoder().encodeToString(encrypted);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new EncryptException.FailToEncryptException();
+      throw new FailToEncryptException();
     }
   }
 
@@ -48,7 +50,7 @@ public class ExtensionKey {
       return Long.parseLong(decryptedString);
     } catch (Exception e) {
       e.printStackTrace();
-      throw new EncryptException.FailToDecryptException();
+      throw new FailToDecryptException();
     }
   }
 

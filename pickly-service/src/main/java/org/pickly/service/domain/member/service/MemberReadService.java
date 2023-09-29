@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.block.repository.interfaces.BlockRepository;
 import org.pickly.service.domain.friend.repository.interfaces.FriendRepository;
+import org.pickly.service.domain.member.dto.service.SearchMemberResultResDTO;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberQueryRepository;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
-import org.pickly.service.domain.member.dto.service.SearchMemberResultResDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.pickly.service.domain.member.exception.MemberException.MemberNotFoundException;
+import static org.pickly.service.domain.member.exception.MemberException.NicknameDuplicateException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class MemberReadService {
 
   public void existsById(Long memberId) {
     if (!memberRepository.existsByIdAndDeletedAtIsNull(memberId)) {
-      throw new MemberException.MemberNotFoundException();
+      throw new MemberNotFoundException();
     }
   }
 
@@ -43,7 +45,7 @@ public class MemberReadService {
     if (
         checkIsNewNickname(member, newNickname) && existsByNickname(newNickname)
     ) {
-      throw new MemberException.NicknameDuplicateException();
+      throw new NicknameDuplicateException();
     }
   }
 
@@ -51,8 +53,9 @@ public class MemberReadService {
     return member.getNickname() != null && !member.getNickname().equals(newNickname);
   }
 
-  public List<SearchMemberResultResDTO> searchMemberByKeywords(String keyword, Long memberId,
-                                                               PageRequest pageRequest) {
+  public List<SearchMemberResultResDTO> searchMemberByKeywords(
+      String keyword, Long memberId, PageRequest pageRequest
+  ) {
     existsById(memberId);
 
     List<SearchMemberResultResDTO> searchMemberResults = memberQueryRepository.findAllMembersByKeyword(
@@ -76,12 +79,12 @@ public class MemberReadService {
 
   public Member findById(Long id) {
     return memberRepository.findByIdAndDeletedAtIsNull(id)
-        .orElseThrow(MemberException.MemberNotFoundException::new);
+        .orElseThrow(MemberNotFoundException::new);
   }
 
   public Member findByEmail(String email) {
     return memberRepository.findByEmailAndDeletedAtIsNull(email)
-        .orElseThrow(MemberException.MemberNotFoundException::new);
+        .orElseThrow(MemberNotFoundException::new);
   }
 
 }
