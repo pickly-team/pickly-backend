@@ -21,7 +21,7 @@ public class Category extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @Column(length = 100, nullable = false)
+  @Column(length = 20, nullable = false)
   private String name;
 
   @Column(columnDefinition = "text")
