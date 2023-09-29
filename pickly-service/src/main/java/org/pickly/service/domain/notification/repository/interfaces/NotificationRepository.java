@@ -14,7 +14,9 @@ import java.util.Optional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-  @Query("select n from Notification n where n.isSend = true and n.memberId = :memberId and n.deletedAt is null")
+  @Query("select n from Notification n " +
+      "where n.isSend = true and n.memberId = :memberId and n.deletedAt is null " +
+      "order by n.createdAt desc")
   List<Notification> findAllByMemberIdAndDeletedAtNull(@Param("memberId") Long memberId);
 
   @Query("select n from Notification n where n.isSend = false and n.sendDateTime <= :now" +
