@@ -10,6 +10,7 @@ import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.category.service.CategoryWriteService;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,14 +40,14 @@ public class CategoryFacade {
     categoryWriteService.updateOrderNum(requests);
   }
 
-  // FIXME: category 삭제와 bookmark 삭제가 같은 트랜잭션 안에 있어야 함. 그래야 롤백되니까!
-  // FIXME: 근데 여기에 @Transactional 붙이면 더티체킹이 안먹음 ㅠㅠ 아직 원인 파악 몬함
+  @Transactional
   public void delete(Long categoryId) {
     Category category = categoryReadService.findById(categoryId);
     categoryWriteService.delete(category);
     bookmarkWriteService.deleteByCategory(category);
   }
 
+  @Transactional
   public void delete(List<Long> categoryIds) {
     List<Category> categories = categoryReadService.findByIds(categoryIds);
     categoryWriteService.delete(categories);

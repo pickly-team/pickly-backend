@@ -27,13 +27,13 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
       @Param("bookmarkIds") List<Long> bookmarkIds, @Param("deletedAt") LocalDateTime deletedAt
   );
 
-  @Modifying(clearAutomatically = true)
+  @Modifying
   @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.category.id = :categoryId")
   void deleteByCategory(
       @Param("categoryId") Long categoryId, @Param("deletedAt") LocalDateTime deletedAt
   );
 
-  @Modifying(clearAutomatically = true)
+  @Modifying
   @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.category.id in :categoryIds")
   void deleteByCategory(
       @Param("categoryIds") List<Long> categoryIds, @Param("deletedAt") LocalDateTime deletedAt
