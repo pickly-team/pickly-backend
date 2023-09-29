@@ -6,7 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.member.repository.interfaces.MemberQueryRepository;
-import org.pickly.service.domain.member.service.dto.SearchMemberResultResDTO;
+import org.pickly.service.domain.member.dto.service.SearchMemberResultResDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

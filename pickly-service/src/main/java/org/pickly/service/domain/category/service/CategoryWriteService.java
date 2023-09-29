@@ -2,9 +2,9 @@ package org.pickly.service.domain.category.service;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.base.BaseEntity;
-import org.pickly.service.domain.category.controller.request.CategoryOrderNumUpdateReq;
-import org.pickly.service.domain.category.controller.request.CategoryRequestDTO;
-import org.pickly.service.domain.category.controller.request.CategoryUpdateRequestDTO;
+import org.pickly.service.domain.category.dto.controller.request.CategoryOrderNumUpdateReq;
+import org.pickly.service.domain.category.dto.controller.request.CategoryRequestDTO;
+import org.pickly.service.domain.category.dto.controller.request.CategoryUpdateRequestDTO;
 import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.exception.CategoryException;
 import org.pickly.service.domain.category.repository.interfaces.CategoryJdbcRepository;

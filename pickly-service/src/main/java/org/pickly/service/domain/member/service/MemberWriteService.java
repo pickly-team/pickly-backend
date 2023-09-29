@@ -7,7 +7,7 @@ import org.pickly.service.common.utils.encrypt.EncryptService;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
-import org.pickly.service.domain.member.service.dto.MemberProfileUpdateDTO;
+import org.pickly.service.domain.member.dto.service.MemberProfileUpdateDTO;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;

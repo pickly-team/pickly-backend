@@ -7,7 +7,7 @@ import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkReposito
 import org.pickly.service.domain.category.repository.interfaces.CategoryRepository
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository
 import org.pickly.service.domain.comment.service.CommentWriteService
-import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO
+import org.pickly.service.domain.comment.dto.service.CommentUpdateDTO
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.member.MemberFactory
 import org.springframework.beans.factory.annotation.Autowired

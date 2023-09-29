@@ -1,9 +1,9 @@
 package org.pickly.service.domain.bookmark.common;
 
-import org.pickly.service.domain.bookmark.controller.request.BookmarkUpdateReq;
-import org.pickly.service.domain.bookmark.controller.response.BookmarkDeleteRes;
-import org.pickly.service.domain.bookmark.controller.response.BookmarkListDeleteRes;
-import org.pickly.service.domain.bookmark.controller.response.BookmarkRes;
+import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkUpdateReq;
+import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkDeleteRes;
+import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkListDeleteRes;
+import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.domain.category.entity.Category;

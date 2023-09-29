@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.application.facade.NotificationFacade;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.common.NotificationMapper;
-import org.pickly.service.domain.notification.controller.response.NotificationRes;
+import org.pickly.service.domain.notification.dto.controller.response.NotificationRes;
 import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.service.NotificationReadService;
 import org.springframework.web.bind.annotation.*;

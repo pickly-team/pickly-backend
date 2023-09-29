@@ -10,13 +10,13 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.application.facade.CommentFacade;
 import org.pickly.service.domain.comment.common.CommentMapper;
-import org.pickly.service.domain.comment.controller.request.CommentCreateReq;
-import org.pickly.service.domain.comment.controller.request.CommentUpdateReq;
-import org.pickly.service.domain.comment.controller.response.BookmarkCommentRes;
-import org.pickly.service.domain.comment.controller.response.MemberCommentRes;
+import org.pickly.service.domain.comment.dto.controller.request.CommentCreateReq;
+import org.pickly.service.domain.comment.dto.controller.request.CommentUpdateReq;
+import org.pickly.service.domain.comment.dto.controller.response.BookmarkCommentRes;
+import org.pickly.service.domain.comment.dto.controller.response.MemberCommentRes;
 import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.service.CommentReadService;
-import org.pickly.service.domain.comment.service.dto.CommentDTO;
+import org.pickly.service.domain.comment.dto.service.CommentDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

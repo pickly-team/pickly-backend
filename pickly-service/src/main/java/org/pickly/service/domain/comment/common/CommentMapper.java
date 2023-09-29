@@ -1,14 +1,14 @@
 package org.pickly.service.domain.comment.common;
 
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
-import org.pickly.service.domain.comment.controller.request.CommentCreateReq;
-import org.pickly.service.domain.comment.controller.request.CommentUpdateReq;
-import org.pickly.service.domain.comment.controller.response.BookmarkCommentRes;
-import org.pickly.service.domain.comment.controller.response.MemberCommentRes;
+import org.pickly.service.domain.comment.dto.controller.request.CommentCreateReq;
+import org.pickly.service.domain.comment.dto.controller.request.CommentUpdateReq;
+import org.pickly.service.domain.comment.dto.controller.response.BookmarkCommentRes;
+import org.pickly.service.domain.comment.dto.controller.response.MemberCommentRes;
 import org.pickly.service.domain.comment.entity.Comment;
-import org.pickly.service.domain.comment.service.dto.CommentCreateDTO;
-import org.pickly.service.domain.comment.service.dto.CommentDTO;
-import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO;
+import org.pickly.service.domain.comment.dto.service.CommentCreateDTO;
+import org.pickly.service.domain.comment.dto.service.CommentDTO;
+import org.pickly.service.domain.comment.dto.service.CommentUpdateDTO;
 import org.springframework.stereotype.Component;
 
 @Component

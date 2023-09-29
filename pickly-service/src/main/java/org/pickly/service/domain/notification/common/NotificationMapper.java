@@ -2,9 +2,9 @@ package org.pickly.service.domain.notification.common;
 
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.notification.controller.response.NotificationRes;
+import org.pickly.service.domain.notification.dto.controller.response.NotificationRes;
 import org.pickly.service.domain.notification.entity.Notification;
-import org.pickly.service.domain.notification.service.dto.NotificationDTO;
+import org.pickly.service.domain.notification.dto.service.NotificationDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

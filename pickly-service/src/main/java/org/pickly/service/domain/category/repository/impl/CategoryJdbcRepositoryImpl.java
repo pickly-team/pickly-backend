@@ -1,7 +1,7 @@
 package org.pickly.service.domain.category.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.pickly.service.domain.category.controller.request.CategoryOrderNumUpdateReq;
+import org.pickly.service.domain.category.dto.controller.request.CategoryOrderNumUpdateReq;
 import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.repository.interfaces.CategoryJdbcRepository;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
