@@ -11,7 +11,7 @@ import org.pickly.service.domain.friend.service.FriendWriteService
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository
 import org.pickly.service.domain.member.service.MemberReadService
 import org.pickly.service.domain.member.service.MemberWriteService
-import org.pickly.service.domain.member.service.dto.MemberProfileUpdateDTO
+import org.pickly.service.domain.member.dto.service.MemberProfileUpdateDTO
 import org.pickly.service.member.MemberFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase

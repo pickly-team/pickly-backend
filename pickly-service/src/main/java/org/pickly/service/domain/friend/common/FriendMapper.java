@@ -1,15 +1,15 @@
 package org.pickly.service.domain.friend.common;
 
-import org.pickly.service.domain.friend.controller.request.FriendNotificationStatusReq;
-import org.pickly.service.domain.friend.controller.response.FollowerRes;
-import org.pickly.service.domain.friend.controller.response.FollowingRes;
-import org.pickly.service.domain.friend.controller.response.FriendNotificationStatusRes;
+import org.pickly.service.domain.friend.dto.controller.request.FriendNotificationStatusReq;
+import org.pickly.service.domain.friend.dto.controller.response.FollowerRes;
+import org.pickly.service.domain.friend.dto.controller.response.FollowingRes;
+import org.pickly.service.domain.friend.dto.controller.response.FriendNotificationStatusRes;
 import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.entity.FriendNotificationMode;
-import org.pickly.service.domain.friend.service.dto.FollowerResDTO;
-import org.pickly.service.domain.friend.service.dto.FollowingResDTO;
-import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusReqDTO;
-import org.pickly.service.domain.friend.service.dto.FriendNotificationStatusResDTO;
+import org.pickly.service.domain.friend.dto.service.FollowerResDTO;
+import org.pickly.service.domain.friend.dto.service.FollowingResDTO;
+import org.pickly.service.domain.friend.dto.service.FriendNotificationStatusReqDTO;
+import org.pickly.service.domain.friend.dto.service.FriendNotificationStatusResDTO;
 import org.springframework.stereotype.Component;
 
 @Component

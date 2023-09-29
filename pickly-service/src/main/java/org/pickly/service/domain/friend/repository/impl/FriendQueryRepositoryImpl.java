@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.friend.repository.interfaces.FriendQueryRepository;
 import org.pickly.service.domain.friend.entity.QFriend;
-import org.pickly.service.domain.friend.service.dto.FollowerResDTO;
-import org.pickly.service.domain.friend.service.dto.FollowingResDTO;
-import org.pickly.service.domain.friend.service.dto.QFollowerResDTO;
-import org.pickly.service.domain.friend.service.dto.QFollowingResDTO;
+import org.pickly.service.domain.friend.dto.service.FollowerResDTO;
+import org.pickly.service.domain.friend.dto.service.FollowingResDTO;
+import org.pickly.service.domain.friend.dto.service.QFollowerResDTO;
+import org.pickly.service.domain.friend.dto.service.QFollowingResDTO;
 import org.pickly.service.domain.member.entity.QMember;
 import org.springframework.stereotype.Repository;
 

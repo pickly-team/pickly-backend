@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.page.PageResponse;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
-import org.pickly.service.domain.bookmark.controller.request.BookmarkCreateReq;
+import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkCreateReq;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.BookmarkReadService;

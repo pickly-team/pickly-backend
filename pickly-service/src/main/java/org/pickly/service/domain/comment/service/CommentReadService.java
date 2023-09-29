@@ -5,7 +5,7 @@ import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.exception.CommentException;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository;
-import org.pickly.service.domain.comment.service.dto.CommentDTO;
+import org.pickly.service.domain.comment.dto.service.CommentDTO;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

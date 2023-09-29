@@ -2,9 +2,9 @@ package org.pickly.service.application.facade;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
-import org.pickly.service.domain.category.controller.request.CategoryOrderNumUpdateReq;
-import org.pickly.service.domain.category.controller.request.CategoryRequestDTO;
-import org.pickly.service.domain.category.controller.request.CategoryUpdateRequestDTO;
+import org.pickly.service.domain.category.dto.controller.request.CategoryOrderNumUpdateReq;
+import org.pickly.service.domain.category.dto.controller.request.CategoryRequestDTO;
+import org.pickly.service.domain.category.dto.controller.request.CategoryUpdateRequestDTO;
 import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.category.service.CategoryWriteService;

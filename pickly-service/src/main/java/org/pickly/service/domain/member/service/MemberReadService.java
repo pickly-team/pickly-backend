@@ -8,7 +8,7 @@ import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberQueryRepository;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
-import org.pickly.service.domain.member.service.dto.SearchMemberResultResDTO;
+import org.pickly.service.domain.member.dto.service.SearchMemberResultResDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

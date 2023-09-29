@@ -5,8 +5,8 @@ import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.service.CommentReadService;
 import org.pickly.service.domain.comment.service.CommentWriteService;
-import org.pickly.service.domain.comment.service.dto.CommentCreateDTO;
-import org.pickly.service.domain.comment.service.dto.CommentUpdateDTO;
+import org.pickly.service.domain.comment.dto.service.CommentCreateDTO;
+import org.pickly.service.domain.comment.dto.service.CommentUpdateDTO;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 

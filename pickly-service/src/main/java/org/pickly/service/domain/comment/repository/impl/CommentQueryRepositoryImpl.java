@@ -5,8 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
-import org.pickly.service.domain.comment.service.dto.CommentDTO;
-import org.pickly.service.domain.comment.service.dto.QCommentDTO;
+import org.pickly.service.domain.comment.dto.service.CommentDTO;
+import org.pickly.service.domain.comment.dto.service.QCommentDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,9 +1,9 @@
 package org.pickly.service.domain.block.common;
 
-import org.pickly.service.domain.block.controller.response.BlockBookmarkRes;
-import org.pickly.service.domain.block.controller.response.BlockMemberRes;
-import org.pickly.service.domain.block.service.dto.BlockBookmarkDTO;
-import org.pickly.service.domain.block.service.dto.BlockMemberDTO;
+import org.pickly.service.domain.block.dto.controller.response.BlockBookmarkRes;
+import org.pickly.service.domain.block.dto.controller.response.BlockMemberRes;
+import org.pickly.service.domain.block.dto.service.BlockBookmarkDTO;
+import org.pickly.service.domain.block.dto.service.BlockMemberDTO;
 import org.springframework.stereotype.Component;
 
 @Component

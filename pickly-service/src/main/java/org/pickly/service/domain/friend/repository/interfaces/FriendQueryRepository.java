@@ -1,8 +1,8 @@
 package org.pickly.service.domain.friend.repository.interfaces;
 
 import org.pickly.service.common.utils.page.PageRequest;
-import org.pickly.service.domain.friend.service.dto.FollowerResDTO;
-import org.pickly.service.domain.friend.service.dto.FollowingResDTO;
+import org.pickly.service.domain.friend.dto.service.FollowerResDTO;
+import org.pickly.service.domain.friend.dto.service.FollowingResDTO;
 
 import java.util.List;
 

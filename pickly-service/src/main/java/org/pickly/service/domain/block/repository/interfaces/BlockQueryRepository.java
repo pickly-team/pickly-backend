@@ -1,8 +1,8 @@
 package org.pickly.service.domain.block.repository.interfaces;
 
 import java.util.List;
-import org.pickly.service.domain.block.service.dto.BlockBookmarkDTO;
-import org.pickly.service.domain.block.service.dto.BlockMemberDTO;
+import org.pickly.service.domain.block.dto.service.BlockBookmarkDTO;
+import org.pickly.service.domain.block.dto.service.BlockMemberDTO;
 import org.pickly.service.common.utils.page.PageRequest;
 
 public interface BlockQueryRepository {

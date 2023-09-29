@@ -1,12 +1,12 @@
 package org.pickly.service.domain.member.common;
 
 import com.google.firebase.auth.FirebaseToken;
-import org.pickly.service.domain.member.controller.request.MemberProfileUpdateReq;
-import org.pickly.service.domain.member.controller.request.MemberStatusReq;
-import org.pickly.service.domain.member.controller.response.*;
+import org.pickly.service.domain.member.dto.controller.request.MemberProfileUpdateReq;
+import org.pickly.service.domain.member.dto.controller.request.MemberStatusReq;
+import org.pickly.service.domain.member.dto.controller.response.*;
+import org.pickly.service.domain.member.dto.service.*;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.entity.Password;
-import org.pickly.service.domain.member.service.dto.*;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.springframework.stereotype.Component;
 

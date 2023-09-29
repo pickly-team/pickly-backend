@@ -5,8 +5,8 @@ import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService;
 import org.pickly.service.domain.notification.service.standard.NotificationStandardWriteService;
-import org.pickly.service.domain.notification.service.dto.NotificationStandardDTO;
-import org.pickly.service.domain.notification.service.dto.NotifyStandardDayUpdateDTO;
+import org.pickly.service.domain.notification.dto.service.NotificationStandardDTO;
+import org.pickly.service.domain.notification.dto.service.NotifyStandardDayUpdateDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

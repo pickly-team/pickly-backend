@@ -1,9 +1,9 @@
 package org.pickly.service.domain.category.common;
 
-import org.pickly.service.domain.category.controller.response.CategoryRes;
-import org.pickly.service.domain.category.controller.response.CategoryResponseDTO;
+import org.pickly.service.domain.category.dto.controller.response.CategoryRes;
+import org.pickly.service.domain.category.dto.controller.response.CategoryResponseDTO;
 import org.pickly.service.domain.category.entity.Category;
-import org.pickly.service.domain.category.service.dto.CategoryDTO;
+import org.pickly.service.domain.category.dto.service.CategoryDTO;
 import org.springframework.stereotype.Component;
 
 @Component

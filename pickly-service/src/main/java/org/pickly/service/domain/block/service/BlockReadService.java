@@ -5,8 +5,8 @@ import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.block.exception.BlockException;
 import org.pickly.service.domain.block.repository.interfaces.BlockQueryRepository;
 import org.pickly.service.domain.block.repository.interfaces.BlockRepository;
-import org.pickly.service.domain.block.service.dto.BlockBookmarkDTO;
-import org.pickly.service.domain.block.service.dto.BlockMemberDTO;
+import org.pickly.service.domain.block.dto.service.BlockBookmarkDTO;
+import org.pickly.service.domain.block.dto.service.BlockMemberDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
