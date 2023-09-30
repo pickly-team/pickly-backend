@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
-import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.domain.category.entity.Category;
@@ -22,7 +21,6 @@ public class BookmarkWriteService {
 
   private final BookmarkReadService bookmarkReadService;
   private final BookmarkRepository bookmarkRepository;
-  private final BookmarkQueryRepository bookmarkQueryRepository;
 
   public void like(Long bookmarkId) {
     var bookmark = bookmarkReadService.findById(bookmarkId);

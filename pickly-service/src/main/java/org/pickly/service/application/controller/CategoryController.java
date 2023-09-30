@@ -59,18 +59,12 @@ public class CategoryController {
 
   @PutMapping("/categories/{categoryId}")
   @Operation(summary = "카테고리를 수정한다.", description = "특정 카테고리의 이름, 이모지를 수정할 수 있다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = CategoryResponseDTO.class)))
-  })
-  public ResponseEntity<CategoryResponseDTO> update(
+  public CategoryResponseDTO update(
       @PathVariable @Positive Long categoryId,
       @RequestBody @Valid final CategoryUpdateRequestDTO dto
   ) {
     Category category = categoryFacade.update(categoryId, dto);
-    return ResponseEntity
-        .ok(categoryMapper.toResponseDTO(category));
+    return categoryMapper.toResponseDTO(category);
   }
 
   @ApiResponses(value = {

@@ -19,6 +19,7 @@ import org.pickly.service.domain.friend.service.FriendReadService;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,6 +48,7 @@ public class BookmarkFacade {
     return bookmarkWriteService.create(bookmark);
   }
 
+  @Transactional
   public void delete(Long bookmarkId) {
     var bookmark = bookmarkReadService.findById(bookmarkId);
     bookmarkWriteService.delete(bookmark);
@@ -56,6 +58,7 @@ public class BookmarkFacade {
     notificationWriteService.deleteByBookmark(bookmarkId);
   }
 
+  @Transactional
   public void delete(List<Long> bookmarkIds) {
     LocalDateTime now = TimezoneHandler.getUTCnow();
     bookmarkWriteService.delete(bookmarkIds, now);

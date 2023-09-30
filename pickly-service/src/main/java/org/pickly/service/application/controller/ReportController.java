@@ -8,11 +8,13 @@ import org.pickly.service.application.facade.reporter.BookmarkReportFacade;
 import org.pickly.service.application.facade.reporter.CommentReportFacade;
 import org.pickly.service.application.facade.reporter.MemberReportFacade;
 import org.pickly.service.domain.report.dto.controller.request.ReportReq;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequestMapping("/api/reports")
 @RequiredArgsConstructor

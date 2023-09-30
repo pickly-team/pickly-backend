@@ -21,10 +21,12 @@ import org.pickly.service.domain.friend.dto.controller.response.FriendNotificati
 import org.pickly.service.domain.friend.entity.Friend;
 import org.pickly.service.domain.friend.service.FriendReadService;
 import org.pickly.service.domain.friend.service.FriendWriteService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")

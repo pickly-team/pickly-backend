@@ -15,10 +15,10 @@ import org.pickly.service.domain.notification.service.standard.NotificationStand
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/api/notification-standards")
 @RequiredArgsConstructor
-@Validated
 @Tag(name = "Notification Standard", description = "알림 기준 설정 API")
 public class NotificationStandardController {
 

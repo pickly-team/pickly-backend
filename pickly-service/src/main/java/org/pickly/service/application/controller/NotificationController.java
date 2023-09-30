@@ -7,18 +7,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.application.facade.NotificationFacade;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.notification.common.NotificationMapper;
 import org.pickly.service.domain.notification.dto.controller.response.NotificationRes;
 import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.service.NotificationReadService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -47,9 +47,6 @@ public class NotificationController {
 
   @PatchMapping("notifications/{notificationId}")
   @Operation(summary = "특정 알림을 읽기 처리한다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공")
-  })
   public void readNotification(
       @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
       @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId
@@ -59,9 +56,6 @@ public class NotificationController {
 
   @DeleteMapping("notifications/{notificationId}")
   @Operation(summary = "특정 알림을 삭제한다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공")
-  })
   public void deleteNotification(
       @Parameter(name = "notificationId", description = "알림 ID 값", example = "1", required = true)
       @Positive(message = "알림 ID는 양수입니다.") @PathVariable final Long notificationId

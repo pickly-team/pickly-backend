@@ -21,7 +21,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
   Long countByMemberIdAndDeletedAtNull(Long memberId);
 
-  @Modifying(clearAutomatically = true)
+  @Modifying
   @Query("update Bookmark b set b.deletedAt = :deletedAt WHERE b.id IN :bookmarkIds")
   void deleteBookmarksByIds(
       @Param("bookmarkIds") List<Long> bookmarkIds, @Param("deletedAt") LocalDateTime deletedAt
