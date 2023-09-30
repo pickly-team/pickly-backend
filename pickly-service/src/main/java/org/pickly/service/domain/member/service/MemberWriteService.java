@@ -36,7 +36,7 @@ public class MemberWriteService {
   }
 
   public Member setHardMode(Member member, boolean isHardMode) {
-    member.setHardMode(isHardMode);
+    member.toHardMode(isHardMode);
     return member;
   }
 
