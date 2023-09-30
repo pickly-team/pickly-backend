@@ -9,7 +9,6 @@ import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.pickly.service.domain.notification.entity.NotificationTemplate;
 import org.pickly.service.domain.notification.enums.NotificationType;
-import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository;
 import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService;
 import org.pickly.service.domain.notification.service.template.NotificationTemplateReadService;
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import static org.pickly.service.domain.notification.exception.NotificationException.NotificationNotFoundException;
 
 @Slf4j
 @Service
@@ -100,7 +101,7 @@ public class NotificationReadService {
 
   public Notification findById(Long id) {
     return notificationRepository.findByIdAndDeletedAtNull(id)
-        .orElseThrow(NotificationException.NotificationNotFoundException::new);
+        .orElseThrow(NotificationNotFoundException::new);
   }
 
 }

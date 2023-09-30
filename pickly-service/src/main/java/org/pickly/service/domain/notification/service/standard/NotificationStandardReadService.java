@@ -2,10 +2,12 @@ package org.pickly.service.domain.notification.service.standard;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
-import org.pickly.service.domain.notification.exception.NotificationException;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationStandardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.pickly.service.domain.notification.exception.NotificationException.NotificationStandardAlreadyExistException;
+import static org.pickly.service.domain.notification.exception.NotificationException.NotificationStandardNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class NotificationStandardReadService {
 
   public NotificationStandard findByMemberId(final Long memberId) {
     return notificationStandardRepository.findByMemberId(memberId)
-        .orElseThrow(NotificationException.NotificationStandardNotFoundException::new);
+        .orElseThrow(NotificationStandardNotFoundException::new);
   }
 
   public Integer findMyNotifyStandardDay(final Long memberId) {
@@ -26,7 +28,7 @@ public class NotificationStandardReadService {
 
   public void checkByMemberId(Long memberId) {
     if (existsByMemberId(memberId)) {
-      throw new NotificationException.NotificationStandardAlreadyExistException();
+      throw new NotificationStandardAlreadyExistException();
     }
   }
 

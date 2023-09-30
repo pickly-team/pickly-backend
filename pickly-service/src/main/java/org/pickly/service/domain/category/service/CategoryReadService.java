@@ -2,16 +2,17 @@ package org.pickly.service.domain.category.service;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.category.dto.controller.request.CategoryOrderNumUpdateReq;
-import org.pickly.service.domain.category.entity.Category;
-import org.pickly.service.domain.category.exception.CategoryException;
-import org.pickly.service.domain.category.repository.interfaces.CategoryRepository;
 import org.pickly.service.domain.category.dto.service.CategoryDTO;
+import org.pickly.service.domain.category.entity.Category;
+import org.pickly.service.domain.category.repository.interfaces.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.pickly.service.domain.category.exception.CategoryException.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class CategoryReadService {
     List<Category> savedCategories = categoryRepository.findAllCategoryByMemberId(memberId);
     int savedSize = savedCategories.size();
     if (savedSize == MAX_CATEGORY_CNT || savedSize + requestSize > MAX_CATEGORY_CNT) {
-      throw new CategoryException.ExceedMaxCategorySizeException();
+      throw new ExceedMaxCategorySizeException();
     }
     if (savedSize == 0) {
       return 1;
@@ -36,12 +37,12 @@ public class CategoryReadService {
 
   public Category findById(Long categoryId) {
     return categoryRepository.findById(categoryId)
-        .orElseThrow(CategoryException.CategoryNotFoundException::new);
+        .orElseThrow(CategoryNotFoundException::new);
   }
 
   public void checkOrderNumUnique(List<CategoryOrderNumUpdateReq> requests) {
     if (!isOrderNumUnique(requests)) {
-      throw new CategoryException.CategoryOrderNumDuplicateException();
+      throw new CategoryOrderNumDuplicateException();
     }
   }
 

@@ -1,17 +1,18 @@
 package org.pickly.service.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.domain.comment.dto.service.CommentDTO;
 import org.pickly.service.domain.comment.entity.Comment;
-import org.pickly.service.domain.comment.exception.CommentException;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository;
-import org.pickly.service.domain.comment.dto.service.CommentDTO;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.pickly.service.domain.comment.exception.CommentException.CommentNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class CommentReadService {
 
   public Comment findById(final Long id) {
     return commentRepository.findByIdAndDeletedAtNull(id)
-        .orElseThrow(CommentException.CommentNotFoundException::new);
+        .orElseThrow(CommentNotFoundException::new);
   }
 
   public Map<Long, Long> getBookmarkCommentCnt(final Long memberId) {
