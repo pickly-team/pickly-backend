@@ -18,7 +18,12 @@ public class BlockWriteService {
 
   public void blockMember(Member fromMember, Member toMember) {
     blockReadService.checkAlreadyBlock(toMember.getId(), fromMember.getId());
-    blockRepository.save(new Block(fromMember, toMember));
+    blockRepository.save(
+        Block.builder()
+            .blocker(fromMember)
+            .blockee(toMember)
+            .build()
+    );
   }
 
   public void unblockMember(Member fromMember, Member toMember) {
@@ -27,7 +32,12 @@ public class BlockWriteService {
 
   public void blockBookmark(Member fromMember, Bookmark toBookmark) {
     blockReadService.checkAlreadyBlockBookmark(fromMember.getId(), toBookmark.getId());
-    blockRepository.save(new Block(fromMember, toBookmark));
+    blockRepository.save(
+        Block.builder()
+            .blocker(fromMember)
+            .bookmark(toBookmark)
+            .build()
+    );
   }
 
   public void unblockBookmark(Member fromMember, Bookmark toBookmark) {

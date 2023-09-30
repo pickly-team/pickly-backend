@@ -1,23 +1,16 @@
 package org.pickly.service.domain.block.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.base.BaseEntity;
+import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.member.entity.Member;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Table(name = "block")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Block extends BaseEntity {
@@ -34,13 +27,11 @@ public class Block extends BaseEntity {
   @JoinColumn(name = "bookmark_id")
   private Bookmark bookmark;
 
-  public Block(Member blocker, Member blockee) {
+  @Builder
+  Block(Member blocker, Member blockee, Bookmark bookmark) {
     this.blocker = blocker;
     this.blockee = blockee;
-  }
-
-  public Block(Member blocker, Bookmark bookmark) {
-    this.blocker = blocker;
     this.bookmark = bookmark;
   }
+
 }
