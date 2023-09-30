@@ -16,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -76,7 +75,7 @@ public class BlockController {
     List<BlockMemberRes> blockedMembers = blockReadService.getBlockedMembers(blockerId, pageRequest)
         .stream()
         .map(BlockMapper::toMember)
-        .collect(Collectors.toList());
+        .toList();
 
     PageResponse<BlockMemberRes> response = new PageResponse<>(
         blockedMembers.size(),
@@ -123,15 +122,18 @@ public class BlockController {
       @Parameter(name = "blockerId", description = "북마크 차단조회를 위한 대상 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long blockerId,
 
-      @Parameter(name = "cursorId", description = "마지막 member의 Id", example = "1") final @RequestParam(required = false) String cursorId,
-      @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1") final @RequestParam(defaultValue = "15") Integer pageSize
+      @Parameter(name = "cursorId", description = "마지막 member의 Id", example = "1")
+      @RequestParam(required = false) final String cursorId,
+
+      @Parameter(name = "pageSize", description = "페이지 사이즈", example = "1")
+      @RequestParam(defaultValue = "15") final Integer pageSize
   ) {
     PageRequest pageRequest = new PageRequest(cursorId, pageSize);
 
     List<BlockBookmarkRes> blockedBookmarks = blockReadService.getBlockedBookmarks(blockerId, pageRequest)
         .stream()
         .map(BlockMapper::toBookmark)
-        .collect(Collectors.toList());
+        .toList();
 
     PageResponse<BlockBookmarkRes> response = new PageResponse<>(
         blockedBookmarks.size(),

@@ -7,6 +7,7 @@ import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.pickly.service.domain.friend.service.FriendWriteService;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class BlockFacade {
   private final BlockWriteService blockWriteService;
   private final FriendWriteService friendWriteService;
 
+  @Transactional
   public void blockMember(Long fromMemberId, Long toMemberId) {
     var fromMember = memberReadService.findById(fromMemberId);
     var toMember = memberReadService.findById(toMemberId);
@@ -35,6 +37,7 @@ public class BlockFacade {
     blockWriteService.unblockMember(fromMember, toMember);
   }
 
+  @Transactional
   public void blockBookmark(Long fromMemberId, Long toBookmarkId) {
     var fromMember = memberReadService.findById(fromMemberId);
     var toBookmark = bookmarkReadService.findById(toBookmarkId);

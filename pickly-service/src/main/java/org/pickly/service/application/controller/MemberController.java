@@ -3,7 +3,6 @@ package org.pickly.service.application.controller;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,10 +32,10 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
-@Validated
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
 
@@ -76,12 +75,6 @@ public class MemberController {
 
   @GetMapping("/{memberId}")
   @Operation(summary = "유저 프로필을 ID로 조회한다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = {
-              @Content(schema = @Schema(implementation = MemberProfileRes.class))
-          })
-  })
   public MemberProfileRes getMemberProfile(
       @PathVariable
       @Positive(message = "유저 ID는 양수입니다.")
@@ -98,12 +91,6 @@ public class MemberController {
 
   @GetMapping("/{memberId}/mode")
   @Operation(summary = "유저의 모드를 조회한다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = {
-              @Content(schema = @Schema(implementation = MemberModeRes.class))
-          })
-  })
   public MemberModeRes getMemberMode(
       @PathVariable @Positive(message = "유저 ID는 양수입니다.")
       @Schema(description = "Member ID", example = "1")
@@ -189,9 +176,7 @@ public class MemberController {
       summary = "검색어를 통해 특정 유저를 검색한다.",
       description = "검색의 연관된 초성, 혹은 일치하는 항목들에 대해 유저 검색결과 프로필 리스트를 반환한다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = PageResponse.class))),
+      @ApiResponse(responseCode = "200", description = "성공"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
   })
   public PageResponse<SearchMemberResultRes> searchMember(

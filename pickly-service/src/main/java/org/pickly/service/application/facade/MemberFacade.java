@@ -13,6 +13,7 @@ import org.pickly.service.domain.notification.service.standard.NotificationStand
 import org.pickly.service.domain.notification.service.standard.NotificationStandardWriteService;
 import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class MemberFacade {
   private final NotificationStandardReadService notificationStandardReadService;
   private final NotificationStandardWriteService notificationStandardWriteService;
 
+  @Transactional
   public Member create(Member member) {
     var email = member.getEmail();
     if (memberReadService.existsByEmail(email)) {
@@ -39,6 +41,7 @@ public class MemberFacade {
     }
   }
 
+  @Transactional
   public void delete(Long memberId) {
     var member = memberReadService.findById(memberId);
     memberWriteService.delete(member);

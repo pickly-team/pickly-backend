@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.application.facade.BookmarkFacade;
 import org.pickly.service.common.utils.encrypt.EncryptService;
 import org.pickly.service.common.utils.encrypt.ExtensionKey;
@@ -27,12 +26,10 @@ import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -166,22 +163,19 @@ public class BookmarkController {
 
   @PostMapping("/bookmarks")
   @Operation(summary = "북마크를 생성한다.")
-  public ResponseEntity<BookmarkRes> create(
+  @ResponseStatus(HttpStatus.CREATED)
+  public BookmarkRes create(
       @RequestBody
       @Valid
       BookmarkCreateReq dto
   ) {
     Bookmark entity = bookmarkFacade.create(dto);
-    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
-
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(response);
+    return bookmarkMapper.entityToResponseDto(entity);
   }
 
   @GetMapping("/bookmarks/{bookmarkId}")
   @Operation(summary = "특정 북마크를 조회한다.")
-  public ResponseEntity<BookmarkRes> getBookmarkById(
+  public BookmarkRes getBookmarkById(
       @PathVariable
       @Positive(message = "북마크 ID는 양수입니다.")
       @Schema(description = "Bookmark id", example = "1")
@@ -191,8 +185,7 @@ public class BookmarkController {
       @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long memberId
   ) {
     Bookmark entity = bookmarkReadService.findByIdAndRead(bookmarkId, memberId);
-    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
-    return ResponseEntity.ok(response);
+    return bookmarkMapper.entityToResponseDto(entity);
   }
 
   @GetMapping("/members/{memberId}/bookmark/title")
@@ -243,7 +236,8 @@ public class BookmarkController {
 
   @PostMapping("/bookmarks/chrome-extension")
   @Operation(summary = "[크롬 익스텐션] 북마크를 생성한다.")
-  public ResponseEntity<BookmarkRes> createForExtension(
+  @ResponseStatus(HttpStatus.CREATED)
+  public BookmarkRes createForExtension(
       @RequestBody
       @Valid
       ExtensionBookmarkReq.CreateDto dto
@@ -251,11 +245,7 @@ public class BookmarkController {
     ExtensionKey key = encryptService.getKey();
     BookmarkCreateReq createReq = new BookmarkCreateReq(key.decrypt(dto.memberId()), dto);
     Bookmark entity = bookmarkFacade.create(createReq);
-    BookmarkRes response = bookmarkMapper.entityToResponseDto(entity);
-
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(response);
+    return bookmarkMapper.entityToResponseDto(entity);
   }
 
   @GetMapping("/members/bookmark/title/chrome-extension")
