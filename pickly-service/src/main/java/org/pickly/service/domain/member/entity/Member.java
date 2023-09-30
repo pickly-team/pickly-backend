@@ -69,13 +69,13 @@ public class Member extends BaseEntity {
     this.timezone = timezone;
   }
 
-  public void existsNullName() {
+  public void handleNullName() {
     if (name == null) {
       this.name = "";
     }
   }
 
-  public void existsNullNickname() {
+  public void handleNullNickname() {
     if (nickname == null) {
       this.nickname = "";
     }

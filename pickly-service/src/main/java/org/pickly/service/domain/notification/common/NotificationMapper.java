@@ -35,8 +35,11 @@ public class NotificationMapper {
         .build();
   }
 
-  public List<NotificationRes> toResponse(List<Notification> notifications, Member member) {
-    return notifications.stream().map(a -> toResponse(a, member.getTimezone())).toList();
+  public List<NotificationRes> toResponse(
+      List<Notification> notifications, Member member
+  ) {
+    return notifications.stream()
+        .map(a -> toResponse(a, member.getTimezone())).toList();
   }
 
 }

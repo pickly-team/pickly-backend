@@ -13,82 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberMapper {
 
-  public MyProfileRes toResponse(MyProfileDTO dto) {
-    return MyProfileRes.builder()
-        .id(dto.getId())
-        .name(dto.getName())
-        .nickname(dto.getNickname())
-        .profileEmoji(dto.getProfileEmoji())
-        .followersCount(dto.getFollowersCount())
-        .followeesCount(dto.getFolloweesCount())
-        .bookmarksCount(dto.getBookmarksCount())
-        .build();
-  }
-
-  public HardModeRes toMemberStatusRes(Member member) {
-    return new HardModeRes(member.isHardMode(member.getIsHardMode()));
-  }
-
-  public MemberModeRes toResponse(MemberModeDTO dto) {
-    return new MemberModeRes(dto.getIsHardMode(), dto.getNotifyDailyAt());
-  }
-
-  public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
-    return new MemberProfileUpdateDTO(
-        request.getName(), request.getNickname(), request.getProfileEmoji()
-    );
-  }
-
-  public MemberStatusDTO toStatusDTO(MemberStatusReq request) {
-    return new MemberStatusDTO(request.getIsHardMode());
-  }
-
-  public MyProfileDTO toMyProfileDTO(Member member, Long followersCount, Long followeesCount,
-                                     Long bookmarksCount) {
-
-    member.existsNullName();
-    member.existsNullNickname();
-
-    return MyProfileDTO.builder()
-        .id(member.getId())
-        .name(member.getName())
-        .nickname(member.getNickname())
-        .profileEmoji(member.getProfileEmoji())
-        .followersCount(followersCount)
-        .followeesCount(followeesCount)
-        .bookmarksCount(bookmarksCount)
-        .build();
-  }
-
-  public MemberProfileRes toResponse(MemberProfileDTO dto) {
-    return MemberProfileRes.builder()
-        .id(dto.getId())
-        .name(dto.getName())
-        .nickname(dto.getNickname())
-        .profileEmoji(dto.getProfileEmoji())
-        .isFollowing(dto.getIsFollowing())
-        .isBlocked(dto.getIsBlocked())
-        .build();
-  }
-
-  public MemberProfileDTO toMemberProfileDTO(Member member, boolean isFollowing, boolean isBlocked) {
-    return MemberProfileDTO.builder()
-        .id(member.getId())
-        .name(member.getName())
-        .nickname(member.getNickname())
-        .profileEmoji(member.getProfileEmoji())
-        .isFollowing(isFollowing)
-        .isBlocked(isBlocked)
-        .build();
-  }
-
-  public MemberModeDTO toMemberModeDTO(Member member, NotificationStandard standard) {
-    return MemberModeDTO.builder()
-        .isHardMode(member.getIsHardMode())
-        .notifyDailyAt(standard.getNotifyDailyAt())
-        .build();
-  }
-
   public Member tokenToMember(FirebaseToken token) {
     //TODO: password nullable한 값으로 변경?
     Password password = new Password("test123");
@@ -108,6 +32,83 @@ public class MemberMapper {
         member.getUsername(), member.getIsHardMode(), member.getEmail(),
         member.getName(), member.getNickname(), member.getId()
     );
+  }
+
+  public MyProfileRes toResponse(MyProfileDTO dto) {
+    return MyProfileRes.builder()
+        .id(dto.getId())
+        .name(dto.getName())
+        .nickname(dto.getNickname())
+        .profileEmoji(dto.getProfileEmoji())
+        .followersCount(dto.getFollowersCount())
+        .followeesCount(dto.getFolloweesCount())
+        .bookmarksCount(dto.getBookmarksCount())
+        .build();
+  }
+
+  public MemberProfileRes toResponse(MemberProfileDTO dto) {
+    return MemberProfileRes.builder()
+        .id(dto.getId())
+        .name(dto.getName())
+        .nickname(dto.getNickname())
+        .profileEmoji(dto.getProfileEmoji())
+        .isFollowing(dto.getIsFollowing())
+        .isBlocked(dto.getIsBlocked())
+        .build();
+  }
+
+  public MyProfileDTO toMyProfileDTO(
+      Member member, Long followersCount, Long followeesCount, Long bookmarksCount
+  ) {
+
+    member.handleNullName();
+    member.handleNullNickname();
+
+    return MyProfileDTO.builder()
+        .id(member.getId())
+        .name(member.getName())
+        .nickname(member.getNickname())
+        .profileEmoji(member.getProfileEmoji())
+        .followersCount(followersCount)
+        .followeesCount(followeesCount)
+        .bookmarksCount(bookmarksCount)
+        .build();
+  }
+
+  public MemberProfileDTO toResponse(Member member, boolean isFollowing, boolean isBlocked) {
+    return MemberProfileDTO.builder()
+        .id(member.getId())
+        .name(member.getName())
+        .nickname(member.getNickname())
+        .profileEmoji(member.getProfileEmoji())
+        .isFollowing(isFollowing)
+        .isBlocked(isBlocked)
+        .build();
+  }
+
+  public HardModeRes toMemberStatusRes(Member member) {
+    return new HardModeRes(member.isHardMode(member.getIsHardMode()));
+  }
+
+  public MemberStatusDTO toStatusDTO(MemberStatusReq request) {
+    return new MemberStatusDTO(request.getIsHardMode());
+  }
+
+  public MemberModeRes toResponse(MemberModeDTO dto) {
+    return new MemberModeRes(dto.getIsHardMode(), dto.getNotifyDailyAt());
+  }
+
+  public MemberProfileUpdateDTO toDTO(MemberProfileUpdateReq request) {
+    return new MemberProfileUpdateDTO(
+        request.getName(), request.getNickname(), request.getProfileEmoji()
+    );
+  }
+
+  public MemberModeDTO toMemberModeDTO(Member member, NotificationStandard standard) {
+    return MemberModeDTO.builder()
+        .isHardMode(member.getIsHardMode())
+        .notifyDailyAt(standard.getNotifyDailyAt())
+        .build();
   }
 
   public SearchMemberResultRes toSearchMemberResultRes(SearchMemberResultResDTO dto) {

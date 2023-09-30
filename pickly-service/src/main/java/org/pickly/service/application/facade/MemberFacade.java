@@ -89,7 +89,7 @@ public class MemberFacade {
     boolean isFollowing = friendReadService.existsByFollowerIdAndFolloweeId(loginId, memberId);
     boolean isBlocked = blockReadService.existsByBlockerIdAndBlockeeId(loginId, memberId);
     Member member = memberReadService.findById(memberId);
-    return memberMapper.toMemberProfileDTO(member, isFollowing, isBlocked);
+    return memberMapper.toResponse(member, isFollowing, isBlocked);
   }
 
 }

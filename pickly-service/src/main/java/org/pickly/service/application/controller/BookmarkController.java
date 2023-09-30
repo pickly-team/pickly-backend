@@ -230,7 +230,7 @@ public class BookmarkController {
   ) {
     bookmarkFacade.update(
         bookmarkId,
-        bookmarkMapper.toBookmarkUpdateReqDTO(request)
+        bookmarkMapper.toUpdateDto(request)
     );
   }
 
