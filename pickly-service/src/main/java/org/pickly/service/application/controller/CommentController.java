@@ -56,7 +56,7 @@ public class CommentController {
   ) {
     List<CommentDTO> dtoList = commentReadService.findByMember(memberId);
     return dtoList.stream()
-        .map(commentMapper::toMemberCommentsResponse)
+        .map(commentMapper::toResponse)
         .toList();
   }
 
@@ -89,7 +89,7 @@ public class CommentController {
   ) {
     List<CommentDTO> dtoList = commentReadService.findByBookmark(bookmarkId);
     return dtoList.stream()
-        .map(dto -> commentMapper.toBookmarkCommentsResponse(dto, memberId))
+        .map(dto -> commentMapper.toResponse(dto, memberId))
         .toList();
   }
 

@@ -1,25 +1,15 @@
 package org.pickly.service.domain.bookmark.common;
 
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkUpdateReq;
-import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkDeleteRes;
-import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkListDeleteRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.domain.category.entity.Category;
-import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BookmarkMapper {
-
-  public BookmarkDeleteRes toBookmarkDelete(Boolean request) {
-    return new BookmarkDeleteRes(request);
-  }
-
-  public BookmarkListDeleteRes toBookmarkListDelete(Boolean request) {
-    return new BookmarkListDeleteRes(request);
-  }
 
   public BookmarkRes entityToResponseDto(Bookmark bookmark) {
     Category category = bookmark.getCategory();
@@ -40,7 +30,7 @@ public class BookmarkMapper {
         .build();
   }
 
-  public BookmarkUpdateReqDTO toBookmarkUpdateReqDTO(BookmarkUpdateReq request) {
+  public BookmarkUpdateReqDTO toUpdateDto(BookmarkUpdateReq request) {
     return BookmarkUpdateReqDTO
         .builder()
         .categoryId(request.getCategoryId())

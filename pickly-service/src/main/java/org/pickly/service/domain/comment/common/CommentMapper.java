@@ -9,12 +9,13 @@ import org.pickly.service.domain.comment.entity.Comment;
 import org.pickly.service.domain.comment.dto.service.CommentCreateDTO;
 import org.pickly.service.domain.comment.dto.service.CommentDTO;
 import org.pickly.service.domain.comment.dto.service.CommentUpdateDTO;
+import org.pickly.service.domain.member.entity.Member;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CommentMapper {
 
-  public MemberCommentRes toMemberCommentsResponse(CommentDTO dto) {
+  public MemberCommentRes toResponse(CommentDTO dto) {
     return MemberCommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
@@ -28,7 +29,7 @@ public class CommentMapper {
         .build();
   }
 
-  public BookmarkCommentRes toBookmarkCommentsResponse(CommentDTO dto, Long memberId) {
+  public BookmarkCommentRes toResponse(CommentDTO dto, Long memberId) {
     return BookmarkCommentRes.builder()
         .id(dto.getId())
         .member(dto.getMember())
@@ -43,22 +44,19 @@ public class CommentMapper {
   }
 
   public BookmarkCommentRes toResponse(Comment comment, Long memberId) {
-    String timezone = comment.getMember().getTimezone();
+    Member member = comment.getMember();
+    String timezone = member.getTimezone();
     return BookmarkCommentRes.builder()
         .id(comment.getId())
-        .member(comment.getMember().getNickname())
-        .memberId(comment.getMember().getId())
-        .profileEmoji(comment.getMember().getProfileEmoji())
+        .member(member.getNickname())
+        .memberId(member.getId())
+        .profileEmoji(member.getProfileEmoji())
         .bookmark(comment.getBookmark().getTitle())
         .category(comment.getBookmark().getCategory().getName())
-        .isOwnerComment(comment.getMember().getId().equals(memberId))
+        .isOwnerComment(member.getId().equals(memberId))
         .content(comment.getContent())
         .createdTimestamp(TimezoneHandler.convertToUnix(comment.getCreatedAt(), timezone))
         .build();
-  }
-
-  public CommentDTO toBookmarkCommentDTO(Comment comment) {
-    return new CommentDTO(comment);
   }
 
   public CommentCreateDTO toCreateDTO(CommentCreateReq req) {

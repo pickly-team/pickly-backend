@@ -9,14 +9,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class BlockMapper {
 
-  public static BlockMemberRes toMember(BlockMemberDTO blockMemberDTO) {
-    return new BlockMemberRes(blockMemberDTO.getId(), blockMemberDTO.getNickname(),
-        blockMemberDTO.getProfileEmoji());
+  public static BlockMemberRes toMember(BlockMemberDTO dto) {
+    return new BlockMemberRes(
+        dto.getId(), dto.getNickname(), dto.getProfileEmoji()
+    );
   }
 
-  public static BlockBookmarkRes toBookmark(BlockBookmarkDTO blockBookmarkDTO) {
+  public static BlockBookmarkRes toBookmark(BlockBookmarkDTO dto) {
 
-    return new BlockBookmarkRes(blockBookmarkDTO.getId(), blockBookmarkDTO.getTitle(),
-        blockBookmarkDTO.getPreviewImageUrl());
+    return new BlockBookmarkRes(
+        dto.getId(), dto.getTitle(), dto.getPreviewImageUrl()
+    );
   }
+
 }
