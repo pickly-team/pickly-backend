@@ -1,12 +1,9 @@
 package org.pickly.service.category;
 
 import org.pickly.service.domain.category.entity.Category;
-import org.pickly.service.member.MemberFactory;
 import org.pickly.service.domain.member.entity.Member;
 
 public class CategoryFactory {
-
-  private final MemberFactory memberFactory = new MemberFactory();
 
   public Category testCategory(Member member) {
     return Category.builder()

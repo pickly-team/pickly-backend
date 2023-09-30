@@ -28,7 +28,10 @@ public class CategoryWriteService {
     List<Category> categories = new ArrayList<>();
     for (CategoryRequestDTO dto : requests) {
       categories.add(
-          new Category(member, dto.name(), dto.emoji(), nextOrderNum)
+          Category.builder()
+              .member(member).name(dto.name())
+              .emoji(dto.emoji()).orderNum(nextOrderNum)
+              .build()
       );
       nextOrderNum++;
     }

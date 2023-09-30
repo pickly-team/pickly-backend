@@ -13,10 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class FriendWriteService {
 
   private final FriendRepository friendRepository;
-  private static final boolean FRIEND_NOTIFICATION_ON = true;
 
   public void follow(Member fromMember, Member toMember) {
-    Friend friend = new Friend(toMember, fromMember, FRIEND_NOTIFICATION_ON);
+    Friend friend = Friend.create(fromMember, toMember);
     friendRepository.save(friend);
   }
 
@@ -25,7 +24,7 @@ public class FriendWriteService {
   }
 
   public Friend updateNotificationEnabled(Friend friend, boolean isFollowing) {
-    friend.updateNotificationEnabled(isFollowing);
+    friend.offNotification(isFollowing);
     return friend;
   }
 

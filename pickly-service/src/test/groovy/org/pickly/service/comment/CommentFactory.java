@@ -6,7 +6,9 @@ import org.pickly.service.domain.member.entity.Member;
 
 public class CommentFactory {
 
-  public Comment testComment(Member member, Bookmark bookmark, Boolean isOwnerComment, String content) {
+  public Comment testComment(
+      Member member, Bookmark bookmark, Boolean isOwnerComment, String content
+  ) {
     return new Comment(member, bookmark, isOwnerComment, content);
   }
 

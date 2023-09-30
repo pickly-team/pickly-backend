@@ -1,16 +1,14 @@
 package org.pickly.service.domain.notification.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -18,7 +16,6 @@ import java.time.LocalTime;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "notification_standard")
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationStandard extends BaseEntity {
 
@@ -36,16 +33,33 @@ public class NotificationStandard extends BaseEntity {
   @Column(name = "notify_daily_at", nullable = false)
   private LocalTime notifyDailyAt;
 
-  @PrePersist
-  public void prePersist() {
-    if (this.notifyStandardDay == null) {
-      this.notifyStandardDay = 7;
-    }
+  @Builder
+  public NotificationStandard(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+      Member member, Boolean isActive, Integer notifyStandardDay, LocalTime notifyDailyAt
+  ) {
+    super(id, createdAt, updatedAt, deletedAt);
+    this.member = member;
+    this.isActive = isActive;
+    this.notifyStandardDay = notifyStandardDay;
+    this.notifyDailyAt = notifyDailyAt;
   }
 
-  public static NotificationStandard createDafaultStandard(Member member) {
-    LocalTime defaultNotifyDailyAt = LocalTime.of(9, 0);
-    return new NotificationStandard(member, true, 7, defaultNotifyDailyAt);
+  public static NotificationStandard create(Member member) {
+    return NotificationStandard.builder()
+        .member(member).isActive(true)
+        .notifyStandardDay(7)
+        .notifyDailyAt(LocalTime.of(9, 0))
+        .build();
+  }
+
+  public static NotificationStandard create(
+      Member member, boolean isActive, LocalTime notifyDailyAt
+  ) {
+    return NotificationStandard.builder()
+        .member(member).isActive(isActive)
+        .notifyStandardDay(7).notifyDailyAt(notifyDailyAt)
+        .build();
   }
 
   public void update(Boolean isActive, LocalTime notifyDailyAt) {

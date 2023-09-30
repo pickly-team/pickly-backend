@@ -5,16 +5,15 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.pickly.service.common.utils.base.BaseEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -46,8 +45,23 @@ public class Member extends BaseEntity {
   @Column(name = "timezone", length = 20)
   private String timezone;
 
-  public void updateToken(final String newToken) {
-    this.fcmToken = newToken;
+  @Builder
+  public Member(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+      String username, Password password, Boolean isHardMode,
+      String email, String name, String nickname, String profileEmoji,
+      String fcmToken, String timezone
+  ) {
+    super(id, createdAt, updatedAt, deletedAt);
+    this.username = username;
+    this.password = password;
+    this.isHardMode = isHardMode;
+    this.email = email;
+    this.name = name;
+    this.nickname = nickname;
+    this.profileEmoji = profileEmoji;
+    this.fcmToken = fcmToken;
+    this.timezone = timezone;
   }
 
   public void updateProfile(String name, String nickname, String profileEmoji) {
@@ -56,17 +70,17 @@ public class Member extends BaseEntity {
     this.profileEmoji = profileEmoji;
   }
 
+  public void updateNotificationSettings(String fcmToken, String timezone) {
+    this.fcmToken = fcmToken;
+    this.timezone = timezone;
+  }
+
   public void toHardMode(Boolean isHardMode) {
     this.isHardMode = isHardMode;
   }
 
   public MemberMode isHardMode(Boolean isHardMode) {
     return isHardMode ? MemberMode.HARD : MemberMode.NORMAL;
-  }
-
-  public void updateNotificationSettings(String fcmToken, String timezone) {
-    this.fcmToken = fcmToken;
-    this.timezone = timezone;
   }
 
   public void handleNullName() {

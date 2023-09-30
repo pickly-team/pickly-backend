@@ -43,6 +43,15 @@ public abstract class BaseEntity {
     this.updatedAt = TimezoneHandler.getUTCnow();
   }
 
+  public BaseEntity(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt
+  ) {
+    this.id = id;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.deletedAt = deletedAt;
+  }
+
   public boolean isDeleted() {
     return null != this.deletedAt;
   }

@@ -53,9 +53,10 @@ public class NotificationReadService {
         LocalTime sendTime = makeSendTime(bookmark.getCreatedAt());
         if (isBeforeAndEqual(dueDateTime, now)) {
           notifications.add(
-              Notification.makeNormalNotification(
+              Notification.makeNormal(
                   memberId, bookmark,
-                  getNotificationTitle(templates), getSendDateTime(dueDateTime, now, sendTime)
+                  getNotificationTitle(templates),
+                  getSendDateTime(dueDateTime, now, sendTime)
               )
           );
         }
