@@ -6,7 +6,6 @@ import org.pickly.service.domain.category.dto.controller.request.CategoryOrderNu
 import org.pickly.service.domain.category.dto.controller.request.CategoryRequestDTO;
 import org.pickly.service.domain.category.dto.controller.request.CategoryUpdateRequestDTO;
 import org.pickly.service.domain.category.entity.Category;
-import org.pickly.service.domain.category.exception.CategoryException;
 import org.pickly.service.domain.category.repository.interfaces.CategoryJdbcRepository;
 import org.pickly.service.domain.member.entity.Member;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.pickly.service.domain.category.exception.CategoryException.CategoryOrderNumDuplicateException;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class CategoryWriteService {
     try {
       categoryJdbcRepository.updateCategoryOrderNums(requests);
     } catch (DataIntegrityViolationException e) {
-      throw new CategoryException.CategoryOrderNumDuplicateException();
+      throw new CategoryOrderNumDuplicateException();
     }
   }
 

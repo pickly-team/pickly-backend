@@ -11,14 +11,12 @@ import org.pickly.service.domain.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.entity.Visibility;
-import org.pickly.service.domain.bookmark.exception.BookmarkException;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.friend.entity.Relationship;
 import org.pickly.service.domain.member.entity.Member;
-import org.pickly.service.domain.member.exception.MemberException;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.pickly.service.domain.bookmark.exception.BookmarkException.BookmarkNotFoundException;
+import static org.pickly.service.domain.bookmark.exception.BookmarkException.ForbiddenBookmarkException;
+import static org.pickly.service.domain.member.exception.MemberException.MemberNotFoundException;
 
 @Slf4j
 @Service
@@ -54,18 +56,6 @@ public class BookmarkReadService {
     List<Bookmark> memberLikes = bookmarkQueryRepository.findBookmarks(pageRequest, memberId, null,
         USER_LIKE, null, null);
     return makeResponse(pageRequest.getPageSize(), memberLikes);
-  }
-
-  public PageResponse<BookmarkPreviewItemDTO> findMyBookmarks(
-      final PageRequest pageRequest, final Long memberId, final Long categoryId,
-      final Boolean readByUser, final Visibility visibility
-  ) {
-    memberReadService.existsById(memberId);
-    List<Bookmark> memberBookmarks = bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
-        categoryId, null, readByUser, Collections.singletonList(visibility));
-    Map<Long, Long> bookmarkCommentCntMap = commentQueryRepository.findBookmarkCommentCntByMember(
-        memberId);
-    return makeResponse(pageRequest.getPageSize(), memberBookmarks, bookmarkCommentCntMap);
   }
 
   public List<Bookmark> findMemberBookmarks(
@@ -121,21 +111,21 @@ public class BookmarkReadService {
   public Bookmark findByIdAndRead(Long id, Long memberId) {
     bookmarkRepository.readByUser(id, memberId);
     return bookmarkRepository.findOneById(id)
-        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
+        .orElseThrow(BookmarkNotFoundException::new);
   }
 
   public Bookmark findById(Long id) {
     return bookmarkRepository.findOneById(id)
-        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
+        .orElseThrow(BookmarkNotFoundException::new);
   }
 
   public Bookmark findByIdWithCategory(Long id) {
     return bookmarkRepository.findByIdWithCategory(id)
-        .orElseThrow(BookmarkException.BookmarkNotFoundException::new);
+        .orElseThrow(BookmarkNotFoundException::new);
   }
 
   public String getTitleFromUrl(Long memberId, String url) {
-    Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MemberNotFoundException::new);
+    Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
     BookmarkInfoDTO info = scrapOgTagInfo(url, member);
     return info.getTitle();
   }
@@ -151,12 +141,13 @@ public class BookmarkReadService {
       result.updateTitleAndImage(title, previewImageUrl, member.getTimezone());
       return result;
     } catch (IOException e) {
-      throw new BookmarkException.ForbiddenBookmarkException();
+      throw new ForbiddenBookmarkException();
     }
   }
 
-  public PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(final PageRequest pageRequest,
-                                                                final Long categoryId) {
+  public PageResponse<BookmarkItemDTO> findBookmarkByCategoryId(
+      final PageRequest pageRequest, final Long categoryId
+  ) {
     List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarkByCategoryId(pageRequest,
         categoryId);
     return makeResponse(pageRequest.getPageSize(), bookmarks);

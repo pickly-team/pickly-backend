@@ -2,10 +2,11 @@ package org.pickly.service.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.domain.comment.entity.Comment;
-import org.pickly.service.domain.comment.exception.CommentException;
 import org.pickly.service.domain.comment.repository.interfaces.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.pickly.service.domain.comment.exception.CommentException.OnlyAuthorCanEditException;
 
 @Service
 @Transactional
@@ -29,7 +30,7 @@ public class CommentWriteService {
 
   public Comment update(Comment comment, Long memberId, String newContent) {
     if (!comment.getMember().getId().equals(memberId)) {
-      throw new CommentException.OnlyAuthorCanEditException();
+      throw new OnlyAuthorCanEditException();
     }
     comment.updateContent(newContent);
     return comment;

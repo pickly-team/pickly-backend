@@ -3,17 +3,19 @@ package org.pickly.service.domain.friend.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.common.utils.page.PageRequest;
-import org.pickly.service.domain.friend.entity.Friend;
-import org.pickly.service.domain.friend.exception.FriendException;
-import org.pickly.service.domain.friend.repository.interfaces.FriendQueryRepository;
-import org.pickly.service.domain.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.domain.friend.dto.service.FollowerResDTO;
 import org.pickly.service.domain.friend.dto.service.FollowingResDTO;
+import org.pickly.service.domain.friend.entity.Friend;
+import org.pickly.service.domain.friend.repository.interfaces.FriendQueryRepository;
+import org.pickly.service.domain.friend.repository.interfaces.FriendRepository;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.pickly.service.domain.friend.exception.FriendException.AlreadyFriendException;
+import static org.pickly.service.domain.friend.exception.FriendException.FriendNotFoundException;
 
 @Slf4j
 @Service
@@ -37,7 +39,7 @@ public class FriendReadService {
 
   public void checkAlreadyFriend(final Long followerId, final Long memberId) {
     if (friendRepository.existsByFollowerIdAndFolloweeId(followerId, memberId)) {
-      throw new FriendException.AlreadyFriendException();
+      throw new AlreadyFriendException();
     }
   }
 
@@ -49,7 +51,7 @@ public class FriendReadService {
 
   public Friend findFollowerById(final Long followerId, final Long memberId) {
     return friendRepository.findByFollowerIdAndFolloweeId(followerId, memberId)
-        .orElseThrow(FriendException.FriendNotFoundException::new);
+        .orElseThrow(FriendNotFoundException::new);
   }
 
   public List<FollowerResDTO> findAllFollowerByMember(final Long memberId, final PageRequest pageRequest) {
