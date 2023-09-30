@@ -1,8 +1,9 @@
 package org.pickly.service.notification;
 
-import java.time.LocalTime;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
+
+import java.time.LocalTime;
 
 public class NotificationStandardFactory {
 
@@ -13,6 +14,9 @@ public class NotificationStandardFactory {
   public NotificationStandard testNotificationStandard(
       Member member, Boolean isActive, Integer notifyStandardDay, LocalTime notifyDailyAt
   ) {
-    return new NotificationStandard(member, isActive, notifyStandardDay, notifyDailyAt);
+    return NotificationStandard.builder()
+        .member(member).isActive(isActive)
+        .notifyStandardDay(notifyStandardDay).notifyDailyAt(notifyDailyAt)
+        .build();
   }
 }

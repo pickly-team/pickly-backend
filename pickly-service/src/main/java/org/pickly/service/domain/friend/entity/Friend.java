@@ -1,23 +1,17 @@
 package org.pickly.service.domain.friend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Table(name = "friend")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Friend extends BaseEntity {
@@ -33,12 +27,29 @@ public class Friend extends BaseEntity {
   @Column(name = "notification_enabled", nullable = false)
   private Boolean notificationEnabled;
 
-  public void updateNotificationEnabled(Boolean notificationEnabled) {
+  @Builder
+  Friend(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+      Member followee, Member follower, Boolean notificationEnabled
+  ) {
+    super(id, createdAt, updatedAt, deletedAt);
+    this.followee = followee;
+    this.follower = follower;
+    this.notificationEnabled = notificationEnabled;
+  }
+
+  public static Friend create(Member followee, Member follower) {
+    return Friend.builder()
+        .followee(followee).follower(follower)
+        .notificationEnabled(true)
+        .build();
+  }
+
+  public void offNotification(Boolean notificationEnabled) {
     this.notificationEnabled = notificationEnabled;
   }
 
   public FriendNotificationMode getNotificationMode() {
-    return notificationEnabled ? FriendNotificationMode.ALLOWED
-        : FriendNotificationMode.NOT_ALLOWED;
+    return notificationEnabled ? FriendNotificationMode.ALLOWED : FriendNotificationMode.NOT_ALLOWED;
   }
 }

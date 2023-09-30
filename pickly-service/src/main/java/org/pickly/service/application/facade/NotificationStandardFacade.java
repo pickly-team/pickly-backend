@@ -25,8 +25,9 @@ public class NotificationStandardFacade {
     notificationStandardReadService.checkByMemberId(memberId);
     var member = memberReadService.findById(memberId);
 
-    NotificationStandard standard = new NotificationStandard(
-        member, request.isActive(), DEFAULT_STANDARD_DAY, request.getNotifyDailyAt()
+
+    NotificationStandard standard = NotificationStandard.create(
+        member, request.isActive(), request.getNotifyDailyAt()
     );
     notificationStandardWriteService.create(standard);
   }

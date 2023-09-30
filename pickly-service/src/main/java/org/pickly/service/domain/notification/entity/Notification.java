@@ -5,12 +5,11 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.common.utils.base.BaseEntity;
+import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.notification.enums.NotificationType;
 import org.pickly.service.domain.notification.enums.NotificationTypeConverter;
 
@@ -18,8 +17,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Table(name = "notification")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification extends BaseEntity {
@@ -49,11 +46,27 @@ public class Notification extends BaseEntity {
   @Convert(converter = NotificationTypeConverter.class)
   private NotificationType notificationType;
 
+  @Builder
+  public Notification(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Long memberId, Long bookmarkId, String title, String content, boolean isChecked, boolean isSend,
+      LocalDateTime sendDateTime, NotificationType notificationType
+  ) {
+    super(id, createdAt, updatedAt, deletedAt);
+    this.memberId = memberId;
+    this.bookmarkId = bookmarkId;
+    this.title = title;
+    this.content = content;
+    this.isChecked = isChecked;
+    this.isSend = isSend;
+    this.sendDateTime = sendDateTime;
+    this.notificationType = notificationType;
+  }
+
   public void check() {
     this.isChecked = true;
   }
 
-  public static Notification makeNormalNotification(
+  public static Notification makeNormal(
       Long memberId, Bookmark bookmark, String title, LocalDateTime sendDateTime
   ) {
     return Notification.builder()

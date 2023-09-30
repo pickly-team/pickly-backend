@@ -18,7 +18,7 @@ public class NotificationStandardWriteService {
 
   public void create(Member member) {
     notificationStandardRepository.save(
-        NotificationStandard.createDafaultStandard(member)
+        NotificationStandard.create(member)
     );
   }
 

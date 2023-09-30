@@ -1,24 +1,18 @@
 package org.pickly.service.domain.report.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
+
+@Getter
 @Entity
 @Table(name = "member_report")
-@Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberReport extends BaseEntity {
 
@@ -33,7 +27,20 @@ public class MemberReport extends BaseEntity {
   @Column(length = 150, nullable = false)
   private String content;
 
+  @Builder
+  public MemberReport(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+      Member reporter, Member reported, String content
+  ) {
+    super(id, createdAt, updatedAt, deletedAt);
+    this.reporter = reporter;
+    this.reported = reported;
+    this.content = content;
+  }
+
   public static MemberReport create(Member reporter, Member reported, String content) {
-    return new MemberReport(reporter, reported, content);
+    return MemberReport.builder()
+        .reporter(reporter).reported(reported).content(content)
+        .build();
   }
 }

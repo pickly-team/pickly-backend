@@ -9,6 +9,8 @@ import org.pickly.service.common.utils.base.BaseEntity;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "block")
@@ -28,7 +30,11 @@ public class Block extends BaseEntity {
   private Bookmark bookmark;
 
   @Builder
-  Block(Member blocker, Member blockee, Bookmark bookmark) {
+  Block(
+      Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
+      Member blocker, Member blockee, Bookmark bookmark
+  ) {
+    super(id, createdAt, updatedAt, deletedAt);
     this.blocker = blocker;
     this.blockee = blockee;
     this.bookmark = bookmark;
