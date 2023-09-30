@@ -62,17 +62,9 @@ public class BookmarkReadService {
       final PageRequest pageRequest, final Long memberId,
       final Relationship relationship, final Long categoryId, final Boolean readByUser
   ) {
-    List<Visibility> visibilities = getVisibility(relationship);
+    List<Visibility> visibilities = relationship.getVisibility();
     return bookmarkQueryRepository.findBookmarks(pageRequest, memberId,
         categoryId, null, readByUser, visibilities);
-  }
-
-  private List<Visibility> getVisibility(final Relationship relationship) {
-    return switch (relationship) {
-      case FRIEND -> List.of(Visibility.SCOPE_PUBLIC, Visibility.SCOPE_FRIEND);
-      case ME -> List.of(Visibility.SCOPE_PUBLIC, Visibility.SCOPE_FRIEND, Visibility.SCOPE_PRIVATE);
-      default -> List.of(Visibility.SCOPE_PUBLIC);
-    };
   }
 
   private <T> List<T> mapToDtoList(
