@@ -6,7 +6,7 @@ VALUES ('test', 'helpme', true, 'test@gmail.com', '테스트1', '테스트1', '�
        ('test4', 'ohmygod', false, 'test4@gmail.com', '테스트4', '테스트4', '😪', null, 'UTC');
 
 INSERT INTO block
-(blockee_id, blocker_id, bookmark_id)
+    (blockee_id, blocker_id, bookmark_id)
 VALUES (3, 1, null);
 
 INSERT INTO category
@@ -42,12 +42,12 @@ VALUES (1, 3, '09:00:00', true),
        (2, 7, '18:00:00', false);
 
 INSERT INTO notification
-    (member_id, bookmark_id, title, content, is_checked, is_send, send_date_time, notification_type)
+(member_id, bookmark_id, title, content, is_checked, is_send, send_date_time, notification_type)
 VALUES (1, 1, '테스트 알림', '테스트입니다', false, true, '2023-06-07 11:30:00', 1),
        (1, 1, '테스트 알림2', '이것도 테스트에요', true, true, '2023-06-07 11:30:00', 1);
 
 INSERT INTO notification_template
-(title, notification_type)
+    (title, notification_type)
 VALUES ('앗! 북마크가 잊혀지고 있어요!', 1),
        ('읽지 않은 북마크가 있어요!', 1),
        ('아껴둔 북마크, 오늘은 읽어보는게 어떨까요?', 1),
