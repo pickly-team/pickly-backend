@@ -10,6 +10,7 @@ public enum ReportErrorCode implements ErrorCode {
   REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "존재하지 않는 신고 정보입니다."),
   ALREADY_REPORT(HttpStatus.CONFLICT, "R002", "이미 신고했습니다."),
   CAN_NOT_REPORT_SELF(HttpStatus.BAD_REQUEST, "R003", "자기 자신을 신고할 수 없습니다."),
+  FAIL_TO_REPORT(HttpStatus.INTERNAL_SERVER_ERROR, "R004", "잘못된 신고 입니다."),
   ;
 
   private final HttpStatus status;

@@ -26,4 +26,10 @@ public abstract class ReportException extends BusinessException {
     }
   }
 
+  public static class FailToReportException extends ReportException {
+    public FailToReportException() {
+      super(ReportErrorCode.FAIL_TO_REPORT);
+    }
+  }
+
 }
