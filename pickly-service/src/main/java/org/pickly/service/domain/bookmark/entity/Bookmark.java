@@ -41,7 +41,7 @@ public class Bookmark extends BaseEntity {
   @Column(name = "read_by_user", nullable = false)
   private Boolean readByUser;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private Visibility visibility;
 

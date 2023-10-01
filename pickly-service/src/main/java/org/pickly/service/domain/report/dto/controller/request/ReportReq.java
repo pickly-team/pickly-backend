@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.pickly.service.domain.report.common.ReportType;
 
 @Getter
 @AllArgsConstructor
@@ -22,4 +23,7 @@ public class ReportReq {
 
   @NotBlank(message = "신고 내용을 입력해주세요")
   private String content;
+
+  private ReportType reportType;
+
 }
