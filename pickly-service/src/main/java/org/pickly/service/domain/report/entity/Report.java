@@ -26,8 +26,4 @@ public abstract class Report extends BaseEntity {
 
   public abstract Object getReported();
 
-  public void updateContent(String content) {
-    this.content = content;
-  }
-
 }

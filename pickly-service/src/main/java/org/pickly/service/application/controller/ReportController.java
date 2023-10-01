@@ -29,33 +29,4 @@ public class ReportController {
     reportFacade.report(request);
   }
 
-//  @PostMapping("/members")
-//  @Operation(summary = "특정 유저를 신고한다.")
-//  public void reportMember(@Valid @RequestBody ReportReq request) {
-//    memberReportFacade.report(
-//        request.getReporterId(),
-//        request.getReportedId(),
-//        request.getContent()
-//    );
-//  }
-//
-//  @PostMapping("/bookmarks")
-//  @Operation(summary = "특정 북마크를 신고한다.")
-//  public void reportBookmark(@Valid @RequestBody ReportReq request) {
-//    bookmarkReportFacade.report(
-//        request.getReporterId(),
-//        request.getReportedId(),
-//        request.getContent()
-//    );
-//  }
-//
-//  @PostMapping("/comments")
-//  @Operation(summary = "특정 댓글을 신고한다.")
-//  public void reportComment(@Valid @RequestBody ReportReq request) {
-//    commentReportFacade.report(
-//        request.getReporterId(),
-//        request.getReportedId(),
-//        request.getContent()
-//    );
-//  }
 }
