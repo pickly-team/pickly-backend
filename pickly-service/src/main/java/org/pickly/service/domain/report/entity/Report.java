@@ -12,8 +12,9 @@ import org.pickly.service.domain.member.entity.Member;
 @Entity
 @Table(name = "report")
 @AllArgsConstructor
+@DiscriminatorColumn
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Report extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
