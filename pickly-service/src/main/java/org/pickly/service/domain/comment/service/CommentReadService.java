@@ -23,8 +23,8 @@ public class CommentReadService {
   private final CommentQueryRepository commentQueryRepository;
   private final MemberReadService memberReadService;
 
-  public List<CommentDTO> findByBookmark(final Long bookmarkId) {
-    return commentQueryRepository.findComments(null, bookmarkId);
+  public List<CommentDTO> findByBookmark(final Long loginId, final Long bookmarkId) {
+    return commentQueryRepository.findCommentsWithoutBlock(loginId, bookmarkId);
   }
 
   public Long countMemberComments(final Long memberId) {
