@@ -87,7 +87,7 @@ public class CommentController {
       @Parameter(name = "memberId", description = "댓글을 조회하는 Member ID 값", example = "1", required = true)
       @Positive(message = "Member ID는 양수입니다.") @RequestParam final Long memberId
   ) {
-    List<CommentDTO> dtoList = commentReadService.findByBookmark(bookmarkId);
+    List<CommentDTO> dtoList = commentReadService.findByBookmark(memberId, bookmarkId);
     return dtoList.stream()
         .map(dto -> commentMapper.toResponse(dto, memberId))
         .toList();

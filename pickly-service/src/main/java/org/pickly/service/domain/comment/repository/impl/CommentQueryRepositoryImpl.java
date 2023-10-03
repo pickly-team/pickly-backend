@@ -1,12 +1,14 @@
 package org.pickly.service.domain.comment.repository.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.comment.dto.service.CommentDTO;
 import org.pickly.service.domain.comment.dto.service.QCommentDTO;
+import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.pickly.service.domain.block.entity.QBlock.block;
 import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
 import static org.pickly.service.domain.category.entity.QCategory.category;
 import static org.pickly.service.domain.comment.entity.QComment.comment;
@@ -61,6 +64,40 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
         )
         .orderBy(comment.id.desc())
         .fetch();
+  }
+
+  @Override
+  public List<CommentDTO> findCommentsWithoutBlock(Long memberId, Long bookmarkId) {
+    return queryFactory
+        .select(new QCommentDTO(comment, member, bookmark.title, category.name, bookmark.id
+        ))
+        .from(comment)
+        .leftJoin(comment.member, member)
+        .leftJoin(comment.bookmark, bookmark)
+        .leftJoin(bookmark.category, category)
+        .where(
+            inBlockId(memberId),
+            eqBookmarkId(bookmarkId),
+            notDeleted()
+        )
+        .orderBy(comment.id.desc())
+        .fetch();
+  }
+
+  private BooleanExpression inBlockId(final Long memberId) {
+    if (memberId == null) {
+      return null;
+    }
+    return comment.member.id.notIn(
+        selectAllBlockee(memberId)
+    );
+  }
+
+  private JPQLQuery<Long> selectAllBlockee(final Long memberId) {
+    return JPAExpressions
+        .select(block.blockee.id)
+        .from(block)
+        .where(block.blocker.id.eq(memberId));
   }
 
   private BooleanExpression eqMemberId(final Long memberId) {
