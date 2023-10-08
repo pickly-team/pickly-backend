@@ -38,9 +38,10 @@ public class Friend extends BaseEntity {
     this.notificationEnabled = notificationEnabled;
   }
 
-  public static Friend create(Member followee, Member follower) {
+  public static Friend create(Member follower, Member followee) {
     return Friend.builder()
-        .followee(followee).follower(follower)
+        .followee(followee)
+        .follower(follower)
         .notificationEnabled(true)
         .build();
   }

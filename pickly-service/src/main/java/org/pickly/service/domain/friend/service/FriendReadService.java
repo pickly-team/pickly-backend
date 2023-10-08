@@ -37,8 +37,8 @@ public class FriendReadService {
     return friendRepository.countByFollowerId(memberId);
   }
 
-  public void checkAlreadyFriend(final Long followerId, final Long memberId) {
-    if (friendRepository.existsByFollowerIdAndFolloweeId(followerId, memberId)) {
+  public void checkAlreadyFriend(final Long fromMemberId, final Long toMemberId) {
+    if (friendRepository.existsByFollowerIdAndFolloweeId(fromMemberId, toMemberId)) {
       throw new AlreadyFriendException();
     }
   }
