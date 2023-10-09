@@ -20,6 +20,12 @@ public class BookmarkItemDTO {
   @Schema(description = "북마크 원본 URL", example = "https://naver.com/1242")
   private String url;
 
+  @Schema(description = "소속 카테고리 이름", example = "백엔드")
+  private String categoryName;
+
+  @Schema(description = "소속 카테고리 이모지", example = "🤩")
+  private String categoryEmoji;
+
   @Schema(description = "유저가 좋아요 한 북마크인지?", example = "false")
   private Boolean isUserLike;
 
@@ -32,6 +38,8 @@ public class BookmarkItemDTO {
         .bookmarkId(bookmark.getId())
         .title(bookmark.getTitle())
         .url(bookmark.getUrl())
+        .categoryName(bookmark.getCategory().getName())
+        .categoryEmoji(bookmark.getCategory().getEmoji())
         .isUserLike(bookmark.getIsUserLike())
         .build();
   }
