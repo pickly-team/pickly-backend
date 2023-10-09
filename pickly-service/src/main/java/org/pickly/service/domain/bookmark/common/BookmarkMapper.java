@@ -19,6 +19,7 @@ public class BookmarkMapper {
         .id(bookmark.getId())
         .categoryId(category.getId())
         .categoryName(category.getName())
+        .categoryEmoji(category.getEmoji())
         .memberId(bookmark.getMember().getId())
         .url(bookmark.getUrl())
         .title(bookmark.getTitle())
