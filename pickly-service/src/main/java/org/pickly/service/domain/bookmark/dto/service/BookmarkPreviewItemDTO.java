@@ -1,11 +1,12 @@
 package org.pickly.service.domain.bookmark.dto.service;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
+
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -23,6 +24,12 @@ public class BookmarkPreviewItemDTO {
 
   @Schema(description = "북마크 미리보기 이미지 URL", example = "https://naver.com/image/1242")
   private String previewImageUrl;
+
+  @Schema(description = "소속 카테고리 이름", example = "백엔드")
+  private String categoryName;
+
+  @Schema(description = "소속 카테고리 이모지", example = "🤩")
+  private String categoryEmoji;
 
   @Schema(description = "유저가 좋아요 한 북마크인지?", example = "false")
   private Boolean isUserLike;
@@ -46,6 +53,8 @@ public class BookmarkPreviewItemDTO {
         .title(bookmark.getTitle())
         .url(bookmark.getUrl())
         .previewImageUrl(bookmark.getPreviewImageUrl())
+        .categoryName(bookmark.getCategory().getName())
+        .categoryEmoji(bookmark.getCategory().getEmoji())
         .isUserLike(bookmark.getIsUserLike())
         .readByUser(bookmark.getReadByUser())
         .commentCnt(commentCnt)
