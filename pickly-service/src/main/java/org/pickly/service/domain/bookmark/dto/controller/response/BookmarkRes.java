@@ -17,6 +17,8 @@ public class BookmarkRes {
 
   private String categoryName;
 
+  private String categoryEmoji;
+
   private Long memberId;
 
   private String url;
