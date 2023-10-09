@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
+import static org.pickly.service.domain.category.entity.QCategory.category;
 import static org.pickly.service.domain.notification.entity.QNotification.notification;
 
 @Repository
@@ -35,6 +36,8 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     Integer pageSize = pageRequest.getPageSize();
     return queryFactory
         .selectFrom(bookmark)
+        .leftJoin(bookmark.category, category)
+        .fetchJoin()
         .where(
             ltCursorId(cursorId),
             eqMemberId(memberId),
