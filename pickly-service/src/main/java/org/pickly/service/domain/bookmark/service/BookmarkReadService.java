@@ -14,7 +14,6 @@ import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
-import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.pickly.service.domain.friend.entity.Relationship;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
@@ -22,7 +21,10 @@ import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,7 +44,6 @@ public class BookmarkReadService {
   private final MemberRepository memberRepository;
   private final BookmarkRepository bookmarkRepository;
   private final BookmarkQueryRepository bookmarkQueryRepository;
-  private final CommentQueryRepository commentQueryRepository;
   private final MemberReadService memberReadService;
 
   public Long countMemberLikes(final Long memberId) {
