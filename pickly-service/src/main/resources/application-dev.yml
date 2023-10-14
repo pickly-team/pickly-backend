@@ -11,6 +11,8 @@ spring:
         enabled: always
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
+    hibernate:
+      ddl-auto: none
   # schema.sql, data.sql 사용 여부
   sql:
     init:
