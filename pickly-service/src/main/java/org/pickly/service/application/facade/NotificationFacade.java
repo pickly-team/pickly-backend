@@ -19,6 +19,11 @@ public class NotificationFacade {
     notificationWriteService.read(notification);
   }
 
+  public void readAllByMember(Long memberId) {
+    var member = memberReadService.findById(memberId);
+    notificationWriteService.readAllByMember(member);
+  }
+
   public void delete(Long notificationId) {
     var notification = notificationReadService.findById(notificationId);
     notificationWriteService.delete(notification);

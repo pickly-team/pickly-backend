@@ -1,6 +1,7 @@
 package org.pickly.service.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationJdbcRepository;
 import org.pickly.service.domain.notification.repository.interfaces.NotificationRepository;
@@ -31,6 +32,10 @@ public class NotificationWriteService {
 
   public void read(Notification notification) {
     notification.check();
+  }
+
+  public void readAllByMember(Member member) {
+    notificationRepository.readAllByMember(member.getId());
   }
 
   public void save(List<Notification> notifications) {
