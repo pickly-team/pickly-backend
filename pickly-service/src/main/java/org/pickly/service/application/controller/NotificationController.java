@@ -54,6 +54,15 @@ public class NotificationController {
     notificationFacade.read(notificationId);
   }
 
+  @PatchMapping("/members/{memberId}/notifications")
+  @Operation(summary = "모든 알림을 읽기 처리한다.")
+  public void readAllByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    notificationFacade.readAllByMember(memberId);
+  }
+
   @DeleteMapping("notifications/{notificationId}")
   @Operation(summary = "특정 알림을 삭제한다.")
   public void deleteNotification(

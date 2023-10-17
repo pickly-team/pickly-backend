@@ -27,6 +27,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
       + "where n.isSend = true and n.deletedAt is null and n.id = :id")
   Optional<Notification> findByIdAndDeletedAtNull(@Param("id") Long id);
 
+  @Modifying
+  @Query("update Notification n set n.isChecked = true where n.memberId = :memberId")
+  void readAllByMember(@Param("memberId") Long memberId);
 
   @Modifying
   @Query("update Notification n set n.isSend = true where n.id in :ids")
