@@ -63,4 +63,13 @@ public class NotificationController {
     notificationFacade.delete(notificationId);
   }
 
+  @DeleteMapping("/members/{memberId}/notifications")
+  @Operation(summary = "모든 알림을 삭제한다.")
+  public void deleteAllByMember(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    notificationFacade.deleteAllByMember(memberId);
+  }
+
 }
