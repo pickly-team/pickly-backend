@@ -31,7 +31,7 @@ public class NotificationWriteService {
   }
 
   public void deleteByIds(Long memberId, List<Long> notificationIds) {
-    notificationRepository.deleteByIds(memberId, notificationIds);
+    notificationRepository.deleteByMemberAndIds(memberId, notificationIds);
   }
 
   public void read(Notification notification) {
