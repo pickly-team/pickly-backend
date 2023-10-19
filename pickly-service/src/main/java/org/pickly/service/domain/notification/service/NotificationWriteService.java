@@ -30,6 +30,10 @@ public class NotificationWriteService {
     notificationRepository.deleteAllByMemberId(memberId);
   }
 
+  public void deleteByIds(Long memberId, List<Long> notificationIds) {
+    notificationRepository.deleteByIds(memberId, notificationIds);
+  }
+
   public void read(Notification notification) {
     notification.check();
   }

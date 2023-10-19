@@ -6,6 +6,8 @@ import org.pickly.service.domain.notification.service.NotificationReadService;
 import org.pickly.service.domain.notification.service.NotificationWriteService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NotificationFacade {
@@ -32,6 +34,11 @@ public class NotificationFacade {
   public void deleteAllByMember(Long memberId) {
     var member = memberReadService.findById(memberId);
     notificationWriteService.deleteByMember(member.getId());
+  }
+
+  public void deleteAllByIds(Long memberId, List<Long> notificationIds) {
+    var member = memberReadService.findById(memberId);
+    notificationWriteService.deleteByIds(member.getId(), notificationIds);
   }
 
 }

@@ -13,6 +13,7 @@ import org.pickly.service.domain.notification.common.NotificationMapper;
 import org.pickly.service.domain.notification.dto.controller.response.NotificationRes;
 import org.pickly.service.domain.notification.entity.Notification;
 import org.pickly.service.domain.notification.service.NotificationReadService;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,6 +80,18 @@ public class NotificationController {
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
     notificationFacade.deleteAllByMember(memberId);
+  }
+
+  @DeleteMapping("/members/{memberId}/notifications/selected")
+  @Operation(summary = "특정 유저가 선택한 알림을 삭제한다.")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteAllByIds(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @RequestParam(value = "notificationIds") List<Long> notificationIds
+  ) {
+    notificationFacade.deleteAllByIds(memberId, notificationIds);
   }
 
 }
