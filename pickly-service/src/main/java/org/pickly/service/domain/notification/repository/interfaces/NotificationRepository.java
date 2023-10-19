@@ -41,7 +41,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
   void deleteAllByBookmarkIdIn(List<Long> bookmarkIds);
 
   @Modifying
-  @Query("delete from Notification n where n.memberId = : memberId and n.id in :ids")
+  @Query("delete from Notification n where n.memberId = :memberId and n.id in :ids")
   void deleteByMemberAndIds(@Param("memberId") Long memberId, @Param("ids") List<Long> ids);
 
 }
