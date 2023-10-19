@@ -11,6 +11,7 @@ import org.pickly.service.domain.comment.dto.service.QCommentDTO;
 import org.pickly.service.domain.comment.repository.interfaces.CommentQueryRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -82,6 +83,21 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
         )
         .orderBy(comment.id.desc())
         .fetch();
+  }
+
+  @Override
+  public void deleteByCategory(List<Long> categories, LocalDateTime now) {
+    queryFactory
+        .update(comment)
+        .set(comment.deletedAt, now)
+        .where(
+            comment.bookmark.id.in(
+                JPAExpressions.select(bookmark.id)
+                    .from(bookmark)
+                    .where(bookmark.category.id.in(categories))
+            )
+        )
+        .execute();
   }
 
   private BooleanExpression inBlockId(final Long memberId) {

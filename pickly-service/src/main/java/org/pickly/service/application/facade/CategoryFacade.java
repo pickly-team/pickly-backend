@@ -8,6 +8,7 @@ import org.pickly.service.domain.category.dto.controller.request.CategoryUpdateR
 import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.category.service.CategoryWriteService;
+import org.pickly.service.domain.comment.service.CommentWriteService;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CategoryFacade {
 
   private final CategoryWriteService categoryWriteService;
+  private final CommentWriteService commentWriteService;
   private final CategoryReadService categoryReadService;
   private final MemberReadService memberReadService;
   private final BookmarkWriteService bookmarkWriteService;
@@ -45,6 +47,7 @@ public class CategoryFacade {
     Category category = categoryReadService.findById(categoryId);
     categoryWriteService.delete(category);
     bookmarkWriteService.deleteByCategory(category);
+    commentWriteService.deleteByCategory(category);
   }
 
   @Transactional
@@ -52,6 +55,7 @@ public class CategoryFacade {
     List<Category> categories = categoryReadService.findByIds(categoryIds);
     categoryWriteService.delete(categories);
     bookmarkWriteService.deleteByCategory(categories);
+    commentWriteService.deleteByCategory(categories);
   }
 
 }

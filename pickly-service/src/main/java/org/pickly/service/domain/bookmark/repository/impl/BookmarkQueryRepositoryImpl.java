@@ -126,7 +126,6 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return bookmark.readByUser.eq(readByUser);
   }
 
-
   private BooleanExpression eqIsUserLike(final Boolean isUserLike) {
     if (isUserLike == null) {
       return null;
