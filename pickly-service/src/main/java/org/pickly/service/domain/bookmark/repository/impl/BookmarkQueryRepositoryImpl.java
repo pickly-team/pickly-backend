@@ -98,6 +98,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
                     notification.bookmarkId.eq(bookmark.id)
                         .and(notification.sendDateTime.goe(startDateTime))
                         .and(notification.sendDateTime.lt(endDateTime))
+                        .and(notDeleted())
                 ).notExists()
                 .and(bookmark.readByUser.eq(false))
         )
