@@ -40,6 +40,7 @@ public class BookmarkCreateReq {
     this.categoryId = dto.categoryId();
     this.url = dto.url();
     this.title = dto.title();
+    this.thumbnail = dto.thumbnail();
     this.visibility = dto.visibility();
   }
 

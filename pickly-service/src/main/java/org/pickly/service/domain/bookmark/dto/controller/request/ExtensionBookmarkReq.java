@@ -18,8 +18,9 @@ public record ExtensionBookmarkReq() {
       String url,
 
       @Length(max = 100, message = "제목은 최대 100글자 까지만 입력할 수 있습니다.")
-      @NotBlank(message = "북마크의 제목을 입력해주세요")
       String title,
+
+      String thumbnail,
 
       @NotNull(message = "공개 범위 표시 정보는 필수입니다. ")
       Visibility visibility
