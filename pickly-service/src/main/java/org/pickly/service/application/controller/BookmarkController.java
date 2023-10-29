@@ -188,6 +188,7 @@ public class BookmarkController {
     return bookmarkMapper.entityToResponseDto(entity);
   }
 
+  // FIXME: 231026 사용하지 않기로 결정됨
   @GetMapping("/members/{memberId}/bookmark/title")
   @Operation(summary = "특정 북마크의 제목을 url로부터 받아온다.")
   public String getTitleFromUrl(

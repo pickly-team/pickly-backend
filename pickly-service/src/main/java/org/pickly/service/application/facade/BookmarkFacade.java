@@ -42,9 +42,11 @@ public class BookmarkFacade {
     var category = categoryReadService.findById(request.getCategoryId());
     var member = memberReadService.findById(request.getMemberId());
 
-    BookmarkInfoDTO info = bookmarkReadService.scrapOgTagInfo(request.getUrl(), member);
+    BookmarkInfoDTO info = new BookmarkInfoDTO(
+        request.getUrl(), request.getTitle(), request.getThumbnail(), member.getTimezone()
+    );
     Bookmark bookmark = Bookmark.create(
-        category, member, request.getTitle(), info, request.getVisibility()
+        category, member, info, request.getVisibility()
     );
 
     return bookmarkWriteService.create(bookmark);
