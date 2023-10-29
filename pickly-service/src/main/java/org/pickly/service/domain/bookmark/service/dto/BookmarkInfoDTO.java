@@ -23,9 +23,15 @@ public class BookmarkInfoDTO {
     this.previewImageUrl = null;
   }
 
+  public BookmarkInfoDTO(String url, String title, String previewImageUrl, String timezone) {
+    this.url = url;
+    this.title = (title == null || title.isBlank()) ? makeTitle(timezone) : title;
+    this.previewImageUrl = previewImageUrl.isBlank() ? null : previewImageUrl;
+  }
+
   public void updateTitleAndImage(String title, String previewImageUrl, String timezone) {
     this.title = title.isBlank() ? makeTitle(timezone) : title;
-    this.previewImageUrl = title.isBlank() ? null : previewImageUrl;
+    this.previewImageUrl = previewImageUrl.isBlank() ? null : previewImageUrl;
   }
 
   private String makeTitle(String timezone) {
