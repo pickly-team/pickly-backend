@@ -261,4 +261,36 @@ public class BookmarkController {
     return bookmarkReadService.getTitleFromUrl(key.decrypt(memberId), url);
   }
 
+  @Operation(
+      summary = "[크롬 익스텐션] 특정 유저의 북마크 목록을 전체 조회한다.",
+      description = "hasNext = true인 경우, 다음 request의 cursorId는 직전 response의 마지막 요소의 ID. 필터링이 필요하지 않다면 queryParam null로!"
+  )
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "성공")})
+  @GetMapping("/members/bookmarks/chrome-extention")
+  public PageResponse<BookmarkPreviewItemDTO> findMemberBookmarksForExtension(
+      @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
+      @NotBlank(message = "유저 ID를 입력해주세요.") @RequestParam final String memberId,
+
+      @Parameter(name = "loginId", description = "현재 로그인 유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @RequestParam final Long loginId,
+
+      @Parameter(name = "categoryId", description = "카테고리 ID 값. 필터링 필요 없으면 Null", example = "1")
+      @RequestParam(required = false) final Long categoryId,
+
+      @Parameter(name = "readByUser", description = "유저의 읽음 여부. 필터링 필요 없으면 Null", example = "true")
+      @RequestParam(required = false) final Boolean readByUser,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "1")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    return bookmarkFacade.findMemberBookmarks(
+        pageRequest, key.decrypt(memberId), loginId, categoryId, readByUser
+    );
+  }
+
 }
