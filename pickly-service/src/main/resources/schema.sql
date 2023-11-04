@@ -32,7 +32,7 @@ create table member
     is_hard_mode  boolean                 not null,
     email         varchar(100)            not null,
     name          varchar(20),
-    nickname      varchar(20),
+    nickname      varchar(200),
     profile_emoji text,
     fcm_token     varchar(200),
     timezone      varchar(20),
