@@ -9,8 +9,7 @@ import java.util.regex.Pattern;
 
 public class NicknameValidator implements ConstraintValidator<NicknameCheck, String> {
 
-  private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣a-zA-Z0-9]+$");
-
+  private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]+$");
 
   @Override
   public boolean isValid(String inputNickname, ConstraintValidatorContext constraintValidatorContext) {
