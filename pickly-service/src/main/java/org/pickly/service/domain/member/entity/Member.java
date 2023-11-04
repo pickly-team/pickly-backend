@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
   @Column(length = 20)
   private String name;
 
-  @Column(length = 20, unique = true)
+  @Column(length = 200, unique = true)
   private String nickname;
 
   @Column(name = "profile_emoji", columnDefinition = "text")
