@@ -159,4 +159,8 @@ public class BookmarkReadService {
     return bookmarkRepository.countByMemberIdAndDeletedAtNull(memberId);
   }
 
+  public Long countReadBookmarksByMemberId(Long memberId) {
+    return bookmarkRepository.countReadBookmarksByMemberId(memberId);
+  }
+
 }

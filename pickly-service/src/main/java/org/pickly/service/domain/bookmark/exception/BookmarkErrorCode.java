@@ -9,6 +9,7 @@ public enum BookmarkErrorCode implements ErrorCode {
 
   BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "B001", "존재하지 않는 북마크 정보입니다."),
   FORBIDDEN_BOOKMARK(HttpStatus.FORBIDDEN, "B002", "유효하지 않은 url 입니다. 비공개 포스트인지 확인해주세요."),
+  INVALID_READ_STATUS(HttpStatus.INTERNAL_SERVER_ERROR, "B003", "북마크 읽음 현황 값에 오류가 발생했습니다. 서버 개발자에게 문의해주세요.")
   ;
 
   private final HttpStatus status;

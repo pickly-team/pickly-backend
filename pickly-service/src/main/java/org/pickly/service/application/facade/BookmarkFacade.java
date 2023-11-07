@@ -11,6 +11,7 @@ import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
+import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.comment.service.CommentReadService;
 import org.pickly.service.domain.comment.service.CommentWriteService;
@@ -105,6 +106,13 @@ public class BookmarkFacade {
 
     boolean isFriend = friendReadService.checkUsersAreFriend(loginId, memberId);
     return (isFriend) ? Relationship.FRIEND : Relationship.OTHERS;
+  }
+
+  public BookmarkReadStatus getBookmarkReadStatus(final long memberId) {
+    memberReadService.existsById(memberId);
+    var totalBookmarkCount = bookmarkReadService.countByMemberId(member.getId());
+    var readBookmarkCount = bookmarkReadService.countReadBookmarksByMemberId(memberId);
+    return new BookmarkReadStatus(totalBookmarkCount, readBookmarkCount);
   }
 
 }
