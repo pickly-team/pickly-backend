@@ -192,9 +192,8 @@ public class BookmarkController {
     return bookmarkMapper.entityToResponseDto(entity);
   }
 
-  // FIXME: 231026 사용하지 않기로 결정됨
-  @GetMapping("/members/{memberId}/bookmark/title")
-  @Operation(summary = "특정 북마크의 제목을 url로부터 받아온다.")
+  @GetMapping("/members/{memberId}/bookmark/info")
+  @Operation(summary = "특정 북마크의 제목과 썸네일을 url로부터 받아온다.")
   public String getTitleFromUrl(
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
@@ -253,8 +252,8 @@ public class BookmarkController {
     return bookmarkMapper.entityToResponseDto(entity);
   }
 
-  @GetMapping("/members/bookmark/title/chrome-extension")
-  @Operation(summary = "[크롬 익스텐션] 특정 북마크의 제목을 url로부터 받아온다.")
+  @GetMapping("/members/bookmark/info/chrome-extension")
+  @Operation(summary = "[크롬 익스텐션] 특정 북마크의 제목과 썸네일을 url로부터 받아온다.")
   public String getTitleFromUrlForExtension(
       @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
       @NotBlank(message = "유저 ID를 입력해주세요.") @RequestParam final String memberId,
