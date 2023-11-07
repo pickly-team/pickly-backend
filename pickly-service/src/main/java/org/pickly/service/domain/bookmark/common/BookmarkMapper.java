@@ -2,11 +2,13 @@ package org.pickly.service.domain.bookmark.common;
 
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkUpdateReq;
+import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkCrawlInfoRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkReadStatusRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.CategoryReadStatusRes;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
+import org.pickly.service.domain.bookmark.vo.BookmarkCrawlInfo;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 import org.pickly.service.domain.category.entity.Category;
 import org.springframework.stereotype.Component;
@@ -67,6 +69,10 @@ public class BookmarkMapper {
       result.add(toCategoryReadStatusDto(entry.getKey(), entry.getValue()));
     }
     return result;
+  }
+
+  public BookmarkCrawlInfoRes toResponse(BookmarkCrawlInfo info) {
+    return new BookmarkCrawlInfoRes(info.getTitle(), info.getThumbnail());
   }
 
 }

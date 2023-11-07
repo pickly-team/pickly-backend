@@ -19,6 +19,7 @@ import org.pickly.service.domain.bookmark.common.BookmarkMapper;
 import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkCreateReq;
 import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkUpdateReq;
 import org.pickly.service.domain.bookmark.dto.controller.request.ExtensionBookmarkReq;
+import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkCrawlInfoRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkReadStatusRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.CategoryReadStatusRes;
@@ -27,6 +28,7 @@ import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
+import org.pickly.service.domain.bookmark.vo.BookmarkCrawlInfo;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -192,16 +194,14 @@ public class BookmarkController {
     return bookmarkMapper.entityToResponseDto(entity);
   }
 
-  @GetMapping("/members/{memberId}/bookmark/info")
+  @GetMapping("/members/bookmark/info")
   @Operation(summary = "특정 북마크의 제목과 썸네일을 url로부터 받아온다.")
-  public String getTitleFromUrl(
-      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
-      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
-
+  public BookmarkCrawlInfoRes getInfoFromUrl(
       @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
       @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
   ) {
-    return bookmarkReadService.getTitleFromUrl(memberId, url);
+    BookmarkCrawlInfo info = bookmarkReadService.getInfoFromUrl(url);
+    return bookmarkMapper.toResponse(info);
   }
 
   @GetMapping("/categories/{categoryId}/bookmarks")
@@ -250,19 +250,6 @@ public class BookmarkController {
     BookmarkCreateReq createReq = new BookmarkCreateReq(key.decrypt(dto.memberId()), dto);
     Bookmark entity = bookmarkFacade.create(createReq);
     return bookmarkMapper.entityToResponseDto(entity);
-  }
-
-  @GetMapping("/members/bookmark/info/chrome-extension")
-  @Operation(summary = "[크롬 익스텐션] 특정 북마크의 제목과 썸네일을 url로부터 받아온다.")
-  public String getTitleFromUrlForExtension(
-      @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
-      @NotBlank(message = "유저 ID를 입력해주세요.") @RequestParam final String memberId,
-
-      @Parameter(name = "url", description = "북마크의 url", example = "http://naver.com", required = true)
-      @NotEmpty(message = "북마크의 url을 입력해주세요.") @RequestParam final String url
-  ) {
-    ExtensionKey key = encryptService.getKey();
-    return bookmarkReadService.getTitleFromUrl(key.decrypt(memberId), url);
   }
 
   @Operation(

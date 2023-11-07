@@ -44,7 +44,7 @@ public class BookmarkFacade {
     var member = memberReadService.findById(request.getMemberId());
 
     BookmarkInfoDTO info = new BookmarkInfoDTO(
-        request.getUrl(), request.getTitle(), request.getThumbnail(), member.getTimezone()
+        request.getUrl(), request.getTitle(), request.getThumbnail()
     );
     Bookmark bookmark = Bookmark.create(
         category, member, info, request.getVisibility()
