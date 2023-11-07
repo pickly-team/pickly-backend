@@ -120,7 +120,10 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
         )
         .from(category)
         .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
-        .where(category.member.id.eq(memberId))
+        .where(
+            category.member.id.eq(memberId),
+            category.deletedAt.isNull()
+        )
         .groupBy(category.id)
         .fetch();
 
