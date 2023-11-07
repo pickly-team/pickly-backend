@@ -70,4 +70,10 @@ public class CategoryReadService {
     return categories.stream().map(CategoryDTO::from).toList();
   }
 
+  public void existsById(Long categoryId) {
+    if (!categoryRepository.existsByIdAndDeletedAtIsNull(categoryId)) {
+      throw new CategoryNotFoundException();
+    }
+  }
+
 }

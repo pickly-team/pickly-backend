@@ -163,4 +163,12 @@ public class BookmarkReadService {
     return bookmarkRepository.countReadBookmarksByMemberId(memberId);
   }
 
+  public Long countByCategoryId(final Long categoryId) {
+    return bookmarkRepository.countByCategoryIdAndDeletedAtIsNull(categoryId);
+  }
+
+  public Long countReadBookmarksByCategoryId(final Long categoryId) {
+    return bookmarkRepository.countReadBookmarksByCategoryId(categoryId);
+  }
+
 }

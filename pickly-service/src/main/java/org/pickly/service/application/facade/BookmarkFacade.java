@@ -110,8 +110,18 @@ public class BookmarkFacade {
 
   public BookmarkReadStatus getBookmarkReadStatus(final long memberId) {
     memberReadService.existsById(memberId);
-    var totalBookmarkCount = bookmarkReadService.countByMemberId(member.getId());
+    var totalBookmarkCount = bookmarkReadService.countByMemberId(memberId);
     var readBookmarkCount = bookmarkReadService.countReadBookmarksByMemberId(memberId);
+    return new BookmarkReadStatus(totalBookmarkCount, readBookmarkCount);
+  }
+
+  public BookmarkReadStatus getBookmarkReadStatusByCategory(
+      final long memberId, final long categoryId
+  ) {
+    memberReadService.existsById(memberId);
+    categoryReadService.existsById(categoryId);
+    var totalBookmarkCount = bookmarkReadService.countByCategoryId(categoryId);
+    var readBookmarkCount = bookmarkReadService.countReadBookmarksByCategoryId(categoryId);
     return new BookmarkReadStatus(totalBookmarkCount, readBookmarkCount);
   }
 
