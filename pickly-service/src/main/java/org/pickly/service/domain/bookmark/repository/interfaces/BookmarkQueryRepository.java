@@ -3,8 +3,10 @@ package org.pickly.service.domain.bookmark.repository.interfaces;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.entity.Visibility;
+import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BookmarkQueryRepository {
 
@@ -16,4 +18,7 @@ public interface BookmarkQueryRepository {
   List<Bookmark> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId);
 
   List<Bookmark> findAllUnreadBookmark();
+
+  Map<Long, BookmarkReadStatus> findCategoryReadStatus(Long memberId);
+
 }

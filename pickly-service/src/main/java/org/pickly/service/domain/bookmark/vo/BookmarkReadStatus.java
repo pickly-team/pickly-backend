@@ -12,19 +12,18 @@ public class BookmarkReadStatus {
   private final long unreadCount;
   private final long readStatusPercentage;
 
-  public BookmarkReadStatus(final long total, final long readCount) {
-    if (total < readCount) {
+  public BookmarkReadStatus(final Long total, final Long readCount) {
+    this.total = (total == null) ? 0 : total;
+    this.readCount = (readCount == null) ? 0 : readCount;
+    if (this.total < this.readCount) {
       throw new InvalidReadStatusException();
     }
 
-    this.total = total;
-    this.readCount = readCount;
-    this.unreadCount = total - readCount;
-
-    if (total == 0) {
+    this.unreadCount = this.total - this.readCount;
+    if (this.total == 0) {
       this.readStatusPercentage = 0;
     } else {
-      this.readStatusPercentage = Math.round(((double) readCount / total) * 100);
+      this.readStatusPercentage = Math.round(((double) this.readCount / this.total) * 100);
     }
   }
 }
