@@ -20,4 +20,10 @@ public abstract class BookmarkException extends BusinessException {
     }
   }
 
+  public static class InvalidReadStatusException extends BookmarkException {
+    public InvalidReadStatusException() {
+      super(BookmarkErrorCode.INVALID_READ_STATUS);
+    }
+  }
+
 }

@@ -19,12 +19,14 @@ import org.pickly.service.domain.bookmark.common.BookmarkMapper;
 import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkCreateReq;
 import org.pickly.service.domain.bookmark.dto.controller.request.BookmarkUpdateReq;
 import org.pickly.service.domain.bookmark.dto.controller.request.ExtensionBookmarkReq;
+import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkReadStatusRes;
 import org.pickly.service.domain.bookmark.dto.controller.response.BookmarkRes;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkItemDTO;
 import org.pickly.service.domain.bookmark.dto.service.BookmarkPreviewItemDTO;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
+import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -291,4 +293,16 @@ public class BookmarkController {
     );
   }
 
+  @Operation(
+      summary = "특정 유저의 전체 북마크 읽음 현황을 조회한다.",
+      description = "북마크를 아직 하나도 추가하지 않은 경우, 0%로 처리한다."
+  )
+  @GetMapping("/members/{memberId}/bookmarks/read-status")
+  public BookmarkReadStatusRes getBookmarkReadStatus(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
+  ) {
+    BookmarkReadStatus status = bookmarkFacade.getBookmarkReadStatus(memberId);
+    return bookmarkMapper.toReadStatusDto(status);
+  }
 }
