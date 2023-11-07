@@ -14,6 +14,7 @@ import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkRepository;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
+import org.pickly.service.domain.bookmark.vo.BookmarkCrawlInfo;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 import org.pickly.service.domain.friend.entity.Relationship;
 import org.pickly.service.domain.member.entity.Member;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static org.pickly.service.domain.bookmark.exception.BookmarkException.BookmarkNotFoundException;
 import static org.pickly.service.domain.bookmark.exception.BookmarkException.ForbiddenBookmarkException;
-import static org.pickly.service.domain.member.exception.MemberException.MemberNotFoundException;
 
 @Slf4j
 @Service
@@ -118,22 +118,19 @@ public class BookmarkReadService {
         .orElseThrow(BookmarkNotFoundException::new);
   }
 
-  public String getTitleFromUrl(Long memberId, String url) {
-    Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-    BookmarkInfoDTO info = scrapOgTagInfo(url, member);
-    return info.getTitle();
+  public BookmarkCrawlInfo getInfoFromUrl(final String url) {
+    BookmarkInfoDTO info = scrapOgTagInfo(url);
+    return new BookmarkCrawlInfo(url, info.getTitle(), info.getPreviewImageUrl());
   }
 
-  public BookmarkInfoDTO scrapOgTagInfo(final String url, final Member member) {
-    BookmarkInfoDTO result = new BookmarkInfoDTO(url);
+  public BookmarkInfoDTO scrapOgTagInfo(final String url) {
     try {
       Document doc = Jsoup.connect(url).get();
 
       String title = doc.select("meta[property=og:title]").attr(CONTENT_ATTR);
       String previewImageUrl = doc.select("meta[property=og:image]").attr(CONTENT_ATTR);
 
-      result.updateTitleAndImage(title, previewImageUrl, member.getTimezone());
-      return result;
+      return new BookmarkInfoDTO(url, title, previewImageUrl);
     } catch (IOException e) {
       throw new ForbiddenBookmarkException();
     }
