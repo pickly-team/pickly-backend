@@ -26,4 +26,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
       + "GROUP BY c.member_id", nativeQuery = true)
   Integer getCategoryCntByMemberId(@Param("member_id") Long memberId);
 
+  boolean existsByIdAndDeletedAtIsNull(Long categoryId);
+
 }

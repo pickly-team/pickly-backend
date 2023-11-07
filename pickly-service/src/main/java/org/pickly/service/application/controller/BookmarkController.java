@@ -305,4 +305,21 @@ public class BookmarkController {
     BookmarkReadStatus status = bookmarkFacade.getBookmarkReadStatus(memberId);
     return bookmarkMapper.toReadStatusDto(status);
   }
+
+  @Operation(
+      summary = "특정 유저의 카테고리별 북마크 읽음 현황을 조회한다.",
+      description = "북마크를 아직 하나도 추가하지 않은 경우, 0%로 처리한다."
+  )
+  @GetMapping("/members/{memberId}/categories/{categoryId}/bookmarks/read-status")
+  public BookmarkReadStatusRes getBookmarkReadStatusByCategory(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @Parameter(name = "categoryId", description = "카테고리 ID 값", example = "1", required = true)
+      @Positive(message = "카테고리 ID는 양수입니다.") @PathVariable final Long categoryId
+  ) {
+    BookmarkReadStatus status = bookmarkFacade.getBookmarkReadStatusByCategory(memberId, categoryId);
+    return bookmarkMapper.toReadStatusDto(status);
+  }
+
 }
