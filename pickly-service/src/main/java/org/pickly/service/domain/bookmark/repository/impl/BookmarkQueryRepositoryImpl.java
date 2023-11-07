@@ -1,19 +1,23 @@
 package org.pickly.service.domain.bookmark.repository.impl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.pickly.service.common.utils.page.PageRequest;
+import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
-import org.pickly.service.common.utils.page.PageRequest;
-import org.pickly.service.common.utils.timezone.TimezoneHandler;
+import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
 import static org.pickly.service.domain.category.entity.QCategory.category;
@@ -103,6 +107,32 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
                 .and(bookmark.readByUser.eq(false))
         )
         .fetch();
+  }
+
+  @Override
+  public Map<Long, BookmarkReadStatus> findCategoryReadStatus(final Long memberId) {
+    Map<Long, BookmarkReadStatus> categoryBookmarkCounts = new HashMap<>();
+    List<Tuple> results = queryFactory
+        .select(
+            category.id,
+            category.id.count(),
+            bookmark.readByUser.count()
+        )
+        .from(category)
+        .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
+        .where(category.member.id.eq(memberId))
+        .groupBy(category.id)
+        .fetch();
+
+    for (Tuple result : results) {
+      Long categoryId = result.get(category.id);
+      Long totalBookmarks = result.get(category.id.count());
+      Long readBookmarks = result.get(bookmark.readByUser.count());
+
+      BookmarkReadStatus status = new BookmarkReadStatus(totalBookmarks, readBookmarks);
+      categoryBookmarkCounts.put(categoryId, status);
+    }
+    return categoryBookmarkCounts;
   }
 
   private BooleanExpression eqMemberId(final Long memberId) {

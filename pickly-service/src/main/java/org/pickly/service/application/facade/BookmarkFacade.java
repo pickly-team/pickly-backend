@@ -125,4 +125,9 @@ public class BookmarkFacade {
     return new BookmarkReadStatus(totalBookmarkCount, readBookmarkCount);
   }
 
+  public Map<Long, BookmarkReadStatus> getCategoryReadStatus(final long memberId) {
+    memberReadService.existsById(memberId);
+    return bookmarkReadService.getCategoryReadStatus(memberId);
+  }
+
 }
