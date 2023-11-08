@@ -46,4 +46,8 @@ public class CommentReadService {
     return commentQueryRepository.findBookmarkCommentCntByMember(memberId);
   }
 
+  public Map<Long, Long> getBookmarkCommentCntByKeyword(final Long memberId, final String keyword) {
+    return commentQueryRepository.findBookmarkCommentCntByMemberAndKeyword(memberId, keyword);
+  }
+
 }

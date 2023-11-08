@@ -100,6 +100,19 @@ public class BookmarkFacade {
     );
   }
 
+  public PageResponse<BookmarkPreviewItemDTO> searchBookmarks(
+      final PageRequest pageRequest, final Long memberId, final String keyword
+  ) {
+    memberReadService.existsById(memberId);
+
+    List<Bookmark> bookmarks = bookmarkReadService.searchBookmarks(pageRequest, memberId, keyword);
+    Map<Long, Long> bookmarkCommentCntMap = commentReadService.getBookmarkCommentCntByKeyword(memberId, keyword);
+
+    return bookmarkReadService.makeResponse(
+        pageRequest.getPageSize(), bookmarks, bookmarkCommentCntMap
+    );
+  }
+
   private Relationship checkRelationShip(Long loginId, Long memberId) {
     if (memberId.equals(loginId)) {
       return Relationship.ME;
