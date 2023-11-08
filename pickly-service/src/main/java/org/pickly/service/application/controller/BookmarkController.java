@@ -325,7 +325,7 @@ public class BookmarkController {
 
   @Operation(
       summary = "타이틀 값을 이용해 특정 유저의 북마크를 검색한다.",
-      description = "검색 값이 제목에 포함되거나, 또는 제목 초성과 일치하는 북마크를 반환한다."
+      description = "검색 값이 제목에 포함되는 북마크를 반환한다. 대소문자를 구분하지 않는다."
   )
   @GetMapping("/members/{memberId}/bookmarks/search")
   public PageResponse<BookmarkPreviewItemDTO> searchBookmarks(
