@@ -10,6 +10,8 @@ public interface CommentQueryRepository {
 
   Map<Long, Long> findBookmarkCommentCntByMember(Long memberId);
 
+  Map<Long, Long> findBookmarkCommentCntByMemberAndKeyword(Long memberId, String keyword);
+
   List<CommentDTO> findComments(Long memberId, Long bookmarkId);
 
   List<CommentDTO> findCommentsWithoutBlock(Long memberId, Long bookmarkId);

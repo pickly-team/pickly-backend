@@ -50,6 +50,26 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
   }
 
   @Override
+  public Map<Long, Long> findBookmarkCommentCntByMemberAndKeyword(final Long memberId, final String keyword) {
+    return queryFactory
+        .select(bookmark.id, comment.count().castToNum(Long.class))
+        .from(bookmark)
+        .leftJoin(comment).on(comment.bookmark.id.eq(bookmark.id))
+        .groupBy(bookmark.id)
+        .where(
+            bookmark.member.id.eq(memberId),
+            bookmark.title.containsIgnoreCase(keyword),
+            notDeleted()
+        )
+        .fetch()
+        .stream()
+        .collect(Collectors.toMap(
+            tuple -> tuple.get(bookmark.id),
+            tuple -> Optional.ofNullable(tuple.get(comment.count())).orElse(0L)
+        ));
+  }
+
+  @Override
   public List<CommentDTO> findComments(Long memberId, Long bookmarkId) {
     return queryFactory
         .select(new QCommentDTO(comment, member, bookmark.title, category.name, bookmark.id

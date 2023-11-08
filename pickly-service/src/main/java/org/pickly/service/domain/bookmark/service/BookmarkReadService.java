@@ -69,13 +69,19 @@ public class BookmarkReadService {
         categoryId, null, readByUser, visibilities);
   }
 
+  public List<Bookmark> searchBookmarks(
+      final PageRequest pageRequest, final Long memberId, final String keyword
+  ) {
+    return bookmarkQueryRepository.searchBookmarks(pageRequest, memberId, keyword);
+  }
+
   private <T> List<T> mapToDtoList(
       final List<Bookmark> bookmarks, final Function<Bookmark, T> mapper
   ) {
     return bookmarks.stream().map(mapper).toList();
   }
 
-  private PageResponse<BookmarkItemDTO> makeResponse(final int pageSize, List<Bookmark> bookmarks) {
+  public PageResponse<BookmarkItemDTO> makeResponse(final int pageSize, List<Bookmark> bookmarks) {
     int contentSize = bookmarks.size();
     bookmarks = removeElement(bookmarks, contentSize, pageSize);
     List<BookmarkItemDTO> contents = mapToDtoList(bookmarks, BookmarkItemDTO::from);

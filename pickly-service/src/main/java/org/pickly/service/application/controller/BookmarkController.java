@@ -323,4 +323,26 @@ public class BookmarkController {
     return bookmarkMapper.toCategoryReadStatusDto(status);
   }
 
+  @Operation(
+      summary = "타이틀 값을 이용해 특정 유저의 북마크를 검색한다.",
+      description = "검색 값이 제목에 포함되거나, 또는 제목 초성과 일치하는 북마크를 반환한다."
+  )
+  @GetMapping("/members/{memberId}/bookmarks/search")
+  public PageResponse<BookmarkPreviewItemDTO> searchBookmarks(
+      @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
+      @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId,
+
+      @Parameter(name = "keyword", description = "검색어", example = "ww0077", required = true)
+      @RequestParam final String keyword,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "3")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
+  ) {
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    return bookmarkFacade.searchBookmarks(pageRequest, memberId, keyword);
+  }
+
 }

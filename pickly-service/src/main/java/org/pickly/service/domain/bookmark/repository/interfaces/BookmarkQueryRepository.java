@@ -13,6 +13,8 @@ public interface BookmarkQueryRepository {
   List<Bookmark> findBookmarks(PageRequest pageRequest, Long memberId, Long categoryId,
                                Boolean isUserLike, Boolean readByUser, List<Visibility> visibilities);
 
+  List<Bookmark> searchBookmarks(PageRequest pageRequest, Long memberId, String keyword);
+
   long count(Long memberId, Boolean isUserLike);
 
   List<Bookmark> findBookmarkByCategoryId(PageRequest pageRequest, Long categoryId);

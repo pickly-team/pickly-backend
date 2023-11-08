@@ -57,6 +57,27 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   }
 
   @Override
+  public List<Bookmark> searchBookmarks(
+      PageRequest pageRequest, Long memberId, String keyword
+  ) {
+    Long cursorId = (Long) pageRequest.getCursorId();
+    Integer pageSize = pageRequest.getPageSize();
+    return queryFactory
+        .selectFrom(bookmark)
+        .leftJoin(bookmark.category, category)
+        .fetchJoin()
+        .where(
+            ltCursorId(cursorId),
+            eqMemberId(memberId),
+            bookmark.title.containsIgnoreCase(keyword),
+            notDeleted()
+        )
+        .orderBy(bookmark.id.desc())
+        .limit(pageSize + CHECK_LAST)
+        .fetch();
+  }
+
+  @Override
   public long count(Long memberId, Boolean isUserLike) {
     return queryFactory
         .select(bookmark.count())
