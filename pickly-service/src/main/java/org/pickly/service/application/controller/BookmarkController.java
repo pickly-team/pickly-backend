@@ -346,4 +346,27 @@ public class BookmarkController {
     return bookmarkFacade.searchBookmarks(pageRequest, memberId, keyword);
   }
 
+  @Operation(
+      summary = "[크롬 익스텐션] 타이틀 값을 이용해 특정 유저의 북마크를 검색한다.",
+      description = "검색 값이 제목에 포함되는 북마크를 반환한다. 대소문자를 구분하지 않는다."
+  )
+  @GetMapping("/members/bookmarks/search/chrome-extension")
+  public PageResponse<BookmarkPreviewItemDTO> searchBookmarksForExtension(
+      @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
+      @NotBlank(message = "유저 ID를 입력해주세요.") @RequestParam final String memberId,
+
+      @Parameter(name = "keyword", description = "검색어", example = "ww0077", required = true)
+      @RequestParam final String keyword,
+
+      @Parameter(description = "커서 ID 값 :: default value = null", example = "3")
+      @RequestParam(required = false) final Long cursorId,
+
+      @Parameter(description = "한 페이지에 출력할 아이템 수 :: default value = 15", example = "10")
+      @RequestParam(required = false) final Integer pageSize
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    PageRequest pageRequest = new PageRequest(cursorId, pageSize);
+    return bookmarkFacade.searchBookmarks(pageRequest, key.decrypt(memberId), keyword);
+  }
+
 }
