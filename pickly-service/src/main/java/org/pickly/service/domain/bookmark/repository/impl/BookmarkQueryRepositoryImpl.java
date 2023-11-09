@@ -11,6 +11,7 @@ import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkQueryRepository;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
+import org.pickly.service.domain.category.entity.Category;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -110,11 +111,11 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
   }
 
   @Override
-  public Map<Long, BookmarkReadStatus> findCategoryReadStatus(final Long memberId) {
-    Map<Long, BookmarkReadStatus> categoryBookmarkCounts = new HashMap<>();
+  public Map<Category, BookmarkReadStatus> findCategoryReadStatus(final Long memberId) {
+    Map<Category, BookmarkReadStatus> categoryBookmarkCounts = new HashMap<>();
     List<Tuple> results = queryFactory
         .select(
-            category.id,
+            category,
             category.id.count(),
             bookmark.readByUser.count()
         )
@@ -125,15 +126,16 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             category.deletedAt.isNull()
         )
         .groupBy(category.id)
+        .orderBy(category.orderNum.asc())
         .fetch();
 
     for (Tuple result : results) {
-      Long categoryId = result.get(category.id);
+      Category currentCategory = result.get(category);
       Long totalBookmarks = result.get(category.id.count());
       Long readBookmarks = result.get(bookmark.readByUser.count());
 
       BookmarkReadStatus status = new BookmarkReadStatus(totalBookmarks, readBookmarks);
-      categoryBookmarkCounts.put(categoryId, status);
+      categoryBookmarkCounts.put(currentCategory, status);
     }
     return categoryBookmarkCounts;
   }

@@ -30,6 +30,7 @@ import org.pickly.service.domain.bookmark.service.BookmarkReadService;
 import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.pickly.service.domain.bookmark.vo.BookmarkCrawlInfo;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
+import org.pickly.service.domain.category.entity.Category;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -319,7 +320,7 @@ public class BookmarkController {
       @Parameter(name = "memberId", description = "유저 ID 값", example = "1", required = true)
       @Positive(message = "유저 ID는 양수입니다.") @PathVariable final Long memberId
   ) {
-    Map<Long, BookmarkReadStatus> status = bookmarkFacade.getCategoryReadStatus(memberId);
+    Map<Category, BookmarkReadStatus> status = bookmarkFacade.getCategoryReadStatus(memberId);
     return bookmarkMapper.toCategoryReadStatusDto(status);
   }
 
