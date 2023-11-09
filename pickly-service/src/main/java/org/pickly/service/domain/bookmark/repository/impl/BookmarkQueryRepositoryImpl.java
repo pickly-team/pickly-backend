@@ -2,9 +2,12 @@ package org.pickly.service.domain.bookmark.repository.impl;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.common.utils.timezone.TimezoneHandler;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
@@ -24,6 +27,7 @@ import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
 import static org.pickly.service.domain.category.entity.QCategory.category;
 import static org.pickly.service.domain.notification.entity.QNotification.notification;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
@@ -100,6 +104,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     return queryFactory
         .selectFrom(bookmark)
         .where(
+            ltCursorId(cursorId),
             eqCategoryId(categoryId),
             notDeleted()
         )
@@ -138,7 +143,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
         .select(
             category,
             bookmark.id.count(),
-            bookmark.readByUser.count()
+            sumReadTrue()
         )
         .from(category)
         .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
@@ -154,12 +159,20 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     for (Tuple result : results) {
       Category currentCategory = result.get(category);
       Long totalBookmarks = result.get(bookmark.id.count());
-      Long readBookmarks = result.get(bookmark.readByUser.count());
+      Long readBookmarks = result.get(sumReadTrue());
 
       BookmarkReadStatus status = new BookmarkReadStatus(totalBookmarks, readBookmarks);
       categoryBookmarkCounts.put(currentCategory, status);
     }
     return categoryBookmarkCounts;
+  }
+
+  private NumberExpression<Long> sumReadTrue() {
+    return new CaseBuilder()
+        .when(bookmark.readByUser.isTrue())
+        .then(1L)
+        .otherwise(0L)
+        .sum();
   }
 
   private BooleanExpression eqMemberId(final Long memberId) {
