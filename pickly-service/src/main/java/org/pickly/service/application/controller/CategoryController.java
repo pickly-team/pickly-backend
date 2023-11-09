@@ -57,6 +57,23 @@ public class CategoryController {
     categoryFacade.create(memberId, requests);
   }
 
+  @PostMapping("/categories/chrome-extension")
+  @Operation(summary = "[크롬 익스텐션] 카테고리들을 생성한다.", description = "동시에 다수의 카테고리를 생성할 수 있다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 ID"),
+  })
+  public void createForExtension(
+      @Parameter(name = "memberId", description = "암호화된 유저 ID 값", example = "11a9892", required = true)
+      @NotBlank(message = "유저 ID를 입력해주세요.") @RequestParam final String memberId,
+
+      @RequestBody @Valid
+      @Length(min = 1, message = "최소 1개의 카테고리 정보를 입력해주세요.") final List<CategoryRequestDTO> requests
+  ) {
+    ExtensionKey key = encryptService.getKey();
+    categoryFacade.create(key.decrypt(memberId), requests);
+  }
+
   @PutMapping("/categories/{categoryId}")
   @Operation(summary = "카테고리를 수정한다.", description = "특정 카테고리의 이름, 이모지를 수정할 수 있다.")
   public CategoryResponseDTO update(
