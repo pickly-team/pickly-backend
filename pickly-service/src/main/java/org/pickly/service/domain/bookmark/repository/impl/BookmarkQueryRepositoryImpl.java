@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -112,18 +112,19 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
   @Override
   public Map<Category, BookmarkReadStatus> findCategoryReadStatus(final Long memberId) {
-    Map<Category, BookmarkReadStatus> categoryBookmarkCounts = new HashMap<>();
+    Map<Category, BookmarkReadStatus> categoryBookmarkCounts = new LinkedHashMap<>();
     List<Tuple> results = queryFactory
         .select(
             category,
-            category.id.count(),
+            bookmark.id.count(),
             bookmark.readByUser.count()
         )
         .from(category)
         .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
         .where(
             category.member.id.eq(memberId),
-            category.deletedAt.isNull()
+            category.deletedAt.isNull(),
+            bookmark.deletedAt.isNull()
         )
         .groupBy(category.id)
         .orderBy(category.orderNum.asc())
@@ -131,7 +132,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
     for (Tuple result : results) {
       Category currentCategory = result.get(category);
-      Long totalBookmarks = result.get(category.id.count());
+      Long totalBookmarks = result.get(bookmark.id.count());
       Long readBookmarks = result.get(bookmark.readByUser.count());
 
       BookmarkReadStatus status = new BookmarkReadStatus(totalBookmarks, readBookmarks);
