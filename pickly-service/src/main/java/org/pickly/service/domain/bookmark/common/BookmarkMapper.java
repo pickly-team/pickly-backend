@@ -20,7 +20,7 @@ import java.util.Map;
 @Component
 public class BookmarkMapper {
 
-  public BookmarkRes entityToResponseDto(Bookmark bookmark) {
+  public BookmarkRes entityToResponseDto(final Bookmark bookmark) {
     Category category = bookmark.getCategory();
     String timezone = bookmark.getMember().getTimezone();
     return BookmarkRes
@@ -40,7 +40,7 @@ public class BookmarkMapper {
         .build();
   }
 
-  public BookmarkUpdateReqDTO toUpdateDto(BookmarkUpdateReq request) {
+  public BookmarkUpdateReqDTO toUpdateDto(final BookmarkUpdateReq request) {
     return BookmarkUpdateReqDTO
         .builder()
         .categoryId(request.getCategoryId())
@@ -50,7 +50,7 @@ public class BookmarkMapper {
         .build();
   }
 
-  public BookmarkReadStatusRes toReadStatusDto(BookmarkReadStatus status) {
+  public BookmarkReadStatusRes toReadStatusDto(final BookmarkReadStatus status) {
     return BookmarkReadStatusRes.builder()
         .total(status.getTotal())
         .readCount(status.getReadCount())
@@ -59,19 +59,19 @@ public class BookmarkMapper {
         .build();
   }
 
-  public CategoryReadStatusRes toCategoryReadStatusDto(Long categoryId, BookmarkReadStatus status) {
-    return new CategoryReadStatusRes(categoryId, status);
+  public CategoryReadStatusRes toCategoryReadStatusDto(final Category category, final BookmarkReadStatus status) {
+    return new CategoryReadStatusRes(category, status);
   }
 
-  public List<CategoryReadStatusRes> toCategoryReadStatusDto(Map<Long, BookmarkReadStatus> categoryStatus) {
+  public List<CategoryReadStatusRes> toCategoryReadStatusDto(final Map<Category, BookmarkReadStatus> categoryStatus) {
     List<CategoryReadStatusRes> result = new ArrayList<>();
-    for (Map.Entry<Long, BookmarkReadStatus> entry : categoryStatus.entrySet()) {
+    for (Map.Entry<Category, BookmarkReadStatus> entry : categoryStatus.entrySet()) {
       result.add(toCategoryReadStatusDto(entry.getKey(), entry.getValue()));
     }
     return result;
   }
 
-  public BookmarkCrawlInfoRes toResponse(BookmarkCrawlInfo info) {
+  public BookmarkCrawlInfoRes toResponse(final BookmarkCrawlInfo info) {
     return new BookmarkCrawlInfoRes(info.getTitle(), info.getThumbnail());
   }
 

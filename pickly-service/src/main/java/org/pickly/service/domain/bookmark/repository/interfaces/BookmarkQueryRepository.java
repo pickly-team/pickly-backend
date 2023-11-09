@@ -4,6 +4,7 @@ import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.bookmark.entity.Bookmark;
 import org.pickly.service.domain.bookmark.entity.Visibility;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
+import org.pickly.service.domain.category.entity.Category;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,6 @@ public interface BookmarkQueryRepository {
 
   List<Bookmark> findAllUnreadBookmark();
 
-  Map<Long, BookmarkReadStatus> findCategoryReadStatus(Long memberId);
+  Map<Category, BookmarkReadStatus> findCategoryReadStatus(Long memberId);
 
 }

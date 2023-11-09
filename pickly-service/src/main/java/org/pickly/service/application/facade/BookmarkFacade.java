@@ -12,6 +12,7 @@ import org.pickly.service.domain.bookmark.service.BookmarkWriteService;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.bookmark.service.dto.BookmarkUpdateReqDTO;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
+import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.category.service.CategoryReadService;
 import org.pickly.service.domain.comment.service.CommentReadService;
 import org.pickly.service.domain.comment.service.CommentWriteService;
@@ -138,7 +139,7 @@ public class BookmarkFacade {
     return new BookmarkReadStatus(totalBookmarkCount, readBookmarkCount);
   }
 
-  public Map<Long, BookmarkReadStatus> getCategoryReadStatus(final long memberId) {
+  public Map<Category, BookmarkReadStatus> getCategoryReadStatus(final long memberId) {
     memberReadService.existsById(memberId);
     return bookmarkReadService.getCategoryReadStatus(memberId);
   }
