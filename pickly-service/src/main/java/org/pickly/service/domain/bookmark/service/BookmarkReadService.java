@@ -16,6 +16,7 @@ import org.pickly.service.domain.bookmark.repository.interfaces.BookmarkReposito
 import org.pickly.service.domain.bookmark.service.dto.BookmarkInfoDTO;
 import org.pickly.service.domain.bookmark.vo.BookmarkCrawlInfo;
 import org.pickly.service.domain.bookmark.vo.BookmarkReadStatus;
+import org.pickly.service.domain.category.entity.Category;
 import org.pickly.service.domain.friend.entity.Relationship;
 import org.pickly.service.domain.member.entity.Member;
 import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
@@ -169,7 +170,7 @@ public class BookmarkReadService {
     return bookmarkRepository.countReadBookmarksByCategoryId(categoryId);
   }
 
-  public Map<Long, BookmarkReadStatus> getCategoryReadStatus(final Long memberId) {
+  public Map<Category, BookmarkReadStatus> getCategoryReadStatus(final Long memberId) {
     return bookmarkQueryRepository.findCategoryReadStatus(memberId);
   }
 
