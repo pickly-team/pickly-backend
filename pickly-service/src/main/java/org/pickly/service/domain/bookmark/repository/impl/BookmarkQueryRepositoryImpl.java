@@ -146,11 +146,11 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             sumReadTrue()
         )
         .from(category)
-        .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
+        .leftJoin(bookmark).on(category.id.eq(bookmark.category.id)
+            .and(bookmark.deletedAt.isNull()))
         .where(
             category.member.id.eq(memberId),
-            category.deletedAt.isNull(),
-            bookmark.deletedAt.isNull()
+            category.deletedAt.isNull()
         )
         .groupBy(category.id)
         .orderBy(category.orderNum.asc())
