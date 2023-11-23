@@ -21,7 +21,7 @@ public class BookmarkReadStatus {
 
     this.unreadCount = this.total - this.readCount;
     if (this.total == 0) {
-      this.readStatusPercentage = 0;
+      this.readStatusPercentage = 100;
     } else {
       this.readStatusPercentage = Math.round(((double) this.readCount / this.total) * 100);
     }
