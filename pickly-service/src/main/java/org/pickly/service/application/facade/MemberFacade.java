@@ -7,6 +7,7 @@ import org.pickly.service.domain.friend.service.FriendReadService;
 import org.pickly.service.domain.member.common.MemberMapper;
 import org.pickly.service.domain.member.dto.service.*;
 import org.pickly.service.domain.member.entity.Member;
+import org.pickly.service.domain.member.entity.MemberStatus;
 import org.pickly.service.domain.member.service.MemberReadService;
 import org.pickly.service.domain.member.service.MemberWriteService;
 import org.pickly.service.domain.notification.service.standard.NotificationStandardReadService;
@@ -48,7 +49,8 @@ public class MemberFacade {
 
   private Member login(final String email) {
     Member savedMember = memberReadService.findByEmail(email);
-    savedMember.updateLastLoginAt();
+    MemberStatus status = savedMember.getStatus();
+    status.login();
     return savedMember;
   }
 

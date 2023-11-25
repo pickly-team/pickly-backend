@@ -45,15 +45,15 @@ public class Member extends BaseEntity {
   @Column(name = "timezone", length = 20)
   private String timezone;
 
-  @Column(name = "last_login_at")
-  private LocalDateTime lastLoginAt;
+  @Embedded
+  private MemberStatus status;
 
   @Builder
   public Member(
       Long id, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt,
       String username, Password password, Boolean isHardMode,
       String email, String name, String nickname, String profileEmoji,
-      String fcmToken, String timezone, LocalDateTime lastLoginAt
+      String fcmToken, String timezone, MemberStatus status
   ) {
     super(id, createdAt, updatedAt, deletedAt);
     this.username = username;
@@ -65,11 +65,7 @@ public class Member extends BaseEntity {
     this.profileEmoji = profileEmoji;
     this.fcmToken = fcmToken;
     this.timezone = timezone;
-    this.lastLoginAt = lastLoginAt;
-  }
-
-  public void updateLastLoginAt() {
-    this.lastLoginAt = LocalDateTime.now();
+    this.status = status;
   }
 
   public void updateProfile(String name, String nickname, String profileEmoji) {

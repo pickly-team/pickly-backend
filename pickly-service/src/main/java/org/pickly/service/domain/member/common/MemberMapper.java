@@ -6,11 +6,10 @@ import org.pickly.service.domain.member.dto.controller.request.MemberStatusReq;
 import org.pickly.service.domain.member.dto.controller.response.*;
 import org.pickly.service.domain.member.dto.service.*;
 import org.pickly.service.domain.member.entity.Member;
+import org.pickly.service.domain.member.entity.MemberStatus;
 import org.pickly.service.domain.member.entity.Password;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class MemberMapper {
@@ -18,6 +17,7 @@ public class MemberMapper {
   public Member tokenToMember(FirebaseToken token) {
     //TODO: password nullable한 값으로 변경?
     Password password = new Password("test123");
+    MemberStatus status = new MemberStatus();
 
     return Member.builder()
         .username(token.getUid())
@@ -26,7 +26,7 @@ public class MemberMapper {
         .nickname(token.getUid())
         .isHardMode(false)
         .password(password)
-        .lastLoginAt(LocalDateTime.now())
+        .status(status)
         .build();
   }
 
