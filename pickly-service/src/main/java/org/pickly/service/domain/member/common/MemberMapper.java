@@ -10,6 +10,8 @@ import org.pickly.service.domain.member.entity.Password;
 import org.pickly.service.domain.notification.entity.NotificationStandard;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class MemberMapper {
 
@@ -24,6 +26,7 @@ public class MemberMapper {
         .nickname(token.getUid())
         .isHardMode(false)
         .password(password)
+        .lastLoiginAt(LocalDateTime.now())
         .build();
   }
 
