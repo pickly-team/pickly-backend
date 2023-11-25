@@ -26,7 +26,7 @@ public class MemberMapper {
         .nickname(token.getUid())
         .isHardMode(false)
         .password(password)
-        .lastLoiginAt(LocalDateTime.now())
+        .lastLoginAt(LocalDateTime.now())
         .build();
   }
 
