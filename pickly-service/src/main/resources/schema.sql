@@ -24,21 +24,22 @@ END;
 
 create table member
 (
-    id            bigserial
+    id              bigserial
         constraint member_pk
             primary key,
-    username      varchar(80)             not null,
-    password      varchar(80)             not null,
-    is_hard_mode  boolean                 not null,
-    email         varchar(100)            not null,
-    name          varchar(20),
-    nickname      varchar(200),
-    profile_emoji text,
-    fcm_token     varchar(200),
-    timezone      varchar(20),
-    created_at    timestamp default now() not null,
-    updated_at    timestamp,
-    deleted_at    timestamp
+    username        varchar(80)             not null,
+    password        varchar(80)             not null,
+    is_hard_mode    boolean                 not null,
+    email           varchar(100)            not null,
+    name            varchar(20),
+    nickname        varchar(200),
+    profile_emoji   text,
+    fcm_token       varchar(200),
+    timezone        varchar(20),
+    last_login_at timestamp,
+    created_at      timestamp default now() not null,
+    updated_at      timestamp,
+    deleted_at      timestamp
 );
 
 create unique index member_email_uindex
@@ -273,7 +274,7 @@ create table report
             references member
             on update cascade on delete cascade,
     content     varchar(150)            not null,
-    dtype varchar(31) not null,
+    dtype       varchar(31)             not null,
     created_at  timestamp default now() not null,
     updated_at  timestamp,
     deleted_at  timestamp
