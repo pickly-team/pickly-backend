@@ -69,7 +69,7 @@ public class Member extends BaseEntity {
   }
 
   public void updateLastLoginAt() {
-    this.lastLoiginAt = LocalDateTime.now();
+    this.lastLoginAt = LocalDateTime.now();
   }
 
   public void updateProfile(String name, String nickname, String profileEmoji) {
