@@ -30,15 +30,26 @@ public class MemberFacade {
   private final NotificationStandardWriteService notificationStandardWriteService;
 
   @Transactional
-  public Member create(Member member) {
-    var email = member.getEmail();
+  public Member join(Member request) {
+    var email = request.getEmail();
     if (memberReadService.existsByEmail(email)) {
-      return memberReadService.findByEmail(email);
+      return login(email);
     } else {
-      Member savedMember = memberWriteService.create(member);
-      notificationStandardWriteService.create(savedMember);
-      return savedMember;
+      return create(request);
     }
+  }
+
+  @Transactional
+  public Member create(Member request) {
+    Member member = memberWriteService.create(request);
+    notificationStandardWriteService.create(member);
+    return member;
+  }
+
+  private Member login(final String email) {
+    Member savedMember = memberReadService.findByEmail(email);
+    savedMember.updateLastLoginAt();
+    return savedMember;
   }
 
   @Transactional

@@ -155,7 +155,7 @@ public class MemberController {
     FirebaseToken decodedToken = authTokenUtil.validateToken(token);
     Member request = memberMapper.tokenToMember(decodedToken);
 
-    Member member = memberFacade.create(request);
+    Member member = memberFacade.join(request);
     return memberMapper.toResponse(member);
   }
 
