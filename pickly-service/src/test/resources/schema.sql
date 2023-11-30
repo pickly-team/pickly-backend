@@ -24,22 +24,23 @@ END;
 
 create table member
 (
-    id              bigserial
+    id            bigserial
         constraint member_pk
             primary key,
-    username        varchar(80)             not null,
-    password        varchar(80)             not null,
-    is_hard_mode    boolean                 not null,
-    email           varchar(100)            not null,
-    name            varchar(20),
-    nickname        varchar(200),
-    profile_emoji   text,
-    fcm_token       varchar(200),
-    timezone        varchar(20),
+    username      varchar(80)             not null,
+    password      varchar(80)             not null,
+    is_hard_mode  boolean                 not null,
+    email         varchar(100)            not null,
+    name          varchar(20),
+    nickname      varchar(200),
+    profile_emoji text,
+    fcm_token     varchar(200),
+    timezone      varchar(20),
     last_login_at timestamp,
-    created_at      timestamp default now() not null,
-    updated_at      timestamp,
-    deleted_at      timestamp
+    is_inactive   boolean,
+    created_at    timestamp default now() not null,
+    updated_at    timestamp,
+    deleted_at    timestamp
 );
 
 create unique index member_email_uindex
