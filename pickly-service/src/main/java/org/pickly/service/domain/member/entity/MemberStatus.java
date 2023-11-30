@@ -29,8 +29,4 @@ public class MemberStatus {
     this.isInactive = false;
   }
 
-  public void convertToInactive() {
-    this.isInactive = true;
-  }
-
 }

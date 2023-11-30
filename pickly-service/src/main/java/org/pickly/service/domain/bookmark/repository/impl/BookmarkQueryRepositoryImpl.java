@@ -133,6 +133,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
                 ).notExists()
                 .and(bookmark.readByUser.eq(false))
         )
+        .where(bookmark.member.status.isInactive.eq(false))
         .fetch();
   }
 
