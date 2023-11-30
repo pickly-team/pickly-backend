@@ -13,6 +13,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Random;
 
 import static org.pickly.service.domain.member.exception.MemberException.CodeNotFoundException;
@@ -68,6 +69,11 @@ public class MemberWriteService {
     } else {
       throw new CodeNotFoundException();
     }
+  }
+
+  public void convertToSleeper(final List<Member> members) {
+    final List<Long> memberIds = members.stream().map(Member::getId).toList();
+    memberRepository.convertToSleeper(memberIds);
   }
 
   private Cache getCodeCache() {

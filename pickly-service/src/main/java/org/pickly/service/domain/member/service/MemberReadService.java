@@ -11,6 +11,8 @@ import org.pickly.service.domain.member.repository.interfaces.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +87,11 @@ public class MemberReadService {
   public Member findByEmail(String email) {
     return memberRepository.findByEmailAndDeletedAtIsNull(email)
         .orElseThrow(MemberNotFoundException::new);
+  }
+
+  public List<Member> findLongTermInactive(final LocalDate current) {
+    final LocalDateTime inactiveStandard = current.minusMonths(2).atTime(0, 0);
+    return memberRepository.findByStatusLastLoginAtBefore(inactiveStandard);
   }
 
 }
