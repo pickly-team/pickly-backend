@@ -25,7 +25,9 @@ import java.util.Map;
 
 import static org.pickly.service.domain.bookmark.entity.QBookmark.bookmark;
 import static org.pickly.service.domain.category.entity.QCategory.category;
+import static org.pickly.service.domain.member.entity.QMember.member;
 import static org.pickly.service.domain.notification.entity.QNotification.notification;
+import static org.pickly.service.domain.notification.entity.QNotificationStandard.notificationStandard;
 
 @Slf4j
 @Repository
@@ -121,6 +123,11 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
     return queryFactory
         .selectFrom(bookmark)
+        .leftJoin(member).on(bookmark.member.id.eq(member.id))
+        .leftJoin(notificationStandard).on(
+            member.id.eq(notificationStandard.member.id)
+                .and(notificationStandard.isActive.isTrue())
+        )
         .where(
             JPAExpressions
                 .select(notification.bookmarkId)
