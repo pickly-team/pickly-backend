@@ -1,5 +1,6 @@
 package org.pickly.service.domain.member.service;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.block.repository.interfaces.BlockRepository;
@@ -75,7 +76,7 @@ public class MemberReadService {
     }).toList();
   }
 
-  public Map<Long, String> findTokenByIds(List<Long> memberIds) {
+  public Map<Long, String> findTokenByIds(final Set<Long> memberIds) {
     return memberQueryRepository.findTokenByIds(memberIds);
   }
 

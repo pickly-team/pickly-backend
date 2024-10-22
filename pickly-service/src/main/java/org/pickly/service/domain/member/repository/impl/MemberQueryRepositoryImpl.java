@@ -3,6 +3,7 @@ package org.pickly.service.domain.member.repository.impl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.member.repository.interfaces.MemberQueryRepository;
@@ -24,7 +25,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Map<Long, String> findTokenByIds(List<Long> memberIds) {
+  public Map<Long, String> findTokenByIds(Set<Long> memberIds) {
     return queryFactory
         .select(member.id, member.fcmToken)
         .from(member)

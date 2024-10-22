@@ -1,5 +1,6 @@
 package org.pickly.service.domain.member.repository.interfaces;
 
+import java.util.Set;
 import org.pickly.service.common.utils.page.PageRequest;
 import org.pickly.service.domain.member.dto.service.SearchMemberResultResDTO;
 
@@ -8,7 +9,7 @@ import java.util.Map;
 
 public interface MemberQueryRepository {
 
-  Map<Long, String> findTokenByIds(List<Long> memberIds);
+  Map<Long, String> findTokenByIds(Set<Long> memberIds);
   List<SearchMemberResultResDTO> findAllMembersByKeyword(String keyword, Long memberId,
                                                          PageRequest pageRequest);
 
